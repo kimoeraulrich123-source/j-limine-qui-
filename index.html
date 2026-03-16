@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Undercover Deluxe</title>
+  <title>Undercover Infinity</title>
   <style>
     :root{
-      --bg:#090b16;
-      --bg2:#10152d;
-      --bg3:#181f42;
+      --bg:#070b18;
+      --bg2:#0f1730;
+      --bg3:#172247;
       --card:rgba(255,255,255,.08);
-      --card2:rgba(255,255,255,.05);
-      --text:#f6f9ff;
-      --muted:#b8c8ef;
-      --muted2:#8fa4db;
+      --card2:rgba(255,255,255,.045);
       --line:rgba(255,255,255,.12);
+      --text:#f7faff;
+      --muted:#b8c7ed;
+      --muted2:#91a7df;
       --purple:#8b5cf6;
       --blue:#38bdf8;
       --green:#22c55e;
@@ -23,9 +23,6 @@
       --shadow:0 20px 60px rgba(0,0,0,.35);
       --radius:24px;
       --radius2:18px;
-      --ok:#bbf7d0;
-      --danger:#fecdd3;
-      --warn:#fde68a;
     }
 
     *{box-sizing:border-box}
@@ -35,10 +32,11 @@
       color:var(--text);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
-        radial-gradient(circle at 10% 12%, rgba(139,92,246,.22), transparent 28%),
-        radial-gradient(circle at 90% 15%, rgba(56,189,248,.14), transparent 22%),
-        radial-gradient(circle at 50% 85%, rgba(34,197,94,.12), transparent 20%),
-        linear-gradient(180deg,var(--bg),var(--bg2) 45%,var(--bg3) 100%);
+        radial-gradient(circle at 10% 12%, rgba(139,92,246,.25), transparent 26%),
+        radial-gradient(circle at 85% 18%, rgba(56,189,248,.16), transparent 22%),
+        radial-gradient(circle at 50% 85%, rgba(34,197,94,.10), transparent 20%),
+        linear-gradient(180deg,var(--bg),var(--bg2) 48%,var(--bg3) 100%);
+      overflow-x:hidden;
     }
 
     body::before{
@@ -47,16 +45,35 @@
       inset:0;
       pointer-events:none;
       opacity:.18;
-      background-image:radial-gradient(rgba(255,255,255,.8) 1px, transparent 1px);
-      background-size:24px 24px;
+      background-image:radial-gradient(rgba(255,255,255,.85) 1px, transparent 1px);
+      background-size:26px 26px;
       mask-image:linear-gradient(180deg, rgba(0,0,0,.7), transparent);
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-30%;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(139,92,246,.08), transparent 22%),
+        radial-gradient(circle at 75% 35%, rgba(56,189,248,.08), transparent 20%),
+        radial-gradient(circle at 45% 75%, rgba(34,197,94,.05), transparent 18%);
+      animation:slowFloat 16s linear infinite;
+      filter:blur(18px);
+    }
+
+    @keyframes slowFloat{
+      0%{transform:translate3d(0,0,0) scale(1)}
+      50%{transform:translate3d(1%, -1.5%, 0) scale(1.03)}
+      100%{transform:translate3d(0,0,0) scale(1)}
     }
 
     button,input{font:inherit}
     a{color:#93c5fd}
 
     .app{
-      max-width:1240px;
+      max-width:1260px;
       margin:0 auto;
       padding:18px;
       position:relative;
@@ -64,6 +81,16 @@
     }
 
     .hidden{display:none !important}
+    .center{text-align:center}
+    .row{display:flex; gap:12px; flex-wrap:wrap}
+    .stack{display:flex; flex-direction:column; gap:14px}
+    .grid{display:grid; gap:16px}
+    .grid-2{grid-template-columns:1.15fr .85fr}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .hero{display:grid; grid-template-columns:1.08fr .92fr; gap:16px; margin-top:12px}
+    @media(max-width:980px){
+      .hero,.grid-2,.grid-3{grid-template-columns:1fr !important}
+    }
 
     .topbar{
       display:flex;
@@ -72,10 +99,10 @@
       gap:16px;
       position:sticky;
       top:0;
-      z-index:20;
+      z-index:30;
       padding:12px 0 18px;
       backdrop-filter:blur(14px);
-      background:linear-gradient(180deg, rgba(9,11,22,.92), rgba(9,11,22,.35));
+      background:linear-gradient(180deg, rgba(7,11,24,.92), rgba(7,11,24,.36));
     }
 
     .brand{
@@ -85,24 +112,24 @@
     }
 
     .logo{
-      width:56px;
-      height:56px;
+      width:58px;
+      height:58px;
       border-radius:18px;
       display:grid;
       place-items:center;
       font-weight:900;
-      font-size:1.35rem;
-      color:#07111f;
+      font-size:1.38rem;
+      color:#07111d;
       background:
-        radial-gradient(circle at 30% 25%, #fff7a8, transparent 35%),
-        linear-gradient(135deg,#34d399,#60a5fa 50%,#a855f7);
-      box-shadow:0 14px 40px rgba(96,165,250,.3);
+        radial-gradient(circle at 30% 25%, #fff7a7, transparent 36%),
+        linear-gradient(135deg,#34d399,#60a5fa 55%,#a855f7);
+      box-shadow:0 14px 42px rgba(96,165,250,.32);
       transform:rotate(-8deg);
     }
 
     .brand h1{
       margin:0;
-      font-size:1.25rem;
+      font-size:1.28rem;
       letter-spacing:.01em;
     }
 
@@ -110,17 +137,6 @@
       margin:4px 0 0;
       color:var(--muted);
       font-size:.95rem;
-    }
-
-    .row{display:flex; gap:12px; flex-wrap:wrap}
-    .stack{display:flex; flex-direction:column; gap:14px}
-    .grid{display:grid; gap:16px}
-    .grid-2{grid-template-columns:1.18fr .82fr}
-    .grid-3{grid-template-columns:repeat(3,1fr)}
-    .hero{display:grid; grid-template-columns:1.08fr .92fr; gap:16px; margin-top:10px}
-    @media(max-width:980px){
-      .hero,.grid-2,.grid-3{grid-template-columns:1fr !important}
-      .topbar{align-items:flex-start; flex-direction:column}
     }
 
     .card{
@@ -132,6 +148,44 @@
       backdrop-filter:blur(16px);
     }
 
+    .card-lite{
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:20px;
+      padding:14px;
+    }
+
+    .fun-box{
+      border-radius:22px;
+      padding:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(135deg, rgba(139,92,246,.22), rgba(56,189,248,.11)),
+        rgba(255,255,255,.03);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .fun-box::after{
+      content:"";
+      position:absolute;
+      inset:auto -30px -30px auto;
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.12), transparent 62%);
+      pointer-events:none;
+    }
+
+    .big{
+      font-size:clamp(2rem,4.6vw,3.55rem);
+      font-weight:900;
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .sub{color:var(--muted); font-size:.96rem}
+    .tiny{color:var(--muted2); font-size:.85rem}
     .section-title{
       display:flex;
       justify-content:space-between;
@@ -140,27 +194,8 @@
       flex-wrap:wrap;
     }
 
-    .big{
-      font-size:clamp(2rem,4.5vw,3.4rem);
-      font-weight:900;
-      line-height:1.02;
-      letter-spacing:-.04em;
-    }
-
-    .sub{color:var(--muted); font-size:.96rem}
-    .tiny{color:var(--muted2); font-size:.85rem}
-
-    .fun-box{
-      border-radius:22px;
-      padding:18px;
-      border:1px solid rgba(255,255,255,.12);
-      background:
-        linear-gradient(135deg, rgba(139,92,246,.22), rgba(56,189,248,.10)),
-        rgba(255,255,255,.03);
-    }
-
     .field{display:flex; flex-direction:column; gap:8px}
-    label{font-weight:800; font-size:.93rem; color:#e8efff}
+    label{font-weight:800; font-size:.93rem; color:#e7efff}
 
     input{
       width:100%;
@@ -172,6 +207,7 @@
       outline:none;
       transition:.18s ease;
     }
+
     input::placeholder{color:#adc0ed}
     input:focus{
       border-color:rgba(96,165,250,.8);
@@ -192,7 +228,19 @@
       gap:10px;
       transition:.18s ease;
       box-shadow:0 12px 28px rgba(0,0,0,.18);
+      position:relative;
+      overflow:hidden;
     }
+
+    .btn::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg, transparent 20%, rgba(255,255,255,.16), transparent 80%);
+      transform:translateX(-140%);
+      transition:.45s ease;
+    }
+    .btn:hover::after{transform:translateX(140%)}
     .btn:hover{transform:translateY(-2px) scale(1.01)}
     .btn:disabled{opacity:.45; cursor:not-allowed; transform:none}
 
@@ -200,7 +248,7 @@
     .btn-secondary{background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06)); border:1px solid rgba(255,255,255,.12)}
     .btn-danger{background:linear-gradient(135deg,#fb7185,#ef4444)}
     .btn-warning{background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#181818}
-    .btn-green{background:linear-gradient(135deg,#34d399,#22c55e); color:#072012}
+    .btn-green{background:linear-gradient(135deg,#34d399,#22c55e); color:#082115}
 
     .chip,.pill,.phase,.badge,.toggle{
       border:1px solid var(--line);
@@ -224,9 +272,9 @@
       font-size:.84rem;
       font-weight:900;
     }
-    .badge-ok{background:rgba(34,197,94,.14); color:var(--ok); border-color:rgba(34,197,94,.3)}
-    .badge-danger{background:rgba(251,113,133,.15); color:var(--danger); border-color:rgba(251,113,133,.3)}
-    .badge-warn{background:rgba(251,191,36,.14); color:var(--warn); border-color:rgba(251,191,36,.3)}
+    .badge-ok{background:rgba(34,197,94,.14); color:#bbf7d0; border-color:rgba(34,197,94,.3)}
+    .badge-danger{background:rgba(251,113,133,.15); color:#fecdd3; border-color:rgba(251,113,133,.3)}
+    .badge-warn{background:rgba(251,191,36,.14); color:#fde68a; border-color:rgba(251,191,36,.3)}
 
     .phasebar{
       display:flex;
@@ -241,13 +289,11 @@
       color:#dbe7ff;
       font-weight:900;
       font-size:.92rem;
-      position:relative;
-      overflow:hidden;
     }
 
     .phase.active{
-      background:linear-gradient(135deg, rgba(139,92,246,.35), rgba(56,189,248,.24));
-      border-color:rgba(147,197,253,.45);
+      background:linear-gradient(135deg, rgba(139,92,246,.35), rgba(56,189,248,.22));
+      border-color:rgba(147,197,253,.46);
       box-shadow:0 0 0 1px rgba(147,197,253,.16) inset;
     }
 
@@ -264,8 +310,18 @@
       border:1px solid var(--line);
       background:rgba(255,255,255,.05);
     }
-    .stat .k{color:var(--muted2); font-size:.84rem; font-weight:800}
-    .stat .v{font-size:1.3rem; font-weight:900; margin-top:6px}
+
+    .stat .k{
+      color:var(--muted2);
+      font-size:.84rem;
+      font-weight:800;
+    }
+
+    .stat .v{
+      font-size:1.28rem;
+      font-weight:900;
+      margin-top:6px;
+    }
 
     .players{
       display:grid;
@@ -280,8 +336,10 @@
       padding:13px;
       position:relative;
       overflow:hidden;
+      transition:.18s ease;
     }
 
+    .player:hover{transform:translateY(-2px)}
     .player::before{
       content:"";
       position:absolute;
@@ -295,6 +353,10 @@
 
     .player.me{outline:2px solid rgba(52,211,153,.6)}
     .player.dead{opacity:.5; filter:grayscale(.25)}
+    .player.current-speaker{
+      outline:2px solid rgba(251,191,36,.65);
+      box-shadow:0 0 0 6px rgba(251,191,36,.08);
+    }
     .player .name{font-weight:900; font-size:1rem}
     .player .meta{margin-top:4px; color:var(--muted); font-size:.9rem}
 
@@ -310,7 +372,7 @@
       display:grid;
       place-items:center;
       text-align:center;
-      min-height:280px;
+      min-height:290px;
       border-radius:28px;
       padding:28px;
       border:1px solid rgba(255,255,255,.12);
@@ -330,13 +392,49 @@
       text-transform:uppercase;
       letter-spacing:.08em;
     }
+
     .word{
-      font-size:clamp(2.2rem,7vw,4.5rem);
+      font-size:clamp(2.3rem,7vw,4.8rem);
       font-weight:900;
       letter-spacing:.02em;
       text-shadow:0 8px 26px rgba(0,0,0,.24);
     }
-    .warning{color:#fde68a; font-size:.95rem; margin-top:12px}
+
+    .warning{
+      color:#fde68a;
+      font-size:.95rem;
+      margin-top:12px;
+    }
+
+    .discussion-order{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .turn-card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:12px;
+    }
+    .turn-card.active{
+      outline:2px solid rgba(251,191,36,.68);
+      box-shadow:0 0 0 6px rgba(251,191,36,.08);
+    }
+    .turn-card .n{
+      font-size:.8rem;
+      color:var(--muted2);
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+    .turn-card .v{
+      margin-top:6px;
+      font-size:1rem;
+      font-weight:900;
+    }
 
     .timer-wrap{
       display:flex;
@@ -363,14 +461,13 @@
     }
 
     .progress{
-      width:min(520px, 100%);
+      width:min(560px, 100%);
       height:12px;
       border-radius:999px;
       background:rgba(255,255,255,.08);
       overflow:hidden;
       border:1px solid rgba(255,255,255,.09);
     }
-
     .progress > div{
       height:100%;
       width:0%;
@@ -405,20 +502,15 @@
     .list{margin:0; padding-left:18px}
     .list li{margin:6px 0; color:#edf4ff}
     .separator{height:1px; background:rgba(255,255,255,.08); margin:8px 0}
-    .center{text-align:center}
     .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+    .range{width:160px; accent-color:#8b5cf6}
 
     .audio-box{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
-      margin-top:6px;
-    }
-
-    .range{
-      width:160px;
-      accent-color:#8b5cf6;
+      margin-top:8px;
     }
 
     .toast-wrap{
@@ -458,9 +550,8 @@
 
     .sparkle{
       display:inline-block;
-      animation:floaty 2.5s ease-in-out infinite;
+      animation:floaty 2.6s ease-in-out infinite;
     }
-
     @keyframes floaty{
       0%,100%{transform:translateY(0)}
       50%{transform:translateY(-4px)}
@@ -473,8 +564,8 @@
       <div class="brand">
         <div class="logo">U</div>
         <div>
-          <h1>Undercover Deluxe <span class="sparkle">✨</span></h1>
-          <p>Plus de mots, plus d’ambiance, meilleur offline, rôle totalement caché.</p>
+          <h1>Undercover Infinity <span class="sparkle">✨</span></h1>
+          <p>Version améliorée : plus de mots, ordre de passage, meilleure interface, sons et ambiance.</p>
         </div>
       </div>
 
@@ -490,8 +581,8 @@
         <div class="fun-box">
           <div class="big">Crée une room ou rejoins une partie</div>
           <p class="sub">
-            En online avec Firebase ou en local offline sur un seul téléphone.
-            Ici, personne ne voit son rôle : chaque joueur ne voit qu’un mot.
+            Chaque joueur voit uniquement son mot. Personne ne voit officiellement s’il est civil ou undercover.
+            La discussion suit un ordre de passage visible pour tout le monde.
           </p>
 
           <div class="audio-box">
@@ -513,16 +604,16 @@
             <div class="v" id="wordsCount">0</div>
           </div>
           <div class="stat">
-            <div class="k">Mode principal</div>
+            <div class="k">Ordre de passage</div>
+            <div class="v">Oui</div>
+          </div>
+          <div class="stat">
+            <div class="k">Mode online</div>
             <div class="v">Firebase</div>
           </div>
           <div class="stat">
             <div class="k">Fallback</div>
             <div class="v">Offline</div>
-          </div>
-          <div class="stat">
-            <div class="k">Rôle caché</div>
-            <div class="v">Oui</div>
           </div>
         </div>
 
@@ -546,7 +637,7 @@
               <div class="row">
                 <div class="field" style="flex:1">
                   <label>Durée discussion (secondes)</label>
-                  <input id="createDiscussion" type="number" min="15" max="600" value="90" />
+                  <input id="createDiscussion" type="number" min="20" max="600" value="90" />
                 </div>
                 <div class="field" style="flex:1">
                   <label>Durée vote (secondes)</label>
@@ -592,25 +683,28 @@
       <div class="card stack">
         <h3>Règles rapides</h3>
         <ul class="list">
-          <li>La majorité reçoit un mot A.</li>
+          <li>La majorité reçoit le mot A.</li>
           <li>Les undercovers reçoivent un mot proche B.</li>
-          <li>Chaque joueur voit seulement son mot.</li>
-          <li>Personne ne sait officiellement s’il est civil ou undercover.</li>
-          <li>Discussion → Vote → Résultat → Manche suivante.</li>
+          <li>Chaque joueur voit uniquement son mot.</li>
+          <li>Personne ne voit son rôle affiché.</li>
+          <li>La discussion suit un ordre de passage.</li>
           <li>Les civils gagnent si tous les undercovers sont éliminés.</li>
-          <li>Les undercovers gagnent quand la parité devient favorable.</li>
+          <li>Les undercovers gagnent à parité favorable.</li>
         </ul>
 
         <div class="separator"></div>
 
-        <h3>Améliorations de cette version</h3>
-        <ul class="list">
-          <li>Beaucoup plus de mots.</li>
-          <li>Compteur audio sur les 5 dernières secondes.</li>
-          <li>Toasts de feedback.</li>
-          <li>Offline amélioré avec vote joueur par joueur.</li>
-          <li>Ambiance sonore générée dans le navigateur.</li>
-        </ul>
+        <h3>Catégories présentes</h3>
+        <div class="row">
+          <span class="pill">Films</span>
+          <span class="pill">Jeux vidéo</span>
+          <span class="pill">Objets</span>
+          <span class="pill">Éléments</span>
+          <span class="pill">Animaux</span>
+          <span class="pill">Lieux</span>
+          <span class="pill">Nourriture</span>
+          <span class="pill">Technologie</span>
+        </div>
       </div>
     </div>
 
@@ -663,6 +757,7 @@
           <div class="row">
             <button id="btnStartRound" class="btn btn-primary">Démarrer la manche</button>
             <button id="btnForceDiscussion" class="btn btn-secondary hidden">Lancer la discussion</button>
+            <button id="btnNextSpeaker" class="btn btn-green hidden">Passage suivant</button>
             <button id="btnForceVote" class="btn btn-warning hidden">Passer au vote</button>
             <button id="btnNextRound" class="btn btn-primary hidden">Manche suivante</button>
             <button id="btnResetGame" class="btn btn-danger hidden">Réinitialiser la partie</button>
@@ -705,11 +800,25 @@
       </div>
 
       <div id="panel-discussion" class="card hidden">
-        <div class="timer-wrap">
-          <h2 style="margin:0">Discussion</h2>
-          <div class="sub">Décrivez votre mot sans le dire directement.</div>
-          <div id="discussionTimer" class="timer">00:00</div>
-          <div class="progress"><div id="discussionProgress"></div></div>
+        <div class="stack">
+          <div class="timer-wrap">
+            <h2 style="margin:0">Discussion</h2>
+            <div class="sub">Décrivez votre mot sans le dire directement.</div>
+            <div id="discussionTimer" class="timer">00:00</div>
+            <div class="progress"><div id="discussionProgress"></div></div>
+          </div>
+
+          <div class="card-lite">
+            <div class="section-title">
+              <div>
+                <div class="tiny">Joueur actuel</div>
+                <div id="currentSpeakerText" style="font-size:1.18rem;font-weight:900">—</div>
+              </div>
+              <span id="speakerProgressBadge" class="badge badge-warn">Tour 0 / 0</span>
+            </div>
+
+            <div id="discussionOrder" class="discussion-order"></div>
+          </div>
         </div>
       </div>
 
@@ -724,7 +833,6 @@
           </div>
 
           <div class="progress"><div id="voteProgress"></div></div>
-
           <div id="voteInfo" class="badge badge-warn">Tu n’as pas encore voté</div>
           <div id="offlineVoteVoter" class="sub hidden"></div>
           <div id="voteGrid" class="vote-grid"></div>
@@ -746,7 +854,7 @@
       <div id="panel-offline-admin" class="card hidden">
         <div class="stack">
           <h2>Mode local offline</h2>
-          <div class="sub">Ajoute les joueurs sur ce téléphone, puis passe l’écran pour la révélation et le vote.</div>
+          <div class="sub">Ajoute les joueurs sur ce téléphone, puis passe l’écran pour la révélation, la discussion et le vote.</div>
           <div class="row">
             <input id="offlinePlayerName" placeholder="Pseudo du joueur" maxlength="20" />
             <button id="btnAddOfflinePlayer" class="btn btn-secondary">Ajouter</button>
@@ -757,8 +865,7 @@
     </div>
 
     <div class="footer-note">
-      Conseil : en mode Firebase, seul l’hôte doit forcer les transitions si besoin.
-      En offline, le vote passe joueur par joueur pour être plus propre.
+      En discussion, l’hôte gère le bouton “Passage suivant” pour faire avancer l’ordre de parole.
     </div>
   </div>
 
@@ -778,30 +885,74 @@
     };
 
     /******************************************************************
-     * PAIRES DE MOTS
+     * BASE DE MOTS
      ******************************************************************/
     const WORD_PAIRS = [
+      // FILMS / CINÉMA / PERSONNAGES
       { a:"Spider-Man", b:"Superman" },
       { a:"Batman", b:"Iron Man" },
       { a:"Hulk", b:"Shrek" },
-      { a:"Captain America", b:"Captain Marvel" },
       { a:"Thor", b:"Zeus" },
-      { a:"Harry Potter", b:"Percy Jackson" },
-      { a:"Hermione", b:"Katniss" },
       { a:"Darth Vader", b:"Kylo Ren" },
       { a:"Yoda", b:"Dobby" },
-      { a:"Sonic", b:"Pikachu" },
-      { a:"Mario", b:"Luigi" },
-      { a:"Link", b:"Zelda" },
-      { a:"Naruto", b:"Luffy" },
-      { a:"Goku", b:"Vegeta" },
-      { a:"Totoro", b:"Panda" },
+      { a:"Joker", b:"Masque" },
+      { a:"Godzilla", b:"King Kong" },
+      { a:"Harry Potter", b:"Percy Jackson" },
+      { a:"Hermione", b:"Katniss" },
       { a:"Elsa", b:"Raiponce" },
       { a:"Buzz l’Éclair", b:"Woody" },
       { a:"Nemo", b:"Dory" },
-      { a:"Joker", b:"Masque" },
-      { a:"Godzilla", b:"King Kong" },
+      { a:"Titanic", b:"Pearl Harbor" },
+      { a:"Avatar", b:"Dune" },
+      { a:"Interstellar", b:"Gravity" },
+      { a:"Inception", b:"Matrix" },
+      { a:"Gladiator", b:"Troie" },
+      { a:"Jurassic Park", b:"King Kong" },
+      { a:"Fast & Furious", b:"Taxi" },
+      { a:"Mission Impossible", b:"James Bond" },
+      { a:"John Wick", b:"Taken" },
+      { a:"Shrek", b:"Monstres & Cie" },
+      { a:"Le Roi Lion", b:"Le Livre de la Jungle" },
+      { a:"Frozen", b:"Vaiana" },
+      { a:"Cars", b:"Planes" },
+      { a:"Toy Story", b:"Lego Movie" },
+      { a:"Star Wars", b:"Star Trek" },
+      { a:"Avengers", b:"Justice League" },
+      { a:"Pirates des Caraïbes", b:"Peter Pan" },
 
+      // JEUX VIDÉO
+      { a:"Mario", b:"Luigi" },
+      { a:"Sonic", b:"Pikachu" },
+      { a:"Link", b:"Zelda" },
+      { a:"Naruto", b:"Luffy" },
+      { a:"Goku", b:"Vegeta" },
+      { a:"Minecraft", b:"Roblox" },
+      { a:"Fortnite", b:"PUBG" },
+      { a:"FIFA", b:"eFootball" },
+      { a:"Call of Duty", b:"Battlefield" },
+      { a:"Valorant", b:"CS2" },
+      { a:"League of Legends", b:"Dota 2" },
+      { a:"Overwatch", b:"Paladins" },
+      { a:"GTA", b:"Saints Row" },
+      { a:"Red Dead Redemption", b:"Far Cry" },
+      { a:"Assassin’s Creed", b:"Prince of Persia" },
+      { a:"The Last of Us", b:"Days Gone" },
+      { a:"Resident Evil", b:"Silent Hill" },
+      { a:"Elden Ring", b:"Dark Souls" },
+      { a:"God of War", b:"Devil May Cry" },
+      { a:"Animal Crossing", b:"Les Sims" },
+      { a:"Among Us", b:"Loup-Garou" },
+      { a:"Clash Royale", b:"Brawl Stars" },
+      { a:"Pokémon", b:"Digimon" },
+      { a:"Crash Bandicoot", b:"Spyro" },
+      { a:"Halo", b:"Destiny" },
+      { a:"Rocket League", b:"Trackmania" },
+      { a:"Apex Legends", b:"Fortnite" },
+      { a:"Zelda", b:"Skyrim" },
+      { a:"Metroid", b:"Mega Man" },
+      { a:"Pac-Man", b:"Bomberman" },
+
+      // LIEUX / VOYAGES / GÉOGRAPHIE
       { a:"Paris", b:"Londres" },
       { a:"New York", b:"Chicago" },
       { a:"Tokyo", b:"Séoul" },
@@ -812,7 +963,18 @@
       { a:"Forêt", b:"Jungle" },
       { a:"Île", b:"Péninsule" },
       { a:"Village", b:"Quartier" },
+      { a:"Océan", b:"Mer" },
+      { a:"Rivière", b:"Lac" },
+      { a:"Pont", b:"Tunnel" },
+      { a:"Aéroport", b:"Gare" },
+      { a:"Musée", b:"Bibliothèque" },
+      { a:"Stade", b:"Arène" },
+      { a:"Hôtel", b:"Auberge" },
+      { a:"Restaurant", b:"Café" },
+      { a:"Château", b:"Palais" },
+      { a:"Temple", b:"Église" },
 
+      // NOURRITURE
       { a:"Pizza", b:"Lasagnes" },
       { a:"Burger", b:"Sandwich" },
       { a:"Tacos", b:"Burrito" },
@@ -829,16 +991,17 @@
       { a:"Tomate", b:"Poivron" },
       { a:"Carotte", b:"Patate douce" },
       { a:"Fromage", b:"Beurre" },
+      { a:"Café", b:"Thé" },
+      { a:"Lait", b:"Crème" },
+      { a:"Soupe", b:"Purée" },
+      { a:"Gâteau", b:"Tarte" },
+      { a:"Bonbon", b:"Chewing-gum" },
+      { a:"Confiture", b:"Pâte à tartiner" },
+      { a:"Poulet", b:"Dinde" },
+      { a:"Steak", b:"Côtelette" },
+      { a:"Saumon", b:"Thon" },
 
-      { a:"Voiture", b:"Moto" },
-      { a:"Vélo", b:"Trottinette" },
-      { a:"Train", b:"Métro" },
-      { a:"Avion", b:"Hélicoptère" },
-      { a:"Bateau", b:"Yacht" },
-      { a:"Fusée", b:"Navette spatiale" },
-      { a:"Bus", b:"Tramway" },
-      { a:"Camion", b:"Fourgon" },
-
+      // OBJETS / MAISON / OUTILS
       { a:"Téléphone", b:"Tablette" },
       { a:"Ordinateur", b:"Console" },
       { a:"Télévision", b:"Projecteur" },
@@ -849,7 +1012,6 @@
       { a:"Appareil photo", b:"Caméra" },
       { a:"Montre", b:"Bracelet connecté" },
       { a:"Micro", b:"Haut-parleur" },
-
       { a:"Couteau", b:"Ciseaux" },
       { a:"Marteau", b:"Tournevis" },
       { a:"Balai", b:"Aspirateur" },
@@ -860,18 +1022,30 @@
       { a:"Lit", b:"Canapé-lit" },
       { a:"Fenêtre", b:"Miroir" },
       { a:"Porte", b:"Portail" },
+      { a:"Stylo", b:"Crayon" },
+      { a:"Livre", b:"Cahier" },
+      { a:"Feuille", b:"Carton" },
+      { a:"Gomme", b:"Correcteur" },
+      { a:"Sac", b:"Valise" },
+      { a:"Lunettes", b:"Masque" },
+      { a:"Bague", b:"Bracelet" },
+      { a:"Parapluie", b:"Canne" },
+      { a:"Chargeur", b:"Batterie" },
+      { a:"Câble", b:"Adaptateur" },
 
-      { a:"Police", b:"Pompier" },
-      { a:"Docteur", b:"Infirmier" },
-      { a:"Professeur", b:"Surveillant" },
-      { a:"Avocat", b:"Juge" },
-      { a:"Artiste", b:"Designer" },
-      { a:"Chanteur", b:"Rappeur" },
-      { a:"Foot", b:"Rugby" },
-      { a:"Tennis", b:"Badminton" },
-      { a:"Basket", b:"Volley" },
-      { a:"Natation", b:"Plongée" },
+      // TRANSPORTS
+      { a:"Voiture", b:"Moto" },
+      { a:"Vélo", b:"Trottinette" },
+      { a:"Train", b:"Métro" },
+      { a:"Avion", b:"Hélicoptère" },
+      { a:"Bateau", b:"Yacht" },
+      { a:"Fusée", b:"Navette spatiale" },
+      { a:"Bus", b:"Tramway" },
+      { a:"Camion", b:"Fourgon" },
+      { a:"Skate", b:"Roller" },
+      { a:"Sous-marin", b:"Bateau" },
 
+      // NATURE / ÉLÉMENTS / MÉTÉO
       { a:"Lune", b:"Soleil" },
       { a:"Étoile", b:"Planète" },
       { a:"Nuage", b:"Brouillard" },
@@ -882,7 +1056,18 @@
       { a:"Cascade", b:"Fontaine" },
       { a:"Sable", b:"Poussière" },
       { a:"Roche", b:"Cristal" },
+      { a:"Feu", b:"Lave" },
+      { a:"Glace", b:"Neige" },
+      { a:"Vent", b:"Souffle" },
+      { a:"Éclair", b:"Flash" },
+      { a:"Terre", b:"Boue" },
+      { a:"Fleur", b:"Plante" },
+      { a:"Arbre", b:"Buisson" },
+      { a:"Feuille", b:"Pétale" },
+      { a:"Graine", b:"Noyau" },
+      { a:"Champignon", b:"Truffe" },
 
+      // ANIMAUX
       { a:"Lion", b:"Tigre" },
       { a:"Chat", b:"Panthère" },
       { a:"Chien", b:"Loup" },
@@ -893,83 +1078,38 @@
       { a:"Poisson", b:"Requin" },
       { a:"Dauphin", b:"Baleine" },
       { a:"Tortue", b:"Escargot" },
+      { a:"Cheval", b:"Poney" },
+      { a:"Vache", b:"Buffle" },
+      { a:"Mouton", b:"Chèvre" },
+      { a:"Singe", b:"Gorille" },
+      { a:"Serpent", b:"Anguille" },
+      { a:"Hibou", b:"Chouette" },
+      { a:"Canard", b:"Oie" },
+      { a:"Grenouille", b:"Crapaud" },
+      { a:"Papillon", b:"Libellule" },
+      { a:"Abeille", b:"Guêpe" },
 
-      { a:"Chemise", b:"Polo" },
-      { a:"Pull", b:"Sweat" },
-      { a:"Manteau", b:"Veste" },
-      { a:"Jean", b:"Pantalon" },
-      { a:"Chaussures", b:"Baskets" },
-      { a:"Bonnet", b:"Casquette" },
-      { a:"Écharpe", b:"Foulard" },
-      { a:"Sac", b:"Valise" },
-      { a:"Bague", b:"Bracelet" },
-      { a:"Lunettes", b:"Masque" },
-
-      { a:"Stylo", b:"Crayon" },
-      { a:"Livre", b:"Cahier" },
-      { a:"Feuille", b:"Carton" },
-      { a:"Gomme", b:"Correcteur" },
-      { a:"Tableau", b:"Écran" },
-      { a:"Calculatrice", b:"Ordinateur" },
-      { a:"Bureau", b:"Table" },
-      { a:"Cartable", b:"Sac à dos" },
-      { a:"École", b:"Université" },
-      { a:"Examen", b:"Contrôle" },
-
-      { a:"Film", b:"Série" },
-      { a:"Cinéma", b:"Théâtre" },
-      { a:"Musique", b:"Podcast" },
-      { a:"Guitare", b:"Basse" },
-      { a:"Piano", b:"Synthé" },
-      { a:"Batterie", b:"Percussion" },
-      { a:"Photo", b:"Vidéo" },
-      { a:"Dessin", b:"Peinture" },
-      { a:"Roman", b:"BD" },
-      { a:"Poème", b:"Chanson" },
-
-      { a:"Wifi", b:"Bluetooth" },
-      { a:"Internet", b:"Réseau" },
-      { a:"Mot de passe", b:"Code PIN" },
-      { a:"Application", b:"Jeu" },
-      { a:"Site web", b:"Blog" },
-      { a:"Cloud", b:"Disque dur" },
-      { a:"Batterie", b:"Chargeur" },
-      { a:"Câble", b:"Adaptateur" },
-      { a:"Écran tactile", b:"Pavé tactile" },
-      { a:"Notification", b:"Message" },
-
-      { a:"Matin", b:"Aube" },
-      { a:"Soir", b:"Nuit" },
-      { a:"Hier", b:"Demain" },
-      { a:"Seconde", b:"Minute" },
-      { a:"Heure", b:"Journée" },
-      { a:"Semaine", b:"Mois" },
-      { a:"Vacances", b:"Week-end" },
-      { a:"Départ", b:"Arrivée" },
-      { a:"Début", b:"Fin" },
-      { a:"Pause", b:"Repos" },
-
-      { a:"Café", b:"Thé" },
-      { a:"Lait", b:"Crème" },
-      { a:"Eau", b:"Jus" },
-      { a:"Sucre", b:"Miel" },
-      { a:"Sel", b:"Poivre" },
-      { a:"Soupe", b:"Purée" },
-      { a:"Salade", b:"Crudités" },
-      { a:"Gâteau", b:"Tarte" },
-      { a:"Bonbon", b:"Chewing-gum" },
-      { a:"Confiture", b:"Pâte à tartiner" },
-
-      { a:"Dormir", b:"Rêver" },
-      { a:"Courir", b:"Marcher" },
-      { a:"Sauter", b:"Danser" },
+      // MÉTIERS / SPORT / ACTIVITÉS
+      { a:"Police", b:"Pompier" },
+      { a:"Docteur", b:"Infirmier" },
+      { a:"Professeur", b:"Surveillant" },
+      { a:"Avocat", b:"Juge" },
+      { a:"Artiste", b:"Designer" },
+      { a:"Chanteur", b:"Rappeur" },
+      { a:"Foot", b:"Rugby" },
+      { a:"Tennis", b:"Badminton" },
+      { a:"Basket", b:"Volley" },
+      { a:"Natation", b:"Plongée" },
       { a:"Lire", b:"Écrire" },
       { a:"Parler", b:"Chuchoter" },
       { a:"Crier", b:"Chanter" },
-      { a:"Regarder", b:"Observer" },
+      { a:"Courir", b:"Marcher" },
+      { a:"Sauter", b:"Danser" },
+      { a:"Dormir", b:"Rêver" },
       { a:"Chercher", b:"Trouver" },
+      { a:"Ouvrir", b:"Fermer" },
       { a:"Monter", b:"Descendre" },
-      { a:"Ouvrir", b:"Fermer" }
+      { a:"Début", b:"Fin" }
     ];
 
     /******************************************************************
@@ -1037,9 +1177,9 @@
     }
 
     const STORAGE_KEYS = {
-      profile: "undercover_profile_v2",
-      offlineRoom: "undercover_offline_room_v2",
-      soundPrefs: "undercover_sound_prefs_v2"
+      profile: "undercover_profile_v3",
+      offlineRoom: "undercover_offline_room_v3",
+      soundPrefs: "undercover_sound_prefs_v3"
     };
 
     function getProfile(){
@@ -1093,7 +1233,6 @@
       audioState.ambienceGain = audioState.ctx.createGain();
       audioState.ambienceGain.gain.value = 0;
       audioState.ambienceGain.connect(audioState.master);
-
       return audioState.ctx;
     }
 
@@ -1113,7 +1252,6 @@
       const ctx = audioState.ctx;
       const osc = ctx.createOscillator();
       const g = ctx.createGain();
-
       osc.type = type;
       osc.frequency.setValueAtTime(freq, ctx.currentTime + when);
 
@@ -1123,7 +1261,6 @@
 
       osc.connect(g);
       g.connect(audioState.master);
-
       osc.start(ctx.currentTime + when);
       osc.stop(ctx.currentTime + when + duration + 0.02);
     }
@@ -1174,7 +1311,7 @@
       const lowOsc = ctx.createOscillator();
       const lowGain = ctx.createGain();
       lowOsc.type = "sine";
-      lowOsc.frequency.value = 50;
+      lowOsc.frequency.value = 52;
       lowGain.gain.value = 0.008;
       lowOsc.connect(lowGain);
       lowGain.connect(audioState.ambienceGain);
@@ -1183,7 +1320,7 @@
       const midOsc = ctx.createOscillator();
       const midGain = ctx.createGain();
       midOsc.type = "triangle";
-      midOsc.frequency.value = 95;
+      midOsc.frequency.value = 96;
       midGain.gain.value = 0.004;
       midOsc.connect(midGain);
       midGain.connect(audioState.ambienceGain);
@@ -1194,7 +1331,7 @@
       noise.loop = true;
       const bp = ctx.createBiquadFilter();
       bp.type = "bandpass";
-      bp.frequency.value = 700;
+      bp.frequency.value = 680;
       bp.Q.value = 0.6;
       const ng = ctx.createGain();
       ng.gain.value = 0.006;
@@ -1243,7 +1380,7 @@
     };
 
     /******************************************************************
-     * UI / ROOM HELPERS
+     * HELPERS ROOM
      ******************************************************************/
     function getRoom(){
       return state.mode === "firebase" ? state.roomData : state.offline;
@@ -1257,6 +1394,12 @@
     function currentRoundNumber(){
       return getRoom()?.roundNumber || 0;
     }
+    function currentSpeakerId(){
+      const room = getRoom();
+      const order = room?.current?.turnOrder || [];
+      const idx = room?.current?.speakerIndex || 0;
+      return order[idx] || "";
+    }
     function phaseLabel(phase){
       switch(phase){
         case "lobby": return "Lobby";
@@ -1266,10 +1409,6 @@
         case "result": return "Résultat";
         default: return "—";
       }
-    }
-    function hasSeenCurrentWord(){
-      const me = getPlayers().find(p => p.id === state.myId);
-      return me?.revealedRound === currentRoundNumber();
     }
     function setText(id, text){
       const el = $(id);
@@ -1292,33 +1431,26 @@
       setText("roundBadge", `Manche : ${currentRoundNumber()}`);
     }
 
-    function updateStepUI(phase){
-      ["lobby","reveal","discussion","vote","result"].forEach(p=>{
-        $("step-"+p)?.classList.toggle("active", p === phase);
-      });
-      setText("phaseBadge", phaseLabel(phase));
-      show($("panel-reveal"), phase === "reveal");
-      show($("panel-discussion"), phase === "discussion");
-      show($("panel-vote"), phase === "vote");
-      show($("panel-result"), phase === "result");
+    function pickPairIndex(){
+      const max = WORD_PAIRS.length;
+      if(max <= 1) return 0;
+      let idx = randInt(max);
+      let tries = 0;
+      while(state.recentPairIndexes.includes(idx) && tries < 20){
+        idx = randInt(max);
+        tries++;
+      }
+      state.recentPairIndexes.push(idx);
+      if(state.recentPairIndexes.length > 10) state.recentPairIndexes.shift();
+      return idx;
     }
 
-    function renderPlayers(){
-      const players = getPlayers();
-      setText("aliveCount", players.filter(p => p.alive).length);
-      $("playersList").innerHTML = players.map(p=>{
-        const tags = [];
-        if(p.id === state.myId) tags.push("Toi");
-        if(p.host) tags.push("Hôte");
-        if(!p.alive) tags.push("Éliminé");
-        return `
-          <div class="player ${p.id===state.myId ? "me" : ""} ${p.alive ? "" : "dead"}">
-            <div class="name">${escapeHtml(p.nickname || "Joueur")}</div>
-            <div class="meta">${tags.join(" • ") || "En jeu"}</div>
-            <div class="meta">Révélation : ${p.revealedRound === currentRoundNumber() ? "vue" : "pas vue"}</div>
-          </div>
-        `;
-      }).join("") || `<div class="sub">Aucun joueur</div>`;
+    function buildTurnOrder(alivePlayers){
+      return shuffle(alivePlayers.map(p => p.id));
+    }
+
+    function getPlayerName(playerId){
+      return getPlayers().find(p => p.id === playerId)?.nickname || "—";
     }
 
     function maybePlayPhaseAudio(){
@@ -1338,6 +1470,39 @@
       if(!room.winner) state.lastWinner = "";
     }
 
+    function renderPlayers(){
+      const players = getPlayers();
+      const currentSpeaker = currentSpeakerId();
+      setText("aliveCount", players.filter(p => p.alive).length);
+
+      $("playersList").innerHTML = players.map(p=>{
+        const tags = [];
+        if(p.id === state.myId) tags.push("Toi");
+        if(p.host) tags.push("Hôte");
+        if(!p.alive) tags.push("Éliminé");
+        if(currentSpeaker && p.id === currentSpeaker) tags.push("Parole");
+        return `
+          <div class="player ${p.id===state.myId ? "me" : ""} ${p.alive ? "" : "dead"} ${currentSpeaker===p.id ? "current-speaker" : ""}">
+            <div class="name">${escapeHtml(p.nickname || "Joueur")}</div>
+            <div class="meta">${tags.join(" • ") || "En jeu"}</div>
+            <div class="meta">Révélation : ${p.revealedRound === currentRoundNumber() ? "vue" : "pas vue"}</div>
+          </div>
+        `;
+      }).join("") || `<div class="sub">Aucun joueur</div>`;
+    }
+
+    function updateStepUI(phase){
+      ["lobby","reveal","discussion","vote","result"].forEach(p=>{
+        $("step-"+p)?.classList.toggle("active", p === phase);
+      });
+      setText("phaseBadge", phaseLabel(phase));
+
+      show($("panel-reveal"), phase === "reveal");
+      show($("panel-discussion"), phase === "discussion");
+      show($("panel-vote"), phase === "vote");
+      show($("panel-result"), phase === "result");
+    }
+
     function updateButtons(){
       const room = getRoom();
       const phase = room?.phase || "lobby";
@@ -1347,6 +1512,12 @@
       show($("btnStartRound"), canStart);
       show($("btnForceDiscussion"), state.isHost && phase === "reveal");
       $("btnForceDiscussion").disabled = !allSeen;
+
+      show($("btnNextSpeaker"), state.isHost && phase === "discussion");
+      const order = room?.current?.turnOrder || [];
+      const idx = room?.current?.speakerIndex || 0;
+      $("btnNextSpeaker").disabled = idx >= Math.max(0, order.length - 1);
+
       show($("btnForceVote"), state.isHost && phase === "discussion");
       show($("btnNextRound"), state.isHost && phase === "result" && !room?.winner);
       show($("btnResetGame"), state.isHost && !!room?.winner);
@@ -1361,11 +1532,13 @@
     function updateRoomHeader(){
       const room = getRoom();
       const settings = room?.settings || {};
+
       setText("roomTitle", `Room ${state.roomId || "—"}`);
       setText("roomMeta", state.mode === "firebase"
         ? "Room multijoueur synchronisée en ligne."
         : "Partie locale sur un seul appareil."
       );
+
       setText("settingsUndercover", settings.undercoverCount ?? 1);
       setText("settingsDiscussion", `${settings.discussionSeconds ?? 90}s`);
       setText("settingsVote", `${settings.voteSeconds ?? 45}s`);
@@ -1379,25 +1552,17 @@
 
       updateRoomBadge();
       updateStepUI(room?.phase || "lobby");
-      updateResultPanel();
       updateRevealPanel();
+      updateDiscussionPanel();
       updateVotePanel();
+      updateResultPanel();
       updateButtons();
       maybePlayPhaseAudio();
     }
 
-    function pickPairIndex(){
-      const max = WORD_PAIRS.length;
-      if(max <= 1) return 0;
-      let idx = randInt(max);
-      let tries = 0;
-      while(state.recentPairIndexes.includes(idx) && tries < 20){
-        idx = randInt(max);
-        tries++;
-      }
-      state.recentPairIndexes.push(idx);
-      if(state.recentPairIndexes.length > 8) state.recentPairIndexes.shift();
-      return idx;
+    function hasSeenCurrentWord(){
+      const me = getPlayers().find(p => p.id === state.myId);
+      return me?.revealedRound === currentRoundNumber();
     }
 
     /******************************************************************
@@ -1456,7 +1621,9 @@
           undercoverIds: [],
           civilianWord: "",
           discussionEndsAt: 0,
-          voteEndsAt: 0
+          voteEndsAt: 0,
+          turnOrder: [],
+          speakerIndex: 0
         }
       };
 
@@ -1588,7 +1755,9 @@
           undercoverIds,
           civilianWord: pair.a,
           discussionEndsAt: 0,
-          voteEndsAt: 0
+          voteEndsAt: 0,
+          turnOrder: [],
+          speakerIndex: 0
         }
       });
 
@@ -1629,22 +1798,46 @@
       }, { merge:true });
 
       sfxSeen();
-      toast("Mot vu", "Tu es prêt pour la discussion");
+      toast("Mot vu", "Tu es prêt");
     }
 
     async function firebaseStartDiscussion(){
       const room = getRoom();
       if(!state.isHost || room.phase !== "reveal") return;
-      const allSeen = getAlivePlayers().every(p => p.revealedRound === currentRoundNumber());
+
+      const alive = getAlivePlayers();
+      const allSeen = alive.every(p => p.revealedRound === currentRoundNumber());
       if(!allSeen) return;
 
       const end = Date.now() + Number(room.settings.discussionSeconds || 90) * 1000;
+      const turnOrder = buildTurnOrder(alive);
+
       await firebaseFns.updateDoc(roomRef(state.roomId), {
         phase: "discussion",
         updatedAt: firebaseFns.serverTimestamp(),
-        "current.discussionEndsAt": end
+        "current.discussionEndsAt": end,
+        "current.turnOrder": turnOrder,
+        "current.speakerIndex": 0
       });
-      toast("Discussion lancée", "Décrivez votre mot sans le dire");
+
+      toast("Discussion lancée", `Premier joueur : ${getPlayerName(turnOrder[0])}`);
+    }
+
+    async function firebaseNextSpeaker(){
+      const room = getRoom();
+      if(!state.isHost || room.phase !== "discussion") return;
+
+      const order = room.current?.turnOrder || [];
+      const idx = room.current?.speakerIndex || 0;
+      if(idx >= order.length - 1) return;
+
+      await firebaseFns.updateDoc(roomRef(state.roomId), {
+        updatedAt: firebaseFns.serverTimestamp(),
+        "current.speakerIndex": idx + 1
+      });
+
+      toast("Passage suivant", getPlayerName(order[idx + 1]));
+      sfxPhase();
     }
 
     async function firebaseStartVote(){
@@ -1657,6 +1850,7 @@
         updatedAt: firebaseFns.serverTimestamp(),
         "current.voteEndsAt": end
       });
+
       toast("Vote lancé", "Choisissez un joueur");
     }
 
@@ -1666,6 +1860,7 @@
 
       const me = getPlayers().find(p => p.id === state.myId);
       if(!me?.alive || me.votedRound === currentRoundNumber()) return;
+      if(targetId === state.myId) return;
 
       await firebaseFns.runTransaction(state.db, async (tx)=>{
         const roomSnap = await tx.get(roomRef(state.roomId));
@@ -1673,7 +1868,6 @@
         const voteSnap = await tx.get(voteRef(state.roomId, state.myId));
 
         if(!roomSnap.exists()) throw new Error("Room inexistante");
-
         const roomData = roomSnap.data();
         const meData = meSnap.data();
 
@@ -1747,7 +1941,9 @@
         resultText,
         winner,
         "current.aliveIds": survivors.map(p => p.id),
-        "current.eliminatedIds": eliminatedId ? firebaseFns.arrayUnion(eliminatedId) : room.current.eliminatedIds || []
+        "current.turnOrder": [],
+        "current.speakerIndex": 0,
+        ...(eliminatedId ? { "current.eliminatedIds": firebaseFns.arrayUnion(eliminatedId) } : {})
       });
 
       await batch.commit();
@@ -1767,7 +1963,9 @@
         updatedAt: firebaseFns.serverTimestamp(),
         resultText: "",
         "current.discussionEndsAt": 0,
-        "current.voteEndsAt": 0
+        "current.voteEndsAt": 0,
+        "current.turnOrder": [],
+        "current.speakerIndex": 0
       });
 
       for(const p of getPlayers()){
@@ -1780,7 +1978,6 @@
 
     async function firebaseResetGame(){
       if(!state.isHost) return;
-      const room = getRoom();
 
       const votesSnap = await firebaseFns.getDocs(votesCol(state.roomId));
       const batch = firebaseFns.writeBatch(state.db);
@@ -1807,7 +2004,9 @@
           undercoverIds: [],
           civilianWord: "",
           discussionEndsAt: 0,
-          voteEndsAt: 0
+          voteEndsAt: 0,
+          turnOrder: [],
+          speakerIndex: 0
         }
       });
 
@@ -1858,7 +2057,9 @@
           pairIndex: -1,
           undercoverIds: [],
           discussionEndsAt: 0,
-          voteEndsAt: 0
+          voteEndsAt: 0,
+          turnOrder: [],
+          speakerIndex: 0
         },
         privateWords: {},
         votes: {},
@@ -1905,6 +2106,7 @@
       if(!state.isHost || !state.offline) return;
       const clean = String(name || "").trim();
       if(!clean) return;
+
       state.offline.players.push({
         id: uid("p"),
         secretId: uid("secret"),
@@ -1915,6 +2117,7 @@
         revealedRound: -1,
         votedRound: -1
       });
+
       state.offline.current.aliveIds = state.offline.players.filter(p => p.alive).map(p => p.id);
       persistOffline();
       renderPlayers();
@@ -1934,15 +2137,16 @@
       const pair = WORD_PAIRS[pairIndex];
       const shuffled = shuffle(alive.map(p => p.id));
       const undercoverIds = shuffled.slice(0, ucCount);
-      const roundNumber = room.roundNumber + 1;
 
-      room.roundNumber = roundNumber;
+      room.roundNumber += 1;
       room.phase = "reveal";
       room.winner = "";
       room.resultText = "";
       room.current.pairIndex = pairIndex;
       room.current.undercoverIds = undercoverIds;
       room.current.aliveIds = alive.map(p => p.id);
+      room.current.turnOrder = [];
+      room.current.speakerIndex = 0;
       room.privateWords = {};
       room.votes = {};
       room.offlineRevealQueue = alive.map(p => p.id);
@@ -1957,7 +2161,7 @@
 
       for(const p of alive){
         room.privateWords[p.id] = {
-          roundNumber,
+          roundNumber: room.roundNumber,
           word: undercoverIds.includes(p.id) ? pair.b : pair.a,
           playerId: p.id,
           seen: false
@@ -1968,10 +2172,8 @@
       persistOffline();
       renderPlayers();
       updateRoomHeader();
-      updateRevealPanel();
-      setStatus("Révélation", "Passe le téléphone au joueur affiché, puis clique sur “J’ai vu”.");
-      sfxReveal();
       toast("Manche lancée");
+      sfxReveal();
     }
 
     function offlineCurrentRevealPlayer(){
@@ -2001,28 +2203,42 @@
       persistOffline();
       renderPlayers();
       updateRoomHeader();
-      updateRevealPanel();
       sfxSeen();
 
-      if(offlineCurrentRevealPlayer()){
-        toast("Mot vu", `Passe à ${offlineCurrentRevealPlayer().nickname}`);
-      }else{
-        toast("Tous les joueurs ont vu");
-      }
+      const next = offlineCurrentRevealPlayer();
+      toast("Mot vu", next ? `Passe à ${next.nickname}` : "Tous les joueurs ont vu");
     }
 
     function offlineStartDiscussion(){
       const room = state.offline;
       if(!room || !state.isHost || room.phase !== "reveal") return;
 
-      const allSeen = room.players.filter(p => p.alive).every(p => p.revealedRound === room.roundNumber);
+      const alive = room.players.filter(p => p.alive);
+      const allSeen = alive.every(p => p.revealedRound === room.roundNumber);
       if(!allSeen) return;
 
       room.phase = "discussion";
       room.current.discussionEndsAt = now() + Number(room.settings.discussionSeconds || 90) * 1000;
+      room.current.turnOrder = buildTurnOrder(alive);
+      room.current.speakerIndex = 0;
+
       persistOffline();
       updateRoomHeader();
-      toast("Discussion lancée");
+      toast("Discussion lancée", `Premier joueur : ${getPlayerName(room.current.turnOrder[0])}`);
+    }
+
+    function offlineNextSpeaker(){
+      const room = state.offline;
+      if(!room || !state.isHost || room.phase !== "discussion") return;
+      const order = room.current.turnOrder || [];
+      const idx = room.current.speakerIndex || 0;
+      if(idx >= order.length - 1) return;
+
+      room.current.speakerIndex += 1;
+      persistOffline();
+      updateRoomHeader();
+      toast("Passage suivant", getPlayerName(order[room.current.speakerIndex]));
+      sfxPhase();
     }
 
     function offlineStartVote(){
@@ -2034,6 +2250,9 @@
       room.votes = {};
       room.offlineVoteQueue = room.players.filter(p => p.alive).map(p => p.id);
       room.offlineVoteIndex = 0;
+      room.current.turnOrder = [];
+      room.current.speakerIndex = 0;
+
       for(const p of room.players) p.votedRound = -1;
 
       persistOffline();
@@ -2065,16 +2284,12 @@
       room.offlineVoteIndex += 1;
 
       persistOffline();
-      updateVotePanel();
       renderPlayers();
+      updateVotePanel();
       sfxVote();
 
       const nextVoter = offlineCurrentVoter();
-      if(nextVoter){
-        toast("Vote enregistré", `Passe à ${nextVoter.nickname}`);
-      }else{
-        toast("Tous les votes sont enregistrés");
-      }
+      toast("Vote enregistré", nextVoter ? `Passe à ${nextVoter.nickname}` : "Tous les votes sont enregistrés");
     }
 
     function offlineResolveVotes(){
@@ -2111,12 +2326,13 @@
       else room.winner = "";
 
       room.current.aliveIds = survivors.map(p => p.id);
+      room.current.turnOrder = [];
+      room.current.speakerIndex = 0;
       if(eliminatedId) room.current.eliminatedIds.push(eliminatedId);
 
       persistOffline();
       renderPlayers();
       updateRoomHeader();
-      updateResultPanel();
       toast("Résultat prêt");
     }
 
@@ -2129,6 +2345,8 @@
       room.votes = {};
       room.current.discussionEndsAt = 0;
       room.current.voteEndsAt = 0;
+      room.current.turnOrder = [];
+      room.current.speakerIndex = 0;
       room.offlineVoteQueue = [];
       room.offlineVoteIndex = 0;
       for(const p of room.players) p.votedRound = -1;
@@ -2152,7 +2370,9 @@
         pairIndex: -1,
         undercoverIds: [],
         discussionEndsAt: 0,
-        voteEndsAt: 0
+        voteEndsAt: 0,
+        turnOrder: [],
+        speakerIndex: 0
       };
       room.privateWords = {};
       room.votes = {};
@@ -2224,6 +2444,24 @@
         : !offlineCurrentRevealPlayer();
 
       updateButtons();
+    }
+
+    function updateDiscussionPanel(){
+      const room = getRoom();
+      if(room?.phase !== "discussion") return;
+
+      const order = room.current?.turnOrder || [];
+      const idx = room.current?.speakerIndex || 0;
+      const currentId = order[idx] || "";
+      setText("currentSpeakerText", currentId ? getPlayerName(currentId) : "—");
+      setText("speakerProgressBadge", `Tour ${Math.min(idx + 1, Math.max(1, order.length))} / ${order.length || 0}`);
+
+      $("discussionOrder").innerHTML = order.map((id, i)=>`
+        <div class="turn-card ${i === idx ? "active" : ""}">
+          <div class="n">Passage ${i + 1}</div>
+          <div class="v">${escapeHtml(getPlayerName(id))}</div>
+        </div>
+      `).join("");
     }
 
     function updateVotePanel(){
@@ -2330,6 +2568,7 @@
 
     function startTick(){
       if(state.tickInterval) clearInterval(state.tickInterval);
+
       state.tickInterval = setInterval(()=>{
         const room = getRoom();
         if(!room) return;
@@ -2350,7 +2589,11 @@
     /******************************************************************
      * ACTIONS
      ******************************************************************/
-    $("btnStartAudio").addEventListener("click", async ()=>{ await enableAudioNow(); toast("Audio activé"); });
+    $("btnStartAudio").addEventListener("click", async ()=>{
+      await enableAudioNow();
+      toast("Audio activé");
+    });
+
     $("soundEnabled").addEventListener("change", ()=> updateAudioSettings());
     $("soundVolume").addEventListener("input", ()=> updateAudioSettings());
 
@@ -2364,10 +2607,11 @@
       await enableAudioNow();
       const nickname = $("createNickname").value.trim();
       const settings = {
-        discussionSeconds: clamp(Number($("createDiscussion").value || 90), 15, 600),
+        discussionSeconds: clamp(Number($("createDiscussion").value || 90), 20, 600),
         voteSeconds: clamp(Number($("createVote").value || 45), 10, 300),
         undercoverCount: clamp(Number($("createUndercover").value || 1), 1, 4)
       };
+
       if(!nickname) return alert("Entre un pseudo.");
       if(!state.firebaseReady) return alert("Firebase n’est pas prêt.");
       try{
@@ -2381,7 +2625,7 @@
       await enableAudioNow();
       const nickname = $("createNickname").value.trim();
       const settings = {
-        discussionSeconds: clamp(Number($("createDiscussion").value || 90), 15, 600),
+        discussionSeconds: clamp(Number($("createDiscussion").value || 90), 20, 600),
         voteSeconds: clamp(Number($("createVote").value || 45), 10, 300),
         undercoverCount: clamp(Number($("createUndercover").value || 1), 1, 4)
       };
@@ -2419,6 +2663,12 @@
       await enableAudioNow();
       if(state.mode === "firebase") firebaseStartDiscussion();
       else offlineStartDiscussion();
+    });
+
+    $("btnNextSpeaker").addEventListener("click", async ()=>{
+      await enableAudioNow();
+      if(state.mode === "firebase") firebaseNextSpeaker();
+      else offlineNextSpeaker();
     });
 
     $("btnForceVote").addEventListener("click", async ()=>{
