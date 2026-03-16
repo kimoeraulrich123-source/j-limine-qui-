@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Undercover – Mots proches</title>
+  <style>
+    :root{
+      --bg:#0f1021;
+      --bg2:#171936;
+      --bg3:#241f52;
+      --card:rgba(255,255,255,.09);
+      --card-2:rgba(255,255,255,.06);
+      --text:#f8fbff;
+      --muted:#bed0ff;
+      --accent:#7c3aed;
+      --accent2:#22c55e;
+      --accent3:#38bdf8;
+      --danger:#fb7185;
+      --warning:#fbbf24;
+      --border:rgba(255,255,255,.12);
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(124,58,237,.22), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(34,197,94,.18), transparent 26%),
+        radial-gradient(circle at 50% 90%, rgba(56,189,248,.16), transparent 28%),
+        linear-gradient(180deg,var(--bg),var(--bg2) 50%, #0c1024 100%);
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size:20px 20px;
+      mask-image:linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.18));
+      opacity:.35;
+    }
+
+    a{color:#93c5fd}
+    button,input,select,textarea{font:inherit}
+    .app{max-width:1180px;margin:0 auto;padding:18px}
+    .hidden{display:none !important}
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      position:sticky;
+      top:0;
+      z-index:20;
+      padding:14px 0 18px;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(180deg, rgba(15,16,33,.88), rgba(15,16,33,.35));
+    }
+
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:52px;
+      height:52px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      font-size:1.2rem;
+      font-weight:900;
+      color:#08111a;
+      background:
+        radial-gradient(circle at 30% 30%, #fef08a, transparent 35%),
+        linear-gradient(135deg,#34d399,#60a5fa 55%,#a855f7);
+      box-shadow:0 12px 34px rgba(96,165,250,.32);
+      transform:rotate(-8deg);
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:1.22rem;
+      letter-spacing:.01em;
+    }
+
+    .brand p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:.94rem;
+    }
+
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .stack{display:flex;flex-direction:column;gap:14px}
+    .grid{display:grid;gap:16px}
+    .grid-2{grid-template-columns:1.2fr .8fr}
+    @media(max-width:950px){.grid-2,.hero{grid-template-columns:1fr !important}}
+
+    .chip,.pill,.phase,.badge{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.07);
+      backdrop-filter:blur(10px);
+    }
+
+    .chip{
+      border-radius:999px;
+      padding:9px 13px;
+      color:var(--text);
+      font-size:.92rem;
+      font-weight:700;
+    }
+
+    .card{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+      backdrop-filter:blur(16px);
+    }
+
+    .card h2,.card h3{margin:0 0 10px}
+    .sub{color:var(--muted);font-size:.96rem}
+    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:16px}
+    .big{
+      font-size:clamp(1.8rem,4.2vw,3.3rem);
+      font-weight:900;
+      line-height:1.02;
+      letter-spacing:-.03em;
+    }
+
+    .field{display:flex;flex-direction:column;gap:8px}
+    label{font-size:.94rem;color:#e5efff;font-weight:700}
+
+    input,select{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.07);
+      color:var(--text);
+      padding:13px 14px;
+      outline:none;
+      transition:.18s border-color,.18s box-shadow,.18s transform;
+    }
+
+    input:focus,select:focus{
+      border-color:rgba(96,165,250,.8);
+      box-shadow:0 0 0 4px rgba(96,165,250,.14);
+      transform:translateY(-1px);
+    }
+
+    input::placeholder{color:#b5c6ef}
+
+    .btn{
+      border:0;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:900;
+      cursor:pointer;
+      transition:.18s transform,.18s opacity,.18s filter;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      color:white;
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
+    }
+    .btn:hover{transform:translateY(-2px) scale(1.01)}
+    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+    .btn-primary{
+      background:linear-gradient(135deg,#8b5cf6,#3b82f6);
+    }
+    .btn-secondary{
+      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.12);
+      color:#fff;
+    }
+    .btn-danger{
+      background:linear-gradient(135deg,#fb7185,#ef4444);
+    }
+    .btn-warning{
+      background:linear-gradient(135deg,#fbbf24,#f59e0b);
+      color:#161616;
+    }
+
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      color:#e8f1ff;
+      font-size:.88rem;
+      font-weight:700;
+    }
+
+    .phasebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .phase{
+      padding:10px 14px;
+      border-radius:999px;
+      color:#d5e2ff;
+      font-weight:800;
+    }
+    .phase.active{
+      background:linear-gradient(135deg,rgba(124,58,237,.35),rgba(56,189,248,.28));
+      border-color:rgba(147,197,253,.4);
+      box-shadow:0 0 0 1px rgba(147,197,253,.18) inset;
+    }
+
+    .list{margin:0;padding-left:18px;color:#edf4ff}
+    .list li{margin:6px 0}
+
+    .players{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:12px;
+    }
+
+    .player{
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+      border-radius:18px;
+      padding:13px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .player::before{
+      content:"";
+      position:absolute;
+      inset:auto -30px -30px auto;
+      width:90px;
+      height:90px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(124,58,237,.18), transparent 60%);
+    }
+
+    .player .name{font-weight:900;font-size:1rem}
+    .player .meta{color:var(--muted);font-size:.9rem;margin-top:4px}
+    .player.dead{opacity:.5;filter:grayscale(.25)}
+    .player.me{outline:2px solid rgba(52,211,153,.65)}
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 11px;
+      border-radius:999px;
+      font-size:.85rem;
+      font-weight:900;
+    }
+    .badge-ok{
+      background:rgba(52,211,153,.15);
+      color:#bbf7d0;
+      border-color:rgba(52,211,153,.28);
+    }
+    .badge-danger{
+      background:rgba(251,113,133,.15);
+      color:#fecdd3;
+      border-color:rgba(251,113,133,.28);
+    }
+    .badge-warn{
+      background:rgba(251,191,36,.16);
+      color:#fde68a;
+      border-color:rgba(251,191,36,.28);
+    }
+
+    .copyline{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .copyline input{flex:1}
+
+    .word-box{
+      display:grid;
+      place-items:center;
+      text-align:center;
+      min-height:250px;
+      border-radius:26px;
+      padding:28px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at 18% 20%, rgba(251,191,36,.22), transparent 26%),
+        radial-gradient(circle at 85% 18%, rgba(56,189,248,.22), transparent 28%),
+        radial-gradient(circle at 50% 80%, rgba(124,58,237,.24), transparent 28%),
+        rgba(255,255,255,.06);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .role{
+      font-size:1rem;
+      font-weight:900;
+      margin-bottom:10px;
+      color:#dbeafe;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .word{
+      font-size:clamp(2.2rem,7vw,4.2rem);
+      font-weight:900;
+      letter-spacing:.02em;
+      text-shadow:0 6px 24px rgba(0,0,0,.24);
+    }
+    .warning{color:#fde68a;font-size:.95rem;margin-top:10px}
+    .timer{
+      font-size:clamp(2rem,5vw,3.4rem);
+      font-weight:900;
+      letter-spacing:.04em;
+    }
+
+    .center{text-align:center}
+    .mini{font-size:.88rem;color:var(--muted)}
+    .separator{height:1px;background:rgba(255,255,255,.08);margin:12px 0}
+
+    .vote-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:10px;
+    }
+
+    .vote-item{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+
+    .result-box{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--border);
+    }
+
+    .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+    .footer-note{margin-top:20px;color:var(--muted);font-size:.9rem}
+
+    .fun-box{
+      padding:16px;
+      border-radius:20px;
+      background:
+        linear-gradient(135deg, rgba(124,58,237,.22), rgba(56,189,248,.12));
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .sparkle{
+      display:inline-block;
+      animation:floaty 2.6s ease-in-out infinite;
+    }
+
+    @keyframes floaty{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-4px)}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">U</div>
+        <div>
+          <h1>Undercover – Mots proches <span class="sparkle">✨</span></h1>
+          <p>Version fun, multijoueur par lien, avec fallback hors ligne.</p>
+        </div>
+      </div>
+      <div class="row">
+        <span id="modeBadge" class="chip">Mode : Local offline</span>
+        <span id="roomBadge" class="chip">Room : —</span>
+      </div>
+    </div>
+
+    <div id="screen-setup" class="hero">
+      <div class="card stack">
+        <div class="fun-box">
+          <div class="big">Crée une room ou rejoins une partie 🎭</div>
+          <p class="sub">
+            Mode principal : Firebase / Firestore. Si la config Firebase n’est pas disponible,
+            l’app passe automatiquement en mode local offline.
+          </p>
+        </div>
+
+        <div class="phasebar">
+          <div class="phase active">Lobby</div>
+          <div class="phase">Révélation</div>
+          <div class="phase">Discussion</div>
+          <div class="phase">Vote</div>
+          <div class="phase">Résultat</div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Créer une room</h3>
+            <div class="stack">
+              <div class="field">
+                <label>Ton pseudo</label>
+                <input id="createNickname" placeholder="Ex : Ulrich" maxlength="20" />
+              </div>
+              <div class="row">
+                <div class="field" style="flex:1">
+                  <label>Durée discussion (secondes)</label>
+                  <input id="createDiscussion" type="number" min="15" max="600" value="90" />
+                </div>
+                <div class="field" style="flex:1">
+                  <label>Durée vote (secondes)</label>
+                  <input id="createVote" type="number" min="10" max="300" value="45" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="field" style="flex:1">
+                  <label>Nombre d’undercover</label>
+                  <input id="createUndercover" type="number" min="1" max="4" value="1" />
+                </div>
+              </div>
+              <div class="row">
+                <button id="btnCreateOnline" class="btn btn-primary">Créer en mode Firebase</button>
+                <button id="btnCreateOffline" class="btn btn-secondary">Créer en local offline</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Rejoindre une room</h3>
+            <div class="stack">
+              <div class="field">
+                <label>Code room</label>
+                <input id="joinRoomCode" placeholder="Ex : ABCD" maxlength="8" />
+              </div>
+              <div class="field">
+                <label>Ton pseudo</label>
+                <input id="joinNickname" placeholder="Ex : Maya" maxlength="20" />
+              </div>
+              <button id="btnJoinRoom" class="btn btn-primary">Rejoindre</button>
+              <div class="mini">
+                Astuce : le code peut venir de l’URL, par exemple
+                <span class="mono">?room=ABCD</span>.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card stack">
+        <h3>Règles rapides</h3>
+        <ul class="list">
+          <li>La majorité reçoit le même mot A.</li>
+          <li>Un ou plusieurs undercovers reçoivent le mot proche B.</li>
+          <li>Chaque joueur voit son mot une seule fois, puis confirme avec “J’ai vu”.</li>
+          <li>Discussion → Vote → Résultat → Manche suivante.</li>
+          <li>Les civils gagnent si tous les undercovers sont éliminés.</li>
+          <li>Les undercovers gagnent s’ils atteignent une parité favorable.</li>
+        </ul>
+        <div class="separator"></div>
+        <h3>Anti-triche</h3>
+        <ul class="list">
+          <li>Les mots des autres joueurs ne sont jamais affichés.</li>
+          <li>Un vote par joueur vérifié via transaction Firestore.</li>
+          <li>Actions verrouillées selon la phase.</li>
+          <li>Révélation privée stockée par document secret individuel.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="screen-room" class="hidden stack" style="margin-top:16px">
+      <div class="grid grid-2">
+        <div class="card stack">
+          <div class="row" style="justify-content:space-between;align-items:flex-start">
+            <div>
+              <h2 id="roomTitle">Room</h2>
+              <div class="sub" id="roomMeta">En attente des joueurs…</div>
+            </div>
+            <div class="row">
+              <span id="hostBadge" class="badge badge-ok hidden">Hôte</span>
+              <span id="phaseBadge" class="badge badge-warn">Lobby</span>
+            </div>
+          </div>
+
+          <div class="copyline">
+            <input id="shareLinkInput" readonly />
+            <button id="btnCopyLink" class="btn btn-secondary">Copier le lien</button>
+          </div>
+
+          <div class="phasebar">
+            <div id="step-lobby" class="phase active">Lobby</div>
+            <div id="step-reveal" class="phase">Révélation</div>
+            <div id="step-discussion" class="phase">Discussion</div>
+            <div id="step-vote" class="phase">Vote</div>
+            <div id="step-result" class="phase">Résultat</div>
+          </div>
+
+          <div class="row">
+            <span class="pill" id="settingsUndercover">Undercover : 1</span>
+            <span class="pill" id="settingsDiscussion">Discussion : 90s</span>
+            <span class="pill" id="settingsVote">Vote : 45s</span>
+            <span class="pill" id="aliveCount">Vivants : 0</span>
+          </div>
+
+          <div class="row">
+            <button id="btnStartRound" class="btn btn-primary">Démarrer la manche</button>
+            <button id="btnForceDiscussion" class="btn btn-secondary hidden">Lancer la discussion</button>
+            <button id="btnForceVote" class="btn btn-warning hidden">Passer au vote</button>
+            <button id="btnNextRound" class="btn btn-primary hidden">Manche suivante</button>
+            <button id="btnResetGame" class="btn btn-danger hidden">Réinitialiser la partie</button>
+          </div>
+
+          <div id="statusBox" class="result-box">
+            <div id="statusTitle" style="font-weight:900">Statut</div>
+            <div id="statusText" class="sub">Prépare la room, partage le lien, puis démarre quand tout le monde est prêt.</div>
+          </div>
+        </div>
+
+        <div class="card stack">
+          <h3>Joueurs</h3>
+          <div id="playersList" class="players"></div>
+        </div>
+      </div>
+
+      <div id="panel-reveal" class="card hidden">
+        <div class="stack">
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <div>
+              <h2>Révélation privée</h2>
+              <div class="sub">Chaque joueur ne voit que son mot sur son propre écran.</div>
+            </div>
+            <span id="revealProgress" class="badge badge-warn">0 / 0 ont vu</span>
+          </div>
+          <div class="word-box">
+            <div>
+              <div id="revealRole" class="role">Rôle</div>
+              <div id="revealWord" class="word">—</div>
+              <div class="warning">Ne montre pas cet écran aux autres joueurs.</div>
+            </div>
+          </div>
+          <div class="row center" style="justify-content:center">
+            <button id="btnSeenWord" class="btn btn-primary">J’ai vu</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-discussion" class="card hidden">
+        <div class="stack center">
+          <h2>Discussion</h2>
+          <div class="sub">Décrivez votre mot sans le dire directement.</div>
+          <div id="discussionTimer" class="timer">00:00</div>
+        </div>
+      </div>
+
+      <div id="panel-vote" class="card hidden">
+        <div class="stack">
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <div>
+              <h2>Vote</h2>
+              <div class="sub">Un vote par joueur vivant. Les joueurs éliminés ne votent plus.</div>
+            </div>
+            <div id="voteTimer" class="timer" style="font-size:2rem">00:00</div>
+          </div>
+          <div id="voteInfo" class="badge badge-warn">Tu n’as pas encore voté</div>
+          <div id="voteGrid" class="vote-grid"></div>
+        </div>
+      </div>
+
+      <div id="panel-result" class="card hidden">
+        <div class="stack">
+          <h2>Résultat</h2>
+          <div id="resultText" class="big" style="font-size:2rem">—</div>
+          <div id="resultSub" class="sub">—</div>
+          <div id="winnerBox" class="hidden">
+            <div class="separator"></div>
+            <div id="winnerText" class="badge badge-ok">Victoire</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-offline-admin" class="card hidden">
+        <div class="stack">
+          <h2>Mode local offline</h2>
+          <div class="sub">Ajoute les joueurs sur ce téléphone, puis fais passer l’appareil pour la révélation privée.</div>
+          <div class="row">
+            <input id="offlinePlayerName" placeholder="Pseudo du joueur" maxlength="20" />
+            <button id="btnAddOfflinePlayer" class="btn btn-secondary">Ajouter</button>
+          </div>
+          <div class="mini">Minimum conseillé : 3 joueurs.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Conseil : en mode Firebase, seul l’hôte doit forcer les transitions si besoin.
+      Les timers se synchronisent automatiquement par timestamp de room.
+    </div>
+  </div>
+
+  <script type="module">
+    /******************************************************************
+     * CONFIG FIREBASE
+     ******************************************************************/
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyC0Z78enCaHs2Ao3HQdSGAMNxHBbHdGchs",
+      authDomain: "sous-cacher.firebaseapp.com",
+      projectId: "sous-cacher",
+      storageBucket: "sous-cacher.firebasestorage.app",
+      messagingSenderId: "107778956752",
+      appId: "1:107778956752:web:8858751ba4e8d7c5ffedd5"
+    };
+
+    /******************************************************************
+     * PAIRES DE MOTS PROCHES
+     ******************************************************************/
+    const WORD_PAIRS = [
+      { a:"Spider-Man", b:"Superman" },
+      { a:"Batman", b:"Iron Man" },
+      { a:"Hulk", b:"Shrek" },
+      { a:"Captain America", b:"Captain Marvel" },
+      { a:"Thor", b:"Zeus" },
+      { a:"Harry Potter", b:"Percy Jackson" },
+      { a:"Hermione", b:"Katniss" },
+      { a:"Darth Vader", b:"Kylo Ren" },
+      { a:"Yoda", b:"Dobby" },
+      { a:"Sonic", b:"Pikachu" },
+      { a:"Mario", b:"Luigi" },
+      { a:"Link", b:"Zelda" },
+      { a:"Naruto", b:"Luffy" },
+      { a:"Goku", b:"Vegeta" },
+      { a:"Totoro", b:"Panda" },
+      { a:"Elsa", b:"Raiponce" },
+      { a:"Buzz l’Éclair", b:"Woody" },
+      { a:"Nemo", b:"Dory" },
+      { a:"Joker", b:"Masque" },
+      { a:"Godzilla", b:"King Kong" },
+
+      { a:"Paris", b:"Londres" },
+      { a:"New York", b:"Chicago" },
+      { a:"Tokyo", b:"Séoul" },
+      { a:"Rome", b:"Athènes" },
+      { a:"Égypte", b:"Maroc" },
+      { a:"Désert", b:"Plage" },
+      { a:"Montagne", b:"Volcan" },
+      { a:"Forêt", b:"Jungle" },
+      { a:"Île", b:"Péninsule" },
+      { a:"Village", b:"Quartier" },
+
+      { a:"Pizza", b:"Lasagnes" },
+      { a:"Burger", b:"Sandwich" },
+      { a:"Tacos", b:"Burrito" },
+      { a:"Sushi", b:"Maki" },
+      { a:"Riz", b:"Semoule" },
+      { a:"Pâtes", b:"Nouilles" },
+      { a:"Pain", b:"Brioche" },
+      { a:"Croissant", b:"Pain au chocolat" },
+      { a:"Chocolat", b:"Cacao" },
+      { a:"Glace", b:"Yaourt glacé" },
+      { a:"Pomme", b:"Poire" },
+      { a:"Orange", b:"Mandarine" },
+      { a:"Fraise", b:"Framboise" },
+      { a:"Tomate", b:"Poivron" },
+      { a:"Carotte", b:"Patate douce" },
+      { a:"Fromage", b:"Beurre" },
+
+      { a:"Voiture", b:"Moto" },
+      { a:"Vélo", b:"Trottinette" },
+      { a:"Train", b:"Métro" },
+      { a:"Avion", b:"Hélicoptère" },
+      { a:"Bateau", b:"Yacht" },
+      { a:"Fusée", b:"Navette spatiale" },
+      { a:"Bus", b:"Tramway" },
+      { a:"Camion", b:"Fourgon" },
+
+      { a:"Téléphone", b:"Tablette" },
+      { a:"Ordinateur", b:"Console" },
+      { a:"Télévision", b:"Projecteur" },
+      { a:"Casque", b:"Écouteurs" },
+      { a:"Clavier", b:"Piano" },
+      { a:"Souris", b:"Manette" },
+      { a:"Lampe", b:"Torche" },
+      { a:"Appareil photo", b:"Caméra" },
+      { a:"Montre", b:"Bracelet connecté" },
+      { a:"Micro", b:"Haut-parleur" },
+
+      { a:"Couteau", b:"Ciseaux" },
+      { a:"Marteau", b:"Tournevis" },
+      { a:"Balai", b:"Aspirateur" },
+      { a:"Frigo", b:"Congélateur" },
+      { a:"Four", b:"Micro-ondes" },
+      { a:"Canapé", b:"Fauteuil" },
+      { a:"Chaise", b:"Tabouret" },
+      { a:"Lit", b:"Canapé-lit" },
+      { a:"Fenêtre", b:"Miroir" },
+      { a:"Porte", b:"Portail" },
+
+      { a:"Police", b:"Pompier" },
+      { a:"Docteur", b:"Infirmier" },
+      { a:"Professeur", b:"Surveillant" },
+      { a:"Avocat", b:"Juge" },
+      { a:"Artiste", b:"Designer" },
+      { a:"Chanteur", b:"Rappeur" },
+      { a:"Foot", b:"Rugby" },
+      { a:"Tennis", b:"Badminton" },
+      { a:"Basket", b:"Volley" },
+      { a:"Natation", b:"Plongée" }
+    ];
+
+    /******************************************************************
+     * OUTILS
+     ******************************************************************/
+    const $ = (id) => document.getElementById(id);
+    const qs = new URLSearchParams(location.search);
+
+    function randInt(max){ return Math.floor(Math.random() * max); }
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function uid(prefix="id"){
+      return `${prefix}_${Math.random().toString(36).slice(2,10)}${Date.now().toString(36).slice(-4)}`;
+    }
+    function roomCode(){
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let out = "";
+      for(let i=0;i<4;i++) out += chars[randInt(chars.length)];
+      return out;
+    }
+    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+    function formatTimeLeft(ms){
+      const total = Math.max(0, Math.ceil(ms / 1000));
+      const m = String(Math.floor(total / 60)).padStart(2, "0");
+      const s = String(total % 60).padStart(2, "0");
+      return `${m}:${s}`;
+    }
+    function copy(text){ navigator.clipboard.writeText(text).catch(()=>{}); }
+    function saveLocal(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
+    function loadLocal(key,fallback=null){
+      try{
+        const v = localStorage.getItem(key);
+        return v ? JSON.parse(v) : fallback;
+      }catch{
+        return fallback;
+      }
+    }
+    function now(){ return Date.now(); }
+
+    const STORAGE_KEYS = {
+      profile: "undercover_profile_v1",
+      offlineRoom: "undercover_offline_room_v1"
+    };
+
+    function getProfile(){
+      let p = loadLocal(STORAGE_KEYS.profile);
+      if(!p){
+        p = { playerId: uid("p"), secretId: uid("secret") };
+        saveLocal(STORAGE_KEYS.profile, p);
+      }
+      return p;
+    }
+    const PROFILE = getProfile();
+
+    /******************************************************************
+     * ÉTAT
+     ******************************************************************/
+    const state = {
+      mode: "offline",
+      db: null,
+      firebaseReady: false,
+      roomId: null,
+      myId: PROFILE.playerId,
+      mySecret: PROFILE.secretId,
+      isHost: false,
+      myName: "",
+      roomData: null,
+      players: [],
+      myPrivateWord: null,
+      unsubRoom: null,
+      unsubPlayers: null,
+      tickInterval: null,
+      offline: null
+    };
+
+    /******************************************************************
+     * UI
+     ******************************************************************/
+    function show(el, yes=true){
+      if(!el) return;
+      el.classList.toggle("hidden", !yes);
+    }
+    function setText(id, text){
+      const el = $(id);
+      if(el) el.textContent = text;
+    }
+    function updateModeBadge(){
+      setText("modeBadge", `Mode : ${state.mode === "firebase" ? "Firebase" : "Local offline"}`);
+    }
+    function updateRoomBadge(){
+      setText("roomBadge", `Room : ${state.roomId || "—"}`);
+    }
+    function phaseLabel(phase){
+      switch(phase){
+        case "lobby": return "Lobby";
+        case "reveal": return "Révélation";
+        case "discussion": return "Discussion";
+        case "vote": return "Vote";
+        case "result": return "Résultat";
+        default: return "—";
+      }
+    }
+    function updateStepUI(phase){
+      ["lobby","reveal","discussion","vote","result"].forEach(p=>{
+        const el = $("step-"+p);
+        if(el) el.classList.toggle("active", p === phase);
+      });
+      setText("phaseBadge", phaseLabel(phase));
+      show($("panel-reveal"), phase === "reveal");
+      show($("panel-discussion"), phase === "discussion");
+      show($("panel-vote"), phase === "vote");
+      show($("panel-result"), phase === "result");
+    }
+    function setStatus(title, text){
+      setText("statusTitle", title);
+      setText("statusText", text);
+    }
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function getRoom(){
+      return state.mode === "firebase" ? state.roomData : state.offline;
+    }
+    function getPlayers(){
+      return state.mode === "firebase" ? state.players : (state.offline?.players || []);
+    }
+    function getAlivePlayers(){
+      return getPlayers().filter(p => p.alive);
+    }
+    function currentRoundNumber(){
+      return getRoom()?.roundNumber || 0;
+    }
+    function hasSeenCurrentWord(){
+      const me = getPlayers().find(p => p.id === state.myId);
+      return me?.revealedRound === currentRoundNumber();
+    }
+
+    function renderPlayers(){
+      const players = getPlayers();
+      setText("aliveCount", `Vivants : ${players.filter(p => p.alive).length}`);
+      $("playersList").innerHTML = players.map(p=>{
+        const tags = [];
+        if(p.id === state.myId) tags.push("Toi");
+        if(p.host) tags.push("Hôte");
+        if(!p.alive) tags.push("Éliminé");
+        const cls = `player ${p.alive ? "" : "dead"} ${p.id === state.myId ? "me" : ""}`;
+        return `
+          <div class="${cls}">
+            <div class="name">${escapeHtml(p.nickname || "Joueur")}</div>
+            <div class="meta">${tags.join(" • ") || "En jeu"}</div>
+            <div class="meta">Révélation : ${p.revealedRound === currentRoundNumber() ? "vue" : "pas vue"}</div>
+          </div>
+        `;
+      }).join("") || `<div class="sub">Aucun joueur</div>`;
+    }
+
+    function updateRoomHeader(){
+      const room = getRoom();
+      const settings = room?.settings || {};
+      setText("roomTitle", `Room ${state.roomId || "—"}`);
+      setText("roomMeta", state.mode === "firebase"
+        ? "Room multijoueur synchronisée en ligne."
+        : "Partie locale sur un seul appareil."
+      );
+      setText("settingsUndercover", `Undercover : ${settings.undercoverCount ?? 1}`);
+      setText("settingsDiscussion", `Discussion : ${settings.discussionSeconds ?? 90}s`);
+      setText("settingsVote", `Vote : ${settings.voteSeconds ?? 45}s`);
+      $("shareLinkInput").value = state.mode === "firebase"
+        ? `${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId || "")}`
+        : `${location.origin}${location.pathname}`;
+      show($("hostBadge"), state.isHost);
+      show($("panel-offline-admin"), state.mode === "offline" && state.isHost);
+      updateStepUI(room?.phase || "lobby");
+      updateResultPanel();
+      updateRevealPanel();
+      updateVotePanel();
+      updateButtons();
+    }
+
+    function updateButtons(){
+      const room = getRoom();
+      const phase = room?.phase || "lobby";
+      const canStart = state.isHost && phase === "lobby" && getAlivePlayers().length >= 3;
+      const allSeen = getAlivePlayers().every(p => p.revealedRound === currentRoundNumber());
+
+      show($("btnStartRound"), canStart);
+      show($("btnForceDiscussion"), state.isHost && phase === "reveal");
+      $("btnForceDiscussion").disabled = !allSeen;
+      show($("btnForceVote"), state.isHost && phase === "discussion");
+      show($("btnNextRound"), state.isHost && phase === "result" && !room?.winner);
+      show($("btnResetGame"), state.isHost && !!room?.winner);
+
+      if($("btnSeenWord")){
+        $("btnSeenWord").disabled = state.mode === "firebase"
+          ? hasSeenCurrentWord()
+          : !offlineCurrentRevealPlayer();
+      }
+    }
+
+    /******************************************************************
+     * FIREBASE
+     ******************************************************************/
+    let firebaseFns = null;
+
+    async function initFirebaseIfConfigured(){
+      const configured = !!FIREBASE_CONFIG.apiKey && !!FIREBASE_CONFIG.projectId;
+      if(!configured){
+        state.firebaseReady = false;
+        state.mode = "offline";
+        updateModeBadge();
+        return false;
+      }
+
+      const [appMod, fsMod] = await Promise.all([
+        import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),
+        import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js")
+      ]);
+
+      const app = appMod.initializeApp(FIREBASE_CONFIG);
+      const db = fsMod.getFirestore(app);
+
+      firebaseFns = fsMod;
+      state.db = db;
+      state.firebaseReady = true;
+      updateModeBadge();
+      return true;
+    }
+
+    function roomRef(roomId){ return firebaseFns.doc(state.db, "rooms", roomId); }
+    function playersCol(roomId){ return firebaseFns.collection(state.db, "rooms", roomId, "players"); }
+    function playerRef(roomId, playerId){ return firebaseFns.doc(state.db, "rooms", roomId, "players", playerId); }
+    function privateRef(roomId, secretId){ return firebaseFns.doc(state.db, "rooms", roomId, "private", secretId); }
+    function votesCol(roomId){ return firebaseFns.collection(state.db, "rooms", roomId, "votes"); }
+    function voteRef(roomId, playerId){ return firebaseFns.doc(state.db, "rooms", roomId, "votes", playerId); }
+
+    async function createFirebaseRoom(nickname, settings){
+      const roomId = roomCode();
+      const initialRoom = {
+        roomId,
+        mode: "firebase",
+        hostId: state.myId,
+        phase: "lobby",
+        roundNumber: 0,
+        createdAt: firebaseFns.serverTimestamp(),
+        updatedAt: firebaseFns.serverTimestamp(),
+        winner: "",
+        resultText: "",
+        settings,
+        current: {
+          aliveIds: [state.myId],
+          eliminatedIds: [],
+          pairIndex: -1,
+          undercoverIds: [],
+          civilianWord: "",
+          statusWord: "En attente",
+          discussionEndsAt: 0,
+          voteEndsAt: 0
+        }
+      };
+
+      await firebaseFns.setDoc(roomRef(roomId), initialRoom);
+      await firebaseFns.setDoc(playerRef(roomId, state.myId), {
+        id: state.myId,
+        secretId: state.mySecret,
+        nickname,
+        host: true,
+        alive: true,
+        joinedAt: Date.now(),
+        revealedRound: -1,
+        votedRound: -1
+      });
+
+      state.mode = "firebase";
+      state.roomId = roomId;
+      state.myName = nickname;
+      state.isHost = true;
+
+      history.replaceState(null, "", `${location.pathname}?room=${encodeURIComponent(roomId)}`);
+      await subscribeFirebaseRoom(roomId);
+    }
+
+    async function joinFirebaseRoom(roomId, nickname){
+      const snap = await firebaseFns.getDoc(roomRef(roomId));
+      if(!snap.exists()) throw new Error("Room introuvable.");
+
+      state.mode = "firebase";
+      state.roomId = roomId;
+      state.myName = nickname;
+
+      const data = snap.data();
+      state.isHost = data.hostId === state.myId;
+
+      await firebaseFns.setDoc(playerRef(roomId, state.myId), {
+        id: state.myId,
+        secretId: state.mySecret,
+        nickname,
+        host: state.isHost,
+        alive: true,
+        joinedAt: Date.now(),
+        revealedRound: -1,
+        votedRound: -1
+      }, { merge:true });
+
+      history.replaceState(null, "", `${location.pathname}?room=${encodeURIComponent(roomId)}`);
+      await subscribeFirebaseRoom(roomId);
+    }
+
+    async function subscribeFirebaseRoom(roomId){
+      if(state.unsubRoom) state.unsubRoom();
+      if(state.unsubPlayers) state.unsubPlayers();
+
+      show($("screen-setup"), false);
+      show($("screen-room"), true);
+      updateModeBadge();
+      updateRoomBadge();
+
+      state.unsubRoom = firebaseFns.onSnapshot(roomRef(roomId), async (snap)=>{
+        if(!snap.exists()){
+          alert("La room n’existe plus.");
+          location.href = location.pathname;
+          return;
+        }
+        state.roomData = snap.data();
+        state.isHost = state.roomData.hostId === state.myId;
+        updateRoomHeader();
+        renderPlayers();
+        await fetchMyPrivateWord();
+        autoPhaseProgress();
+      });
+
+      state.unsubPlayers = firebaseFns.onSnapshot(playersCol(roomId), (qsnap)=>{
+        state.players = qsnap.docs.map(d=>d.data()).sort((a,b)=>(a.joinedAt || 0) - (b.joinedAt || 0));
+        renderPlayers();
+        updateRoomHeader();
+      });
+
+      startTick();
+    }
+
+    async function fetchMyPrivateWord(){
+      if(state.mode !== "firebase" || !state.roomId) return;
+      const room = getRoom();
+
+      if(room?.phase !== "reveal" && room?.phase !== "discussion" && room?.phase !== "vote" && room?.phase !== "result"){
+        state.myPrivateWord = null;
+        updateRevealPanel();
+        return;
+      }
+
+      const snap = await firebaseFns.getDoc(privateRef(state.roomId, state.mySecret));
+      if(snap.exists()){
+        const data = snap.data();
+        if(data.roundNumber === currentRoundNumber()){
+          state.myPrivateWord = data;
+        }
+      }
+      updateRevealPanel();
+    }
+
+    async function firebaseStartRound(){
+      const room = getRoom();
+      if(!state.isHost || !room || room.phase !== "lobby") return;
+
+      const alive = getAlivePlayers();
+      const ucCount = clamp(Number(room.settings.undercoverCount || 1), 1, Math.max(1, alive.length - 1));
+
+      if(alive.length < ucCount + 2){
+        alert("Pas assez de joueurs vivants pour lancer la manche.");
+        return;
+      }
+
+      const pairIndex = randInt(WORD_PAIRS.length);
+      const pair = WORD_PAIRS[pairIndex];
+      const shuffled = shuffle(alive.map(p => p.id));
+      const undercoverIds = shuffled.slice(0, ucCount);
+      const roundNumber = (room.roundNumber || 0) + 1;
+
+      const batch = firebaseFns.writeBatch(state.db);
+
+      batch.update(roomRef(state.roomId), {
+        phase: "reveal",
+        roundNumber,
+        updatedAt: firebaseFns.serverTimestamp(),
+        winner: "",
+        resultText: "",
+        current: {
+          ...room.current,
+          aliveIds: alive.map(p => p.id),
+          pairIndex,
+          undercoverIds,
+          civilianWord: pair.a,
+          statusWord: "Révélation en cours",
+          discussionEndsAt: 0,
+          voteEndsAt: 0
+        }
+      });
+
+      for(const p of getPlayers()){
+        batch.set(playerRef(state.roomId, p.id), {
+          ...p,
+          revealedRound: p.alive ? -999999 : p.revealedRound,
+          votedRound: -1
+        }, { merge:true });
+      }
+
+      for(const p of alive){
+        const word = undercoverIds.includes(p.id) ? pair.b : pair.a;
+        const role = undercoverIds.includes(p.id) ? "undercover" : "civil";
+        batch.set(privateRef(state.roomId, p.secretId), {
+          roundNumber,
+          pairIndex,
+          word,
+          role,
+          playerId: p.id,
+          seen: false
+        });
+      }
+
+      await batch.commit();
+      setStatus("Révélation", "Chaque joueur doit voir son mot puis cliquer sur “J’ai vu”.");
+    }
+
+    async function firebaseMarkSeen(){
+      const room = getRoom();
+      if(!room || room.phase !== "reveal") return;
+      if(hasSeenCurrentWord()) return;
+
+      await firebaseFns.setDoc(playerRef(state.roomId, state.myId), {
+        revealedRound: currentRoundNumber()
+      }, { merge:true });
+
+      await firebaseFns.setDoc(privateRef(state.roomId, state.mySecret), {
+        seen: true
+      }, { merge:true });
+    }
+
+    async function firebaseStartDiscussion(){
+      const room = getRoom();
+      if(!state.isHost || room.phase !== "reveal") return;
+
+      const allSeen = getAlivePlayers().every(p => p.revealedRound === currentRoundNumber());
+      if(!allSeen) return;
+
+      const end = Date.now() + Number(room.settings.discussionSeconds || 90) * 1000;
+
+      await firebaseFns.updateDoc(roomRef(state.roomId), {
+        phase: "discussion",
+        updatedAt: firebaseFns.serverTimestamp(),
+        "current.statusWord": "Discussion",
+        "current.discussionEndsAt": end
+      });
+    }
+
+    async function firebaseStartVote(){
+      const room = getRoom();
+      if(!state.isHost || room.phase !== "discussion") return;
+
+      const end = Date.now() + Number(room.settings.voteSeconds || 45) * 1000;
+
+      await firebaseFns.updateDoc(roomRef(state.roomId), {
+        phase: "vote",
+        updatedAt: firebaseFns.serverTimestamp(),
+        "current.statusWord": "Vote",
+        "current.voteEndsAt": end
+      });
+    }
+
+    async function firebaseCastVote(targetId){
+      const room = getRoom();
+      if(!room || room.phase !== "vote") return;
+
+      const me = getPlayers().find(p => p.id === state.myId);
+      if(!me?.alive) return;
+      if(me.votedRound === currentRoundNumber()) return;
+
+      await firebaseFns.runTransaction(state.db, async (tx)=>{
+        const roomSnap = await tx.get(roomRef(state.roomId));
+        const meSnap = await tx.get(playerRef(state.roomId, state.myId));
+        const voteSnap = await tx.get(voteRef(state.roomId, state.myId));
+
+        if(!roomSnap.exists()) throw new Error("Room inexistante");
+
+        const roomData = roomSnap.data();
+        const meData = meSnap.data();
+
+        if(roomData.phase !== "vote") throw new Error("Vote fermé");
+        if(!meData.alive) throw new Error("Joueur éliminé");
+        if(meData.votedRound === roomData.roundNumber || voteSnap.exists()) throw new Error("Vote déjà effectué");
+
+        tx.set(voteRef(state.roomId, state.myId), {
+          playerId: state.myId,
+          targetId,
+          roundNumber: roomData.roundNumber,
+          createdAt: Date.now()
+        });
+
+        tx.set(playerRef(state.roomId, state.myId), {
+          votedRound: roomData.roundNumber
+        }, { merge:true });
+      }).catch(err=>{
+        alert(err.message || "Impossible de voter.");
+      });
+    }
+
+    async function firebaseResolveVotes(){
+      const room = getRoom();
+      if(!state.isHost || room.phase !== "vote") return;
+
+      const votesSnap = await firebaseFns.getDocs(votesCol(state.roomId));
+      const votes = votesSnap.docs.map(d => d.data()).filter(v => v.roundNumber === currentRoundNumber());
+      const alive = getAlivePlayers();
+      const tally = {};
+
+      for(const p of alive) tally[p.id] = 0;
+      for(const v of votes){
+        if(v.targetId in tally) tally[v.targetId]++;
+      }
+
+      const maxVotes = Math.max(0, ...Object.values(tally));
+      const top = Object.keys(tally).filter(id => tally[id] === maxVotes);
+      const eliminatedId = top.length ? top[randInt(top.length)] : null;
+      const eliminatedPlayer = getPlayers().find(p => p.id === eliminatedId);
+      const undercoverIds = room.current?.undercoverIds || [];
+      const eliminatedWasUC = eliminatedId ? undercoverIds.includes(eliminatedId) : false;
+
+      const batch = firebaseFns.writeBatch(state.db);
+
+      if(eliminatedId){
+        batch.set(playerRef(state.roomId, eliminatedId), { alive:false }, { merge:true });
+      }
+
+      const survivors = getPlayers().map(p=>{
+        if(p.id === eliminatedId) return { ...p, alive:false };
+        return p;
+      }).filter(p => p.alive);
+
+      const aliveUC = survivors.filter(p => undercoverIds.includes(p.id)).length;
+      const aliveCivil = survivors.length - aliveUC;
+
+      let winner = "";
+      if(aliveUC === 0){
+        winner = "civils";
+      }else if(aliveUC >= aliveCivil){
+        winner = "undercover";
+      }
+
+      const resultText = eliminatedId
+        ? `${eliminatedPlayer?.nickname || "Un joueur"} a été éliminé${eliminatedWasUC ? " (c’était un undercover)." : " (civil)." }`
+        : "Personne n’a été éliminé.";
+
+      batch.update(roomRef(state.roomId), {
+        phase: "result",
+        updatedAt: firebaseFns.serverTimestamp(),
+        resultText,
+        winner,
+        "current.statusWord": winner ? `Victoire ${winner}` : "Résultat",
+        "current.aliveIds": survivors.map(p => p.id),
+        "current.eliminatedIds": eliminatedId ? firebaseFns.arrayUnion(eliminatedId) : room.current.eliminatedIds || []
+      });
+
+      await batch.commit();
+    }
+
+    async function firebaseNextRound(){
+      const room = getRoom();
+      if(!state.isHost || room.phase !== "result" || room.winner) return;
+
+      const votesSnap = await firebaseFns.getDocs(votesCol(state.roomId));
+      const batch = firebaseFns.writeBatch(state.db);
+
+      votesSnap.forEach(doc => batch.delete(doc.ref));
+
+      batch.update(roomRef(state.roomId), {
+        phase: "lobby",
+        updatedAt: firebaseFns.serverTimestamp(),
+        resultText: "",
+        "current.statusWord": "En attente",
+        "current.discussionEndsAt": 0,
+        "current.voteEndsAt": 0
+      });
+
+      for(const p of getPlayers()){
+        batch.set(playerRef(state.roomId, p.id), { votedRound: -1 }, { merge:true });
+      }
+
+      await batch.commit();
+    }
+
+    async function firebaseResetGame(){
+      const room = getRoom();
+      if(!state.isHost) return;
+
+      const votesSnap = await firebaseFns.getDocs(votesCol(state.roomId));
+      const batch = firebaseFns.writeBatch(state.db);
+
+      votesSnap.forEach(doc => batch.delete(doc.ref));
+
+      for(const p of getPlayers()){
+        batch.set(playerRef(state.roomId, p.id), {
+          alive: true,
+          votedRound: -1,
+          revealedRound: -1
+        }, { merge:true });
+      }
+
+      batch.update(roomRef(state.roomId), {
+        phase: "lobby",
+        roundNumber: 0,
+        winner: "",
+        resultText: "",
+        updatedAt: firebaseFns.serverTimestamp(),
+        current: {
+          aliveIds: getPlayers().map(p => p.id),
+          eliminatedIds: [],
+          pairIndex: -1,
+          undercoverIds: [],
+          civilianWord: "",
+          statusWord: "En attente",
+          discussionEndsAt: 0,
+          voteEndsAt: 0
+        }
+      });
+
+      await batch.commit();
+    }
+
+    function autoPhaseProgress(){
+      if(state.mode !== "firebase" || !state.isHost) return;
+      const room = getRoom();
+      if(!room) return;
+
+      if(room.phase === "discussion" && room.current?.discussionEndsAt && Date.now() >= room.current.discussionEndsAt){
+        firebaseStartVote();
+      }
+      if(room.phase === "vote" && room.current?.voteEndsAt && Date.now() >= room.current.voteEndsAt){
+        firebaseResolveVotes();
+      }
+    }
+
+    /******************************************************************
+     * MODE OFFLINE
+     ******************************************************************/
+    function createOfflineRoom(nickname, settings){
+      const roomId = "LOCAL";
+      const offline = {
+        mode: "offline",
+        roomId,
+        hostId: state.myId,
+        phase: "lobby",
+        roundNumber: 0,
+        winner: "",
+        resultText: "",
+        settings,
+        players: [
+          {
+            id: state.myId,
+            secretId: state.mySecret,
+            nickname,
+            host: true,
+            alive: true,
+            joinedAt: now(),
+            revealedRound: -1,
+            votedRound: -1
+          }
+        ],
+        current: {
+          aliveIds: [state.myId],
+          eliminatedIds: [],
+          pairIndex: -1,
+          undercoverIds: [],
+          discussionEndsAt: 0,
+          voteEndsAt: 0
+        },
+        privateWords: {},
+        votes: {},
+        offlineRevealQueue: [],
+        offlineRevealIndex: 0
+      };
+
+      state.mode = "offline";
+      state.roomId = roomId;
+      state.myName = nickname;
+      state.isHost = true;
+      state.offline = offline;
+      state.myPrivateWord = null;
+      persistOffline();
+      mountOfflineRoom();
+    }
+
+    function persistOffline(){
+      saveLocal(STORAGE_KEYS.offlineRoom, state.offline);
+    }
+
+    function loadOfflineRoom(){
+      state.offline = loadLocal(STORAGE_KEYS.offlineRoom);
+      if(state.offline){
+        state.mode = "offline";
+        state.roomId = state.offline.roomId || "LOCAL";
+        state.isHost = state.offline.hostId === state.myId;
+      }
+    }
+
+    function mountOfflineRoom(){
+      show($("screen-setup"), false);
+      show($("screen-room"), true);
+      updateModeBadge();
+      updateRoomBadge();
+      renderPlayers();
+      updateRoomHeader();
+      startTick();
+    }
+
+    function offlineAddPlayer(name){
+      if(!state.isHost || !state.offline) return;
+      const clean = String(name || "").trim();
+      if(!clean) return;
+
+      state.offline.players.push({
+        id: uid("p"),
+        secretId: uid("secret"),
+        nickname: clean,
+        host: false,
+        alive: true,
+        joinedAt: now(),
+        revealedRound: -1,
+        votedRound: -1
+      });
+
+      state.offline.current.aliveIds = state.offline.players.filter(p => p.alive).map(p => p.id);
+      persistOffline();
+      renderPlayers();
+      updateRoomHeader();
+    }
+
+    function offlineStartRound(){
+      const room = state.offline;
+      if(!room || !state.isHost || room.phase !== "lobby") return;
+
+      const alive = room.players.filter(p => p.alive);
+      const ucCount = clamp(Number(room.settings.undercoverCount || 1), 1, Math.max(1, alive.length - 1));
+      if(alive.length < ucCount + 2){
+        alert("Pas assez de joueurs.");
+        return;
+      }
+
+      const pairIndex = randInt(WORD_PAIRS.length);
+      const pair = WORD_PAIRS[pairIndex];
+      const shuffled = shuffle(alive.map(p => p.id));
+      const undercoverIds = shuffled.slice(0, ucCount);
+      const roundNumber = room.roundNumber + 1;
+
+      room.roundNumber = roundNumber;
+      room.phase = "reveal";
+      room.winner = "";
+      room.resultText = "";
+      room.current.pairIndex = pairIndex;
+      room.current.undercoverIds = undercoverIds;
+      room.current.aliveIds = alive.map(p => p.id);
+      room.current.eliminatedIds = room.current.eliminatedIds || [];
+      room.privateWords = {};
+      room.votes = {};
+      room.offlineRevealQueue = alive.map(p => p.id);
+      room.offlineRevealIndex = 0;
+
+      for(const p of room.players){
+        p.votedRound = -1;
+        p.revealedRound = p.alive ? -999999 : p.revealedRound;
+      }
+
+      for(const p of alive){
+        room.privateWords[p.id] = {
+          roundNumber,
+          word: undercoverIds.includes(p.id) ? pair.b : pair.a,
+          role: undercoverIds.includes(p.id) ? "undercover" : "civil",
+          playerId: p.id,
+          seen: false
+        };
+      }
+
+      state.myPrivateWord = room.privateWords[room.offlineRevealQueue[0]] || null;
+      persistOffline();
+      renderPlayers();
+      updateRoomHeader();
+      updateRevealPanel();
+      setStatus("Révélation", "Passe le téléphone au joueur affiché, puis clique sur “J’ai vu”.");
+    }
+
+    function offlineCurrentRevealPlayer(){
+      const room = state.offline;
+      if(!room || room.phase !== "reveal") return null;
+      const id = room.offlineRevealQueue[room.offlineRevealIndex];
+      return room.players.find(p => p.id === id) || null;
+    }
+
+    function offlineMarkSeen(){
+      const room = state.offline;
+      if(!room || room.phase !== "reveal") return;
+
+      const player = offlineCurrentRevealPlayer();
+      if(!player) return;
+
+      player.revealedRound = room.roundNumber;
+      room.privateWords[player.id].seen = true;
+      room.offlineRevealIndex += 1;
+
+      if(room.offlineRevealIndex >= room.offlineRevealQueue.length){
+        state.myPrivateWord = null;
+      }else{
+        const nextId = room.offlineRevealQueue[room.offlineRevealIndex];
+        state.myPrivateWord = room.privateWords[nextId];
+      }
+
+      persistOffline();
+      renderPlayers();
+      updateRoomHeader();
+      updateRevealPanel();
+    }
+
+    function offlineStartDiscussion(){
+      const room = state.offline;
+      if(!room || !state.isHost || room.phase !== "reveal") return;
+
+      const allSeen = room.players.filter(p => p.alive).every(p => p.revealedRound === room.roundNumber);
+      if(!allSeen) return;
+
+      room.phase = "discussion";
+      room.current.discussionEndsAt = now() + Number(room.settings.discussionSeconds || 90) * 1000;
+      persistOffline();
+      updateRoomHeader();
+    }
+
+    function offlineStartVote(){
+      const room = state.offline;
+      if(!room || !state.isHost || room.phase !== "discussion") return;
+
+      room.phase = "vote";
+      room.current.voteEndsAt = now() + Number(room.settings.voteSeconds || 45) * 1000;
+      room.votes = {};
+      for(const p of room.players) p.votedRound = -1;
+
+      persistOffline();
+      updateRoomHeader();
+    }
+
+    function offlineCastVote(targetId){
+      const room = state.offline;
+      if(!room || room.phase !== "vote") return;
+
+      const me = room.players.find(p => p.id === state.myId);
+      if(!me){
+        alert("En mode offline, seul l’hôte sur cet appareil peut gérer le vote.");
+        return;
+      }
+      if(!me.alive || me.votedRound === room.roundNumber) return;
+
+      room.votes[state.myId] = { playerId: state.myId, targetId, roundNumber: room.roundNumber };
+      me.votedRound = room.roundNumber;
+      persistOffline();
+      updateVotePanel();
+      renderPlayers();
+    }
+
+    function offlineResolveVotes(){
+      const room = state.offline;
+      if(!room || !state.isHost || room.phase !== "vote") return;
+
+      const alive = room.players.filter(p => p.alive);
+      const tally = {};
+
+      for(const p of alive) tally[p.id] = 0;
+      Object.values(room.votes).forEach(v=>{
+        if(v.targetId in tally) tally[v.targetId]++;
+      });
+
+      const maxVotes = Math.max(0, ...Object.values(tally));
+      const top = Object.keys(tally).filter(id => tally[id] === maxVotes);
+      const eliminatedId = top.length ? top[randInt(top.length)] : null;
+      const eliminatedPlayer = room.players.find(p => p.id === eliminatedId);
+      const ucIds = room.current.undercoverIds || [];
+      const wasUC = eliminatedId ? ucIds.includes(eliminatedId) : false;
+
+      if(eliminatedPlayer) eliminatedPlayer.alive = false;
+
+      const survivors = room.players.filter(p => p.alive);
+      const aliveUC = survivors.filter(p => ucIds.includes(p.id)).length;
+      const aliveCivil = survivors.length - aliveUC;
+
+      room.phase = "result";
+      room.resultText = eliminatedPlayer
+        ? `${eliminatedPlayer.nickname} a été éliminé${wasUC ? " (c’était un undercover)." : " (civil)." }`
+        : "Personne n’a été éliminé.";
+
+      if(aliveUC === 0){
+        room.winner = "civils";
+      }else if(aliveUC >= aliveCivil){
+        room.winner = "undercover";
+      }else{
+        room.winner = "";
+      }
+
+      room.current.aliveIds = survivors.map(p => p.id);
+      if(eliminatedId) room.current.eliminatedIds.push(eliminatedId);
+
+      persistOffline();
+      renderPlayers();
+      updateRoomHeader();
+      updateResultPanel();
+    }
+
+    function offlineNextRound(){
+      const room = state.offline;
+      if(!room || !state.isHost || room.phase !== "result" || room.winner) return;
+
+      room.phase = "lobby";
+      room.resultText = "";
+      room.votes = {};
+      room.current.discussionEndsAt = 0;
+      room.current.voteEndsAt = 0;
+      for(const p of room.players) p.votedRound = -1;
+
+      persistOffline();
+      updateRoomHeader();
+    }
+
+    function offlineResetGame(){
+      const room = state.offline;
+      if(!room || !state.isHost) return;
+
+      room.phase = "lobby";
+      room.roundNumber = 0;
+      room.winner = "";
+      room.resultText = "";
+      room.current = {
+        aliveIds: room.players.map(p => p.id),
+        eliminatedIds: [],
+        pairIndex: -1,
+        undercoverIds: [],
+        discussionEndsAt: 0,
+        voteEndsAt: 0
+      };
+      room.privateWords = {};
+      room.votes = {};
+      room.offlineRevealQueue = [];
+      room.offlineRevealIndex = 0;
+
+      for(const p of room.players){
+        p.alive = true;
+        p.votedRound = -1;
+        p.revealedRound = -1;
+      }
+
+      persistOffline();
+      renderPlayers();
+      updateRoomHeader();
+    }
+
+    function offlineAutoProgress(){
+      const room = state.offline;
+      if(!room || !state.isHost) return;
+
+      if(room.phase === "discussion" && room.current.discussionEndsAt && now() >= room.current.discussionEndsAt){
+        offlineStartVote();
+      }
+      if(room.phase === "vote" && room.current.voteEndsAt && now() >= room.current.voteEndsAt){
+        offlineResolveVotes();
+      }
+    }
+
+    /******************************************************************
+     * PANELS
+     ******************************************************************/
+    function updateRevealPanel(){
+      const room = getRoom();
+      const phase = room?.phase;
+      if(phase !== "reveal") return;
+
+      if(state.mode === "firebase"){
+        if(state.myPrivateWord){
+          setText("revealRole", state.myPrivateWord.role === "undercover" ? "Undercover" : "Civil");
+          setText("revealWord", state.myPrivateWord.word || "—");
+        }else{
+          setText("revealRole", "En attente");
+          setText("revealWord", "—");
+        }
+        const alive = getAlivePlayers();
+        const seenCount = alive.filter(p => p.revealedRound === currentRoundNumber()).length;
+        setText("revealProgress", `${seenCount} / ${alive.length} ont vu`);
+      }else{
+        const currentPlayer = offlineCurrentRevealPlayer();
+        const alive = getAlivePlayers();
+        const seenCount = alive.filter(p => p.revealedRound === currentRoundNumber()).length;
+        setText("revealProgress", `${seenCount} / ${alive.length} ont vu`);
+
+        if(currentPlayer){
+          const privateData = state.offline.privateWords[currentPlayer.id];
+          setText("revealRole", `${currentPlayer.nickname} — ${privateData?.role === "undercover" ? "Undercover" : "Civil"}`);
+          setText("revealWord", privateData?.word || "—");
+        }else{
+          setText("revealRole", "Tous les joueurs ont vu");
+          setText("revealWord", "—");
+        }
+      }
+
+      $("btnSeenWord").disabled = state.mode === "firebase"
+        ? hasSeenCurrentWord()
+        : !offlineCurrentRevealPlayer();
+
+      updateButtons();
+    }
+
+    function updateVotePanel(){
+      const room = getRoom();
+      const phase = room?.phase;
+      if(phase !== "vote") return;
+
+      const alive = getAlivePlayers();
+      const me = getPlayers().find(p => p.id === state.myId);
+      const alreadyVoted = me?.votedRound === currentRoundNumber();
+      setText("voteInfo", alreadyVoted ? "Vote enregistré" : "Tu n’as pas encore voté");
+
+      const grid = $("voteGrid");
+      grid.innerHTML = alive
+        .filter(p => p.id !== state.myId || state.mode === "offline")
+        .map(p => `
+          <div class="vote-item">
+            <div>
+              <div style="font-weight:900">${escapeHtml(p.nickname)}</div>
+              <div class="mini">${p.alive ? "En jeu" : "Éliminé"}</div>
+            </div>
+            <button class="btn btn-secondary" data-vote="${escapeHtml(p.id)}" ${(!me?.alive || alreadyVoted) ? "disabled" : ""}>Voter</button>
+          </div>
+        `).join("");
+
+      [...grid.querySelectorAll("[data-vote]")].forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const id = btn.getAttribute("data-vote");
+          if(state.mode === "firebase") firebaseCastVote(id);
+          else offlineCastVote(id);
+        });
+      });
+    }
+
+    function updateResultPanel(){
+      const room = getRoom();
+      if(!room) return;
+
+      setText("resultText", room.resultText || "—");
+
+      if(room.winner){
+        show($("winnerBox"), true);
+        $("winnerText").className = "badge " + (room.winner === "civils" ? "badge-ok" : "badge-danger");
+        setText("winnerText", room.winner === "civils" ? "Victoire des civils" : "Victoire des undercovers");
+        setText("resultSub", room.winner === "civils"
+          ? "Tous les undercovers ont été éliminés."
+          : "Les undercovers ont atteint une parité favorable.");
+      }else{
+        show($("winnerBox"), false);
+        setText("resultSub", "L’hôte peut lancer la manche suivante.");
+      }
+    }
+
+    /******************************************************************
+     * TIMER
+     ******************************************************************/
+    function startTick(){
+      if(state.tickInterval) clearInterval(state.tickInterval);
+
+      state.tickInterval = setInterval(()=>{
+        const room = getRoom();
+        if(!room) return;
+
+        if(room.phase === "discussion"){
+          const ms = (room.current?.discussionEndsAt || 0) - Date.now();
+          setText("discussionTimer", formatTimeLeft(ms));
+        }
+
+        if(room.phase === "vote"){
+          const ms = (room.current?.voteEndsAt || 0) - Date.now();
+          setText("voteTimer", formatTimeLeft(ms));
+        }
+
+        if(state.mode === "firebase") autoPhaseProgress();
+        else offlineAutoProgress();
+      }, 250);
+    }
+
+    /******************************************************************
+     * ACTIONS
+     ******************************************************************/
+    $("btnCopyLink").addEventListener("click", ()=>{
+      copy($("shareLinkInput").value);
+    });
+
+    $("btnCreateOnline").addEventListener("click", async ()=>{
+      const nickname = $("createNickname").value.trim();
+      const settings = {
+        discussionSeconds: clamp(Number($("createDiscussion").value || 90), 15, 600),
+        voteSeconds: clamp(Number($("createVote").value || 45), 10, 300),
+        undercoverCount: clamp(Number($("createUndercover").value || 1), 1, 4)
+      };
+
+      if(!nickname) return alert("Entre un pseudo.");
+      if(!state.firebaseReady){
+        return alert("Firebase n’est pas prêt. Vérifie Firestore et la config.");
+      }
+
+      try{
+        await createFirebaseRoom(nickname, settings);
+      }catch(err){
+        alert(err.message || "Impossible de créer la room.");
+      }
+    });
+
+    $("btnCreateOffline").addEventListener("click", ()=>{
+      const nickname = $("createNickname").value.trim();
+      const settings = {
+        discussionSeconds: clamp(Number($("createDiscussion").value || 90), 15, 600),
+        voteSeconds: clamp(Number($("createVote").value || 45), 10, 300),
+        undercoverCount: clamp(Number($("createUndercover").value || 1), 1, 4)
+      };
+      if(!nickname) return alert("Entre un pseudo.");
+      createOfflineRoom(nickname, settings);
+    });
+
+    $("btnJoinRoom").addEventListener("click", async ()=>{
+      const roomId = $("joinRoomCode").value.trim().toUpperCase();
+      const nickname = $("joinNickname").value.trim();
+
+      if(!roomId) return alert("Entre le code de room.");
+      if(!nickname) return alert("Entre un pseudo.");
+      if(!state.firebaseReady){
+        return alert("Firebase n’est pas configuré. La jointure par lien nécessite Firestore.");
+      }
+
+      try{
+        await joinFirebaseRoom(roomId, nickname);
+      }catch(err){
+        alert(err.message || "Impossible de rejoindre la room.");
+      }
+    });
+
+    $("btnStartRound").addEventListener("click", ()=>{
+      if(state.mode === "firebase") firebaseStartRound();
+      else offlineStartRound();
+    });
+
+    $("btnSeenWord").addEventListener("click", ()=>{
+      if(state.mode === "firebase") firebaseMarkSeen();
+      else offlineMarkSeen();
+    });
+
+    $("btnForceDiscussion").addEventListener("click", ()=>{
+      if(state.mode === "firebase") firebaseStartDiscussion();
+      else offlineStartDiscussion();
+    });
+
+    $("btnForceVote").addEventListener("click", ()=>{
+      if(state.mode === "firebase") firebaseStartVote();
+      else offlineStartVote();
+    });
+
+    $("btnNextRound").addEventListener("click", ()=>{
+      if(state.mode === "firebase") firebaseNextRound();
+      else offlineNextRound();
+    });
+
+    $("btnResetGame").addEventListener("click", ()=>{
+      if(state.mode === "firebase") firebaseResetGame();
+      else offlineResetGame();
+    });
+
+    $("btnAddOfflinePlayer").addEventListener("click", ()=>{
+      const name = $("offlinePlayerName").value.trim();
+      if(!name) return;
+      offlineAddPlayer(name);
+      $("offlinePlayerName").value = "";
+    });
+
+    /******************************************************************
+     * BOOT
+     ******************************************************************/
+    async function boot(){
+      await initFirebaseIfConfigured();
+      updateModeBadge();
+
+      const roomFromUrl = (qs.get("room") || "").trim().toUpperCase();
+      if(roomFromUrl){
+        $("joinRoomCode").value = roomFromUrl;
+      }
+
+      loadOfflineRoom();
+
+      if(roomFromUrl && state.firebaseReady){
+        // préremplit seulement
+      }else if(state.offline){
+        mountOfflineRoom();
+      }
+
+      updateRoomBadge();
+    }
+
+    boot();
+  </script>
+</body>
+</html>
