@@ -458,6 +458,7 @@
           <li>La majorité reçoit le même mot A.</li>
           <li>Un ou plusieurs undercovers reçoivent le mot proche B.</li>
           <li>Chaque joueur voit son mot une seule fois, puis confirme avec “J’ai vu”.</li>
+          <li>Les rôles ne sont pas révélés pendant la partie.</li>
           <li>Discussion → Vote → Résultat → Manche suivante.</li>
           <li>Les civils gagnent si tous les undercovers sont éliminés.</li>
           <li>Les undercovers gagnent s’ils atteignent une parité favorable.</li>
@@ -466,6 +467,7 @@
         <h3>Anti-triche</h3>
         <ul class="list">
           <li>Les mots des autres joueurs ne sont jamais affichés.</li>
+          <li>Le rôle exact n’est pas affiché au joueur.</li>
           <li>Un vote par joueur vérifié via transaction Firestore.</li>
           <li>Actions verrouillées selon la phase.</li>
           <li>Révélation privée stockée par document secret individuel.</li>
@@ -538,7 +540,7 @@
           </div>
           <div class="word-box">
             <div>
-              <div id="revealRole" class="role">Rôle</div>
+              <div id="revealRole" class="role">Ton mot</div>
               <div id="revealWord" class="word">—</div>
               <div class="warning">Ne montre pas cet écran aux autres joueurs.</div>
             </div>
@@ -1244,7 +1246,6 @@
       const eliminatedId = top.length ? top[randInt(top.length)] : null;
       const eliminatedPlayer = getPlayers().find(p => p.id === eliminatedId);
       const undercoverIds = room.current?.undercoverIds || [];
-      const eliminatedWasUC = eliminatedId ? undercoverIds.includes(eliminatedId) : false;
 
       const batch = firebaseFns.writeBatch(state.db);
 
@@ -1268,7 +1269,7 @@
       }
 
       const resultText = eliminatedId
-        ? `${eliminatedPlayer?.nickname || "Un joueur"} a été éliminé${eliminatedWasUC ? " (c’était un undercover)." : " (civil)." }`
+        ? `${eliminatedPlayer?.nickname || "Un joueur"} a été éliminé.`
         : "Personne n’a été éliminé.";
 
       batch.update(roomRef(state.roomId), {
@@ -1600,7 +1601,6 @@
       const eliminatedId = top.length ? top[randInt(top.length)] : null;
       const eliminatedPlayer = room.players.find(p => p.id === eliminatedId);
       const ucIds = room.current.undercoverIds || [];
-      const wasUC = eliminatedId ? ucIds.includes(eliminatedId) : false;
 
       if(eliminatedPlayer) eliminatedPlayer.alive = false;
 
@@ -1610,7 +1610,7 @@
 
       room.phase = "result";
       room.resultText = eliminatedPlayer
-        ? `${eliminatedPlayer.nickname} a été éliminé${wasUC ? " (c’était un undercover)." : " (civil)." }`
+        ? `${eliminatedPlayer.nickname} a été éliminé.`
         : "Personne n’a été éliminé.";
 
       if(aliveUC === 0){
@@ -1699,7 +1699,7 @@
 
       if(state.mode === "firebase"){
         if(state.myPrivateWord){
-          setText("revealRole", state.myPrivateWord.role === "undercover" ? "Undercover" : "Civil");
+          setText("revealRole", "Ton mot");
           setText("revealWord", state.myPrivateWord.word || "—");
         }else{
           setText("revealRole", "En attente");
@@ -1716,7 +1716,7 @@
 
         if(currentPlayer){
           const privateData = state.offline.privateWords[currentPlayer.id];
-          setText("revealRole", `${currentPlayer.nickname} — ${privateData?.role === "undercover" ? "Undercover" : "Civil"}`);
+          setText("revealRole", `${currentPlayer.nickname} — ton mot`);
           setText("revealWord", privateData?.word || "—");
         }else{
           setText("revealRole", "Tous les joueurs ont vu");
@@ -1778,7 +1778,7 @@
           : "Les undercovers ont atteint une parité favorable.");
       }else{
         show($("winnerBox"), false);
-        setText("resultSub", "L’hôte peut lancer la manche suivante.");
+        setText("resultSub", "Les rôles restent cachés. L’hôte peut lancer la manche suivante.");
       }
     }
 
