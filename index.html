@@ -875,10 +875,13 @@
             <div class="more-body">
               <div class="small muted" style="margin-bottom:8px"><span id="wordsCount">0</span> paires de mots disponibles.</div>
               <div class="pills-row">
-                <span class="pill">🎬 Films</span><span class="pill">🎮 Jeux vidéo</span>
-                <span class="pill">🌍 Lieux</span><span class="pill">🍕 Nourriture</span>
-                <span class="pill">🦁 Animaux</span><span class="pill">🔧 Objets</span>
-                <span class="pill">🚗 Transports</span><span class="pill">⚡ Nature</span>
+                <span class="pill">🍽️ Nourriture</span><span class="pill">💭 Concepts</span>
+                <span class="pill">👔 Métiers</span><span class="pill">📍 Lieux</span>
+                <span class="pill">🎵 Musique</span><span class="pill">📱 Tech</span>
+                <span class="pill">🎬 Cinéma</span><span class="pill">⚽ Sport</span>
+                <span class="pill">🐾 Animaux</span><span class="pill">🧳 Voyages</span>
+                <span class="pill">🎲 Jeux</span><span class="pill">🌿 Nature</span>
+                <span class="pill">🎓 École</span><span class="pill">💫 Expressions</span>
               </div>
             </div>
           </details>
@@ -1102,57 +1105,142 @@
   };
 
   const WORD_PAIRS = [
-    {a:"Spider-Man",b:"Superman"},{a:"Batman",b:"Iron Man"},{a:"Hulk",b:"Shrek"},
-    {a:"Thor",b:"Zeus"},{a:"Darth Vader",b:"Kylo Ren"},{a:"Yoda",b:"Dobby"},
-    {a:"Joker",b:"Masque"},{a:"Godzilla",b:"King Kong"},{a:"Harry Potter",b:"Percy Jackson"},
-    {a:"Hermione",b:"Katniss"},{a:"Elsa",b:"Raiponce"},{a:"Buzz l'Éclair",b:"Woody"},
-    {a:"Nemo",b:"Dory"},{a:"Titanic",b:"Pearl Harbor"},{a:"Avatar",b:"Dune"},
-    {a:"Interstellar",b:"Gravity"},{a:"Inception",b:"Matrix"},{a:"Gladiator",b:"Troie"},
-    {a:"Jurassic Park",b:"King Kong"},{a:"Fast & Furious",b:"Taxi"},
-    {a:"Mission Impossible",b:"James Bond"},{a:"John Wick",b:"Taken"},
-    {a:"Shrek",b:"Monstres & Cie"},{a:"Le Roi Lion",b:"Le Livre de la Jungle"},
-    {a:"Frozen",b:"Vaiana"},{a:"Cars",b:"Planes"},{a:"Toy Story",b:"Lego Movie"},
-    {a:"Star Wars",b:"Star Trek"},{a:"Avengers",b:"Justice League"},
-    {a:"Pirates des Caraïbes",b:"Peter Pan"},
-    {a:"Mario",b:"Luigi"},{a:"Sonic",b:"Pikachu"},{a:"Link",b:"Zelda"},
-    {a:"Naruto",b:"Luffy"},{a:"Goku",b:"Vegeta"},{a:"Minecraft",b:"Roblox"},
-    {a:"Fortnite",b:"PUBG"},{a:"FIFA",b:"eFootball"},{a:"Call of Duty",b:"Battlefield"},
-    {a:"Valorant",b:"CS2"},{a:"League of Legends",b:"Dota 2"},{a:"Overwatch",b:"Paladins"},
-    {a:"GTA",b:"Saints Row"},{a:"Red Dead Redemption",b:"Far Cry"},
-    {a:"Assassin's Creed",b:"Prince of Persia"},{a:"The Last of Us",b:"Days Gone"},
-    {a:"Resident Evil",b:"Silent Hill"},{a:"Elden Ring",b:"Dark Souls"},
-    {a:"God of War",b:"Devil May Cry"},{a:"Animal Crossing",b:"Les Sims"},
-    {a:"Among Us",b:"Loup-Garou"},{a:"Clash Royale",b:"Brawl Stars"},
-    {a:"Pokémon",b:"Digimon"},{a:"Crash Bandicoot",b:"Spyro"},
-    {a:"Paris",b:"Londres"},{a:"New York",b:"Chicago"},{a:"Tokyo",b:"Séoul"},
-    {a:"Rome",b:"Athènes"},{a:"Égypte",b:"Maroc"},{a:"Désert",b:"Plage"},
-    {a:"Montagne",b:"Volcan"},{a:"Forêt",b:"Jungle"},{a:"Île",b:"Péninsule"},
-    {a:"Château",b:"Palais"},{a:"Temple",b:"Église"},{a:"Musée",b:"Bibliothèque"},
-    {a:"Stade",b:"Arène"},{a:"Aéroport",b:"Gare"},
-    {a:"Pizza",b:"Lasagnes"},{a:"Burger",b:"Sandwich"},{a:"Tacos",b:"Burrito"},
-    {a:"Sushi",b:"Maki"},{a:"Riz",b:"Semoule"},{a:"Pâtes",b:"Nouilles"},
-    {a:"Pain",b:"Brioche"},{a:"Croissant",b:"Pain au chocolat"},
-    {a:"Chocolat",b:"Cacao"},{a:"Glace",b:"Yaourt glacé"},{a:"Pomme",b:"Poire"},
-    {a:"Fraise",b:"Framboise"},{a:"Tomate",b:"Poivron"},{a:"Fromage",b:"Beurre"},
-    {a:"Café",b:"Thé"},{a:"Gâteau",b:"Tarte"},{a:"Poulet",b:"Dinde"},
-    {a:"Téléphone",b:"Tablette"},{a:"Ordinateur",b:"Console"},
-    {a:"Télévision",b:"Projecteur"},{a:"Casque",b:"Écouteurs"},
-    {a:"Lampe",b:"Torche"},{a:"Montre",b:"Bracelet connecté"},
-    {a:"Stylo",b:"Crayon"},{a:"Livre",b:"Cahier"},
-    {a:"Voiture",b:"Moto"},{a:"Vélo",b:"Trottinette"},
-    {a:"Train",b:"Métro"},{a:"Avion",b:"Hélicoptère"},{a:"Bateau",b:"Yacht"},
-    {a:"Fusée",b:"Navette spatiale"},{a:"Bus",b:"Tramway"},
-    {a:"Lune",b:"Soleil"},{a:"Étoile",b:"Planète"},{a:"Nuage",b:"Brouillard"},
-    {a:"Orage",b:"Tempête"},{a:"Pluie",b:"Neige"},{a:"Feu",b:"Lave"},
-    {a:"Fleur",b:"Plante"},{a:"Arbre",b:"Buisson"},{a:"Champignon",b:"Truffe"},
-    {a:"Lion",b:"Tigre"},{a:"Chat",b:"Panthère"},{a:"Chien",b:"Loup"},
-    {a:"Lapin",b:"Lièvre"},{a:"Ours",b:"Panda"},{a:"Aigle",b:"Faucon"},
-    {a:"Dauphin",b:"Baleine"},{a:"Tortue",b:"Escargot"},{a:"Cheval",b:"Poney"},
-    {a:"Serpent",b:"Anguille"},{a:"Papillon",b:"Libellule"},{a:"Abeille",b:"Guêpe"},
-    {a:"Police",b:"Pompier"},{a:"Docteur",b:"Infirmier"},{a:"Professeur",b:"Surveillant"},
-    {a:"Avocat",b:"Juge"},{a:"Chanteur",b:"Rappeur"},
-    {a:"Foot",b:"Rugby"},{a:"Tennis",b:"Badminton"},{a:"Basket",b:"Volley"},
-    {a:"Courir",b:"Marcher"},{a:"Dormir",b:"Rêver"},{a:"Lire",b:"Écrire"}
+    // ── NOURRITURE SUBTILE ──
+    {a:"Cappuccino",b:"Latte"},{a:"Expresso",b:"Ristretto"},{a:"Thé vert",b:"Thé blanc"},
+    {a:"Mozzarella",b:"Burrata"},{a:"Brie",b:"Camembert"},{a:"Gruyère",b:"Emmental"},
+    {a:"Croissant",b:"Pain au chocolat"},{a:"Macaron",b:"Meringue"},{a:"Tiramisu",b:"Panna cotta"},
+    {a:"Crêpe",b:"Galette"},{a:"Gaufre",b:"Pancake"},{a:"Brownie",b:"Fondant au chocolat"},
+    {a:"Risotto",b:"Paella"},{a:"Ramen",b:"Pho"},{a:"Couscous",b:"Taboulé"},
+    {a:"Guacamole",b:"Houmous"},{a:"Sushi",b:"Sashimi"},{a:"Dim sum",b:"Gyoza"},
+    {a:"Kebab",b:"Shawarma"},{a:"Falafel",b:"Nems"},{a:"Bruschetta",b:"Crostini"},
+    {a:"Pesto",b:"Tapenade"},{a:"Vinaigrette",b:"Mayonnaise"},{a:"Moutarde",b:"Wasabi"},
+    {a:"Cannelle",b:"Cardamome"},{a:"Vanille",b:"Fleur d'oranger"},{a:"Miel",b:"Sirop d'érable"},
+    {a:"Smoothie",b:"Milkshake"},{a:"Limonade",b:"Orangina"},{a:"Mojito",b:"Caïpirinha"},
+    {a:"Champagne",b:"Prosecco"},{a:"Bière blonde",b:"Bière blanche"},
+    {a:"Tartare",b:"Carpaccio"},{a:"Raclette",b:"Fondue"},{a:"Gratin",b:"Parmentier"},
+    {a:"Confiture",b:"Marmelade"},{a:"Compote",b:"Purée de fruits"},
+    // ── CONCEPTS ABSTRAITS ──
+    {a:"Nostalgie",b:"Mélancolie"},{a:"Fierté",b:"Orgueil"},{a:"Jalousie",b:"Envie"},
+    {a:"Empathie",b:"Compassion"},{a:"Courage",b:"Témérité"},{a:"Patience",b:"Résignation"},
+    {a:"Intuition",b:"Instinct"},{a:"Sagesse",b:"Intelligence"},{a:"Charisme",b:"Confiance"},
+    {a:"Liberté",b:"Indépendance"},{a:"Solitude",b:"Isolement"},{a:"Silence",b:"Calme"},
+    {a:"Rêve",b:"Cauchemar"},{a:"Destin",b:"Hasard"},{a:"Paradoxe",b:"Dilemme"},
+    {a:"Habitude",b:"Tradition"},{a:"Progrès",b:"Évolution"},{a:"Révolution",b:"Réforme"},
+    {a:"Rumeur",b:"Légende"},{a:"Secret",b:"Mystère"},{a:"Ironie",b:"Sarcasme"},
+    {a:"Excuse",b:"Prétexte"},{a:"Promesse",b:"Serment"},{a:"Mensonge",b:"Bluff"},
+    // ── MÉTIERS PROCHES ──
+    {a:"Architecte",b:"Designer d'intérieur"},{a:"Photographe",b:"Vidéaste"},
+    {a:"Chirurgien",b:"Dentiste"},{a:"Psychologue",b:"Psychiatre"},
+    {a:"Avocat",b:"Notaire"},{a:"Journaliste",b:"Documentariste"},
+    {a:"Chef cuisinier",b:"Pâtissier"},{a:"Barman",b:"Sommelier"},
+    {a:"Pilote",b:"Capitaine"},{a:"Détective",b:"Espion"},
+    {a:"Influenceur",b:"Ambassadeur"},{a:"Coach",b:"Mentor"},
+    {a:"DJ",b:"Producteur"},{a:"Acteur",b:"Doubleur"},
+    // ── LIEUX SUBTILS ──
+    {a:"Balcon",b:"Terrasse"},{a:"Grenier",b:"Cave"},{a:"Couloir",b:"Hall d'entrée"},
+    {a:"Jardin",b:"Parc"},{a:"Plage",b:"Bord de lac"},{a:"Sommet",b:"Falaise"},
+    {a:"Grotte",b:"Tunnel"},{a:"Phare",b:"Tour de guet"},{a:"Pont",b:"Passerelle"},
+    {a:"Marché",b:"Bazar"},{a:"Galerie d'art",b:"Musée"},{a:"Librairie",b:"Bibliothèque"},
+    {a:"Café",b:"Brasserie"},{a:"Auberge",b:"Gîte"},{a:"Palace",b:"Manoir"},
+    {a:"Cathédrale",b:"Basilique"},{a:"Cimetière",b:"Mémorial"},{a:"Fontaine",b:"Cascade"},
+    {a:"Labyrinthe",b:"Dédale"},{a:"Oasis",b:"Clairière"},{a:"Volcan",b:"Geyser"},
+    {a:"Fjord",b:"Canyon"},{a:"Récif",b:"Atoll"},{a:"Toundra",b:"Steppe"},
+    // ── OBJETS DU QUOTIDIEN ──
+    {a:"Parapluie",b:"Parasol"},{a:"Bougie",b:"Encens"},{a:"Miroir",b:"Vitre"},
+    {a:"Coussin",b:"Oreiller"},{a:"Couverture",b:"Plaid"},{a:"Rideau",b:"Store"},
+    {a:"Horloge",b:"Sablier"},{a:"Clé",b:"Badge"},{a:"Portefeuille",b:"Porte-monnaie"},
+    {a:"Lunettes",b:"Lentilles"},{a:"Écharpe",b:"Foulard"},{a:"Bonnet",b:"Casquette"},
+    {a:"Basket",b:"Running"},{a:"Sandale",b:"Tong"},{a:"Cravate",b:"Nœud papillon"},
+    {a:"Sac à dos",b:"Valise"},{a:"Carnet",b:"Agenda"},{a:"Enveloppe",b:"Colis"},
+    {a:"Allumette",b:"Briquet"},{a:"Ciseaux",b:"Cutter"},{a:"Scotch",b:"Colle"},
+    // ── NATURE & SCIENCE ──
+    {a:"Aurore boréale",b:"Arc-en-ciel"},{a:"Éclipse",b:"Équinoxe"},
+    {a:"Marée haute",b:"Tsunami"},{a:"Rosée",b:"Givre"},{a:"Brume",b:"Brouillard"},
+    {a:"Stalactite",b:"Stalagmite"},{a:"Fossile",b:"Relique"},{a:"Cristal",b:"Diamant"},
+    {a:"Aimant",b:"Boussole"},{a:"Prisme",b:"Kaléidoscope"},{a:"Microscope",b:"Télescope"},
+    {a:"Atome",b:"Molécule"},{a:"Galaxie",b:"Nébuleuse"},{a:"Comète",b:"Astéroïde"},
+    {a:"Trou noir",b:"Trou de ver"},{a:"Gravité",b:"Magnétisme"},
+    {a:"Photosynthèse",b:"Fermentation"},{a:"ADN",b:"ARN"},
+    {a:"Séisme",b:"Éruption"},{a:"Tornade",b:"Cyclone"},{a:"Avalanche",b:"Glissement de terrain"},
+    // ── MUSIQUE ──
+    {a:"Guitare",b:"Ukulélé"},{a:"Piano",b:"Synthétiseur"},{a:"Violon",b:"Violoncelle"},
+    {a:"Batterie",b:"Djembé"},{a:"Trompette",b:"Saxophone"},{a:"Flûte",b:"Harmonica"},
+    {a:"Rap",b:"Slam"},{a:"Jazz",b:"Blues"},{a:"Reggae",b:"Dancehall"},
+    {a:"Techno",b:"House"},{a:"Rock",b:"Métal"},{a:"Pop",b:"Variété"},
+    {a:"Opéra",b:"Comédie musicale"},{a:"Chorale",b:"A cappella"},
+    {a:"Remix",b:"Cover"},{a:"Vinyl",b:"CD"},{a:"Playlist",b:"Album"},
+    {a:"Refrain",b:"Couplet"},{a:"Mélodie",b:"Harmonie"},{a:"Rythme",b:"Tempo"},
+    // ── TECH & DIGITAL ──
+    {a:"Algorithme",b:"Intelligence artificielle"},{a:"Bug",b:"Glitch"},
+    {a:"Mot de passe",b:"Code PIN"},{a:"Wi-Fi",b:"Bluetooth"},
+    {a:"Screenshot",b:"Screen recording"},{a:"Emoji",b:"Sticker"},
+    {a:"Story",b:"Reel"},{a:"Like",b:"Retweet"},{a:"Follower",b:"Abonné"},
+    {a:"Podcast",b:"Audiobook"},{a:"Streaming",b:"Téléchargement"},
+    {a:"Cloud",b:"Serveur"},{a:"VPN",b:"Proxy"},{a:"Pixel",b:"Voxel"},
+    {a:"Selfie",b:"Portrait"},{a:"Filtre",b:"Retouche"},{a:"Notification",b:"Alerte"},
+    {a:"Spam",b:"Pub"},{a:"Dark mode",b:"Mode nuit"},
+    // ── CINÉMA & SÉRIES ──
+    {a:"Trailer",b:"Teaser"},{a:"Sequel",b:"Prequel"},{a:"Remake",b:"Reboot"},
+    {a:"Documentaire",b:"Reportage"},{a:"Thriller",b:"Polar"},
+    {a:"Comédie",b:"Sitcom"},{a:"Drame",b:"Tragédie"},
+    {a:"Figurant",b:"Doublure"},{a:"Cascadeur",b:"Acrobate"},
+    {a:"Oscar",b:"Palme d'or"},{a:"Cliffhanger",b:"Plot twist"},
+    {a:"Binge-watching",b:"Marathon"},{a:"Spoiler",b:"Easter egg"},
+    // ── SPORT & CORPS ──
+    {a:"Yoga",b:"Pilates"},{a:"Boxe",b:"MMA"},{a:"Escalade",b:"Alpinisme"},
+    {a:"Sprint",b:"Marathon"},{a:"Surf",b:"Bodyboard"},{a:"Ski",b:"Snowboard"},
+    {a:"Plongeon",b:"Natation synchronisée"},{a:"Escrime",b:"Kendo"},
+    {a:"Dribble",b:"Feinte"},{a:"Penalty",b:"Coup franc"},{a:"Smash",b:"Ace"},
+    {a:"Podium",b:"Piédestal"},{a:"Médaille",b:"Trophée"},{a:"Arbitre",b:"Juge de ligne"},
+    {a:"Tatouage",b:"Piercing"},{a:"Massage",b:"Acupuncture"},{a:"Cicatrice",b:"Grain de beauté"},
+    // ── CULTURE & SOCIÉTÉ ──
+    {a:"Vernissage",b:"Inauguration"},{a:"Festival",b:"Carnaval"},
+    {a:"Manifestation",b:"Grève"},{a:"Débat",b:"Polémique"},
+    {a:"Cliché",b:"Stéréotype"},{a:"Tabou",b:"Interdit"},
+    {a:"Mode",b:"Tendance"},{a:"Vintage",b:"Rétro"},{a:"Minimalisme",b:"Zen"},
+    {a:"Karma",b:"Destin"},{a:"Superstition",b:"Rituel"},{a:"Horoscope",b:"Tarot"},
+    {a:"Utopie",b:"Dystopie"},{a:"Mythe",b:"Légende urbaine"},
+    {a:"Nostalgie",b:"Déjà-vu"},{a:"Adrénaline",b:"Vertige"},
+    // ── ANIMAUX SUBTILS ──
+    {a:"Renard",b:"Coyote"},{a:"Panthère",b:"Léopard"},{a:"Crocodile",b:"Alligator"},
+    {a:"Hibou",b:"Chouette"},{a:"Corbeau",b:"Corneille"},{a:"Mouette",b:"Albatros"},
+    {a:"Pieuvre",b:"Calmar"},{a:"Méduse",b:"Anémone"},{a:"Raie",b:"Requin"},
+    {a:"Salamandre",b:"Lézard"},{a:"Coccinelle",b:"Scarabée"},{a:"Moustique",b:"Mouche"},
+    {a:"Hamster",b:"Cobaye"},{a:"Perruche",b:"Perroquet"},{a:"Tortue de terre",b:"Tortue de mer"},
+    {a:"Phoque",b:"Otarie"},{a:"Cerf",b:"Élan"},{a:"Bison",b:"Buffle"},
+    // ── VOYAGES & TRANSPORT ──
+    {a:"Croisière",b:"Road trip"},{a:"Backpack",b:"Globe-trotter"},
+    {a:"Escale",b:"Correspondance"},{a:"Décalage horaire",b:"Jet lag"},
+    {a:"Passeport",b:"Visa"},{a:"Douane",b:"Frontière"},
+    {a:"Première classe",b:"Business class"},{a:"Turbulence",b:"Trou d'air"},
+    {a:"GPS",b:"Carte routière"},{a:"Péage",b:"Radar"},
+    {a:"Métro",b:"RER"},{a:"Tramway",b:"Funiculaire"},{a:"Kayak",b:"Canoë"},
+    {a:"Montgolfière",b:"Parapente"},{a:"Hoverboard",b:"Skateboard"},
+    // ── EXPRESSIONS & SITUATIONS ──
+    {a:"Rendez-vous",b:"Entretien"},{a:"Fête surprise",b:"Anniversaire"},
+    {a:"Emménagement",b:"Déménagement"},{a:"Premier jour",b:"Dernier jour"},
+    {a:"Réconciliation",b:"Pardon"},{a:"Rupture",b:"Divorce"},
+    {a:"Mariage",b:"Fiançailles"},{a:"Retraite",b:"Sabbatique"},
+    {a:"Insomnie",b:"Sieste"},{a:"Gueule de bois",b:"Fatigue"},
+    {a:"Malchance",b:"Poisse"},{a:"Flemme",b:"Procrastination"},
+    {a:"Frisson",b:"Chair de poule"},{a:"Papillons dans le ventre",b:"Trac"},
+    {a:"Coup de foudre",b:"Béguin"},{a:"Fou rire",b:"Sourire en coin"},
+    // ── ÉCOLE & SAVOIR ──
+    {a:"Examen",b:"Contrôle"},{a:"Dissertation",b:"Rédaction"},{a:"Exposé",b:"Soutenance"},
+    {a:"Récréation",b:"Pause"},{a:"Cantine",b:"Self"},{a:"Internat",b:"Résidence"},
+    {a:"Dictionnaire",b:"Encyclopédie"},{a:"Formule",b:"Équation"},
+    {a:"Théorie",b:"Hypothèse"},{a:"Expérience",b:"Observation"},
+    // ── JEUX & LOISIRS ──
+    {a:"Échecs",b:"Dames"},{a:"Poker",b:"Black-jack"},{a:"Puzzle",b:"Casse-tête"},
+    {a:"Monopoly",b:"Bonne Paye"},{a:"Loup-Garou",b:"Mafia"},
+    {a:"Escape game",b:"Chasse au trésor"},{a:"Karaoké",b:"Blind test"},
+    {a:"Bowling",b:"Pétanque"},{a:"Billard",b:"Baby-foot"},
+    {a:"Fléchettes",b:"Tir à l'arc"},{a:"Cerf-volant",b:"Drone"},
+    // ── SAISONS & MOMENTS ──
+    {a:"Aube",b:"Crépuscule"},{a:"Minuit",b:"Midi"},{a:"Lundi",b:"Vendredi"},
+    {a:"Printemps",b:"Automne"},{a:"Solstice",b:"Équinoxe"},
+    {a:"Nouvel An",b:"Réveillon"},{a:"Halloween",b:"Carnaval"},
+    {a:"Vacances",b:"Week-end"},{a:"Veille",b:"Lendemain"}
   ];
 
   const $ = id => document.getElementById(id);
@@ -1353,9 +1441,33 @@
     const text=(input.value||"").trim();
     if(!text) return;
     input.value="";
-    // Send directly — no confirmation needed
     sendChatMessage(state.myName||"Joueur", text, "other");
     sfxConfirm();
+    // Auto-advance to next speaker after sending during discussion
+    autoAdvanceSpeaker();
+  }
+
+  /* Auto-advance to next speaker after a player sends their message */
+  function autoAdvanceSpeaker() {
+    const room=getRoom();
+    if(!room || room.phase!=="discussion") return;
+    const order=room.current?.turnOrder||[];
+    const idx=room.current?.speakerIndex||0;
+    const totalTurns=room.settings?.turnsPerRound||order.length;
+    if(idx>=totalTurns-1) return; // last turn, don't advance
+    // Small delay so the message appears first
+    setTimeout(()=>{
+      if(state.mode==="firebase") {
+        if(state.isHost) {
+          firebaseNextSpeaker();
+        } else {
+          // Non-host: request advance via updating room
+          firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),"current.speakerIndex":idx+1}).catch(()=>{});
+        }
+      } else {
+        offlineNextSpeaker();
+      }
+    }, 400);
   }
 
   function initChat() {
