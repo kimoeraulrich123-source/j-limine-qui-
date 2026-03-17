@@ -399,8 +399,9 @@
     .phase-step.active { border-color: rgba(108,92,231,.5); background: rgba(108,92,231,.15); color: #d2caff; }
     .phase-step.done { border-color: rgba(0,229,160,.3); background: rgba(0,229,160,.08); color: #80ffd4; }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
-    @media(max-width:600px){ .stats-grid { grid-template-columns: repeat(2,1fr); } }
+    .stats-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; }
+    @media(max-width:700px){ .stats-grid { grid-template-columns: repeat(3,1fr); } }
+    @media(max-width:450px){ .stats-grid { grid-template-columns: repeat(2,1fr); } }
     .stat { padding: 14px; border-radius: var(--r2); border: 1px solid var(--border2); background: var(--surface3); }
     .stat-k { font-size: .74rem; font-weight: 700; color: #b3bfdf; text-transform: uppercase; letter-spacing: .05em; }
     .stat-v { font-size: 1.3rem; font-weight: 900; font-family: 'Syne', sans-serif; margin-top: 5px; }
@@ -919,6 +920,7 @@
             <div class="stat"><div class="stat-k">Undercovers</div><div class="stat-v" id="settingsUndercover">1</div></div>
             <div class="stat"><div class="stat-k">Discussion</div><div class="stat-v" id="settingsDiscussion">90s</div></div>
             <div class="stat"><div class="stat-k">Vote</div><div class="stat-v" id="settingsVote">45s</div></div>
+            <div class="stat"><div class="stat-k">Manches</div><div class="stat-v" id="settingsRounds">3</div></div>
             <div class="stat"><div class="stat-k">Vivants</div><div class="stat-v" id="aliveCount">0</div></div>
           </div>
           <div class="row" id="hostActions">
@@ -1496,6 +1498,7 @@
     setText("settingsUndercover",settings.undercoverCount||1);
     setText("settingsDiscussion",`${settings.discussionSeconds||90}s`);
     setText("settingsVote",`${settings.voteSeconds||45}s`);
+    setText("settingsRounds",settings.roundsTotal||1);
     $("shareLinkInput").value=state.mode==="firebase"?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||"")}`:`${location.origin}${location.pathname}`;
     show($("hostBadge"),state.isHost);
     setText("chatOnlineIndicator",state.mode==="firebase"?"En ligne":"Local");
@@ -1835,9 +1838,9 @@
   $("soundVolume").addEventListener("input",updateAudioSettings);
   $("btnCopyLink").addEventListener("click",()=>{navigator.clipboard.writeText($("shareLinkInput").value).catch(()=>{});sfxPhase();toast("Lien copié !");});
 
-  $("btnCreateOnline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");const settings={discussionSeconds:clamp(Number($("createDiscussion").value||90),20,600),voteSeconds:clamp(Number($("createVote").value||45),10,300),undercoverCount:clamp(Number($("createUndercover").value||1),1,4),roundsTotal:clamp(Number($("createRounds").value||3),1,20)};try{await createFirebaseRoom(nickname,settings);}catch(e){alert(e.message||"Erreur.");}});
+  $("btnCreateOnline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20)};console.log("Creating room with settings:",JSON.stringify(settings));try{await createFirebaseRoom(nickname,settings);}catch(e){alert(e.message||"Erreur.");}});
 
-  $("btnCreateOffline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");const settings={discussionSeconds:clamp(Number($("createDiscussion").value||90),20,600),voteSeconds:clamp(Number($("createVote").value||45),10,300),undercoverCount:clamp(Number($("createUndercover").value||1),1,4),roundsTotal:clamp(Number($("createRounds").value||3),1,20)};createOfflineRoom(nickname,settings);});
+  $("btnCreateOffline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20)};createOfflineRoom(nickname,settings);});
 
   $("btnJoinRoom").addEventListener("click",async()=>{await enableAudio();const roomId=$("joinRoomCode").value.trim().toUpperCase();const nickname=$("joinNickname").value.trim();if(!roomId)return alert("Entre le code de la salle.");if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");try{await joinFirebaseRoom(roomId,nickname);}catch(e){alert(e.message||"Erreur.");}});
 
