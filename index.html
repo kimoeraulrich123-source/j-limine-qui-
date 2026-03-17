@@ -629,6 +629,148 @@
     .text-yellow { color: var(--yellow); }
     .text-red { color: var(--red); }
 
+    /* ── PEEK WORD FLIP CARD ── */
+    .peek-word-btn {
+      position: fixed; bottom: 20px; left: 20px; z-index: 60;
+      width: 56px; height: 56px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), #9b59b6);
+      border: 2px solid rgba(108,92,231,.5);
+      color: #fff; font-size: 1.4rem;
+      display: none; place-items: center;
+      cursor: pointer; box-shadow: 0 8px 28px rgba(108,92,231,.4);
+      transition: all .2s;
+    }
+    .peek-word-btn:hover { transform: scale(1.08); box-shadow: 0 10px 36px rgba(108,92,231,.55); }
+    .peek-word-btn.visible { display: grid; }
+
+    .peek-overlay {
+      position: fixed; inset: 0; z-index: 180;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(5,7,15,.8); backdrop-filter: blur(20px);
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .peek-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .flip-container {
+      width: min(360px, 85vw); height: 220px;
+      perspective: 900px; cursor: pointer;
+    }
+    .flip-card {
+      width: 100%; height: 100%;
+      position: relative; transform-style: preserve-3d;
+      transition: transform .6s cubic-bezier(.4,.2,.2,1);
+    }
+    .flip-card.flipped { transform: rotateY(180deg); }
+
+    .flip-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden;
+      border-radius: 24px; display: flex;
+      flex-direction: column; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .flip-front {
+      background: linear-gradient(160deg, rgba(108,92,231,.3), rgba(0,212,255,.15));
+      border: 2px solid rgba(108,92,231,.4);
+      box-shadow: 0 16px 48px rgba(108,92,231,.3);
+    }
+    .flip-front-icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .flip-front-label {
+      font-family: 'Syne', sans-serif; font-weight: 900; font-size: 1.1rem;
+      color: #c4baff;
+    }
+    .flip-front-hint { font-size: .82rem; color: var(--dim); margin-top: 6px; }
+
+    .flip-back {
+      background: radial-gradient(circle at 30% 30%, rgba(108,92,231,.35), transparent 60%),
+                  radial-gradient(circle at 70% 70%, rgba(0,212,255,.2), transparent 60%),
+                  rgba(10,14,30,.98);
+      border: 2px solid rgba(108,92,231,.5);
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      transform: rotateY(180deg);
+    }
+    .flip-back-label {
+      font-family: 'Space Mono', monospace; font-size: .75rem;
+      color: var(--muted); text-transform: uppercase; letter-spacing: .12em;
+      margin-bottom: 10px;
+    }
+    .flip-back-word {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 6vw, 3rem); font-weight: 900;
+      background: linear-gradient(135deg, #fff 20%, #c4baff 60%, var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; text-align: center;
+    }
+    .flip-back-warn {
+      font-size: .78rem; color: rgba(255,209,102,.6); margin-top: 12px;
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ── ROLE REVEAL OVERLAY (end of game) ── */
+    .roles-overlay {
+      position: fixed; inset: 0; z-index: 210;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(5,7,15,.97); backdrop-filter: blur(30px);
+      opacity: 0; pointer-events: none; transition: opacity .4s;
+      overflow-y: auto; padding: 40px 20px;
+    }
+    .roles-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .roles-title {
+      font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 900; margin-bottom: 32px; text-align: center;
+      opacity: 0; animation: revealSlide .5s ease .2s forwards;
+    }
+
+    .role-cards-grid {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      justify-content: center; max-width: 700px; width: 100%;
+    }
+
+    .role-card-reveal {
+      width: 160px; padding: 20px 14px; border-radius: 20px;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 8px;
+      opacity: 0; transform: scale(.7) rotateY(90deg);
+      animation: roleCardFlip .7s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    .role-card-reveal.civil {
+      background: linear-gradient(160deg, rgba(0,229,160,.15), rgba(0,229,160,.05));
+      border: 2px solid rgba(0,229,160,.35);
+    }
+    .role-card-reveal.undercover {
+      background: linear-gradient(160deg, rgba(255,77,109,.2), rgba(255,77,109,.08));
+      border: 2px solid rgba(255,77,109,.5);
+      box-shadow: 0 0 30px rgba(255,77,109,.25);
+    }
+    .role-card-avatar {
+      width: 44px; height: 44px; border-radius: 14px;
+      display: grid; place-items: center; font-weight: 900; font-size: 1rem;
+      color: #fff;
+    }
+    .role-card-name { font-weight: 900; font-size: .95rem; }
+    .role-card-role {
+      font-family: 'Space Mono', monospace; font-size: .7rem;
+      text-transform: uppercase; letter-spacing: .1em; font-weight: 700;
+    }
+    .role-card-role.civil-text { color: #80ffd4; }
+    .role-card-role.uc-text { color: #ff8fa3; }
+    .role-card-word {
+      font-size: .82rem; color: var(--muted); font-style: italic;
+      margin-top: 2px;
+    }
+
+    @keyframes roleCardFlip {
+      0% { opacity: 0; transform: scale(.7) rotateY(90deg); }
+      60% { opacity: 1; transform: scale(1.05) rotateY(-5deg); }
+      100% { opacity: 1; transform: scale(1) rotateY(0deg); }
+    }
+
+    .roles-close-btn {
+      margin-top: 28px;
+      opacity: 0; animation: revealSlide .5s ease 2s forwards;
+    }
+
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
@@ -904,6 +1046,36 @@
   </div>
 </div>
 
+<!-- PEEK WORD BUTTON (floating) -->
+<div id="peekWordBtn" class="peek-word-btn" title="Revoir mon mot">🔍</div>
+
+<!-- PEEK WORD FLIP OVERLAY -->
+<div id="peekOverlay" class="peek-overlay">
+  <div class="flip-container" id="flipContainer">
+    <div class="flip-card" id="flipCard">
+      <div class="flip-face flip-front">
+        <div class="flip-front-icon">🃏</div>
+        <div class="flip-front-label">Ton mot secret</div>
+        <div class="flip-front-hint">Clique pour retourner</div>
+      </div>
+      <div class="flip-face flip-back">
+        <div class="flip-back-label">Ton mot</div>
+        <div class="flip-back-word" id="peekWordText">—</div>
+        <div class="flip-back-warn">⚠️ Cache vite !</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROLE REVEAL OVERLAY (end of game) -->
+<div id="rolesOverlay" class="roles-overlay">
+  <div class="roles-title" id="rolesTitle">Révélation des rôles</div>
+  <div class="role-cards-grid" id="rolesGrid"></div>
+  <div class="roles-close-btn">
+    <button id="btnCloseRoles" class="btn btn-ghost" style="min-width:160px">✕ Fermer</button>
+  </div>
+</div>
+
 <div id="toastWrap" class="toast-wrap"></div>
 
 <script>
@@ -1104,14 +1276,16 @@
   /* Subscribe to Firebase chat collection — real-time sync for all players */
   function subscribeFirebaseChat(roomId) {
     if(state.unsubChat) state.unsubChat();
-    const q = firebaseFns.query(chatCol(roomId), firebaseFns.orderBy("ts","asc"));
-    state.unsubChat = firebaseFns.onSnapshot(q, snap => {
+    // Simple onSnapshot on the whole collection — no index needed
+    state.unsubChat = firebaseFns.onSnapshot(chatCol(roomId), snap => {
       snap.docChanges().forEach(change => {
         if(change.type === "added") {
           const msg = change.doc.data();
           addChatMessageLocal(msg);
         }
       });
+    }, err => {
+      console.error("Chat subscription error:", err);
     });
   }
 
@@ -1256,7 +1430,7 @@
       if(room.phase==="vote") addSystemMessage("Phase de vote — débattez librement puis votez !");
       if(room.phase==="result") addSystemMessage("Le résultat est tombé…");
     }
-    if(room.winner&&state.lastWinner!==room.winner){sfxWin(room.winner==="civils");state.lastWinner=room.winner;}
+    if(room.winner&&state.lastWinner!==room.winner){state.lastWinner=room.winner;}
     if(!room.winner)state.lastWinner="";
   }
 
@@ -1338,6 +1512,7 @@
     updateResultPanel();
     updateButtons();
     updateChatLock();
+    updatePeekButton();
     maybePlayPhaseAudio();
   }
 
@@ -1419,6 +1594,8 @@
       wb.className=`winner-banner ${isCivil?"civils":"undercover"}`;
       wb.innerHTML=`<div class="winner-icon">${isCivil?"🏆":"🕵️"}</div><div><div class="winner-label">${isCivil?"Victoire des civils !":"Victoire des undercovers !"}</div><div class="winner-desc">${isCivil?"Tous les undercovers ont été démasqués.":"Les undercovers ont atteint la parité."}</div></div>`;
       setText("resultSub","");
+      // Trigger role reveal animation
+      setTimeout(() => showRolesReveal(), 600);
     } else {
       show(wb,false);
       setText("resultSub",room.resultText?"L'hôte peut lancer la manche suivante.":"");
@@ -1507,9 +1684,9 @@
 
   async function firebaseResolveVotes(){const room=getRoom();if(!state.isHost||room.phase!=="vote") return;const votesSnap=await firebaseFns.getDocs(votesCol(state.roomId));const votes=votesSnap.docs.map(d=>d.data()).filter(v=>v.roundNumber===currentRoundNumber());const alive=getAlivePlayers();const tally={};for(const p of alive)tally[p.id]=0;for(const v of votes){if(v.targetId in tally)tally[v.targetId]++;}const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=getPlayers().find(p=>p.id===elimId);const ucIds=room.current?.undercoverIds||[];const batch=firebaseFns.writeBatch(state.db);if(elimId)batch.set(playerRef(state.roomId,elimId),{alive:false},{merge:true});const survivors=getPlayers().map(p=>p.id===elimId?{...p,alive:false}:p).filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;let winner="";if(aliveUC===0)winner="civils";else if(aliveUC>=aliveCivil)winner="undercover";const resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";batch.update(roomRef(state.roomId),{phase:"result",updatedAt:firebaseFns.serverTimestamp(),resultText,winner,"current.aliveIds":survivors.map(p=>p.id),"current.turnOrder":[],"current.speakerIndex":0,...(elimId?{"current.eliminatedIds":firebaseFns.arrayUnion(elimId)}:{})});await batch.commit();toast("Résultat prêt");}
 
-  async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=="result"||room.winner) return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:"lobby",updatedAt:firebaseFns.serverTimestamp(),resultText:"","current.discussionEndsAt":0,"current.voteEndsAt":0,"current.turnOrder":[],"current.speakerIndex":0});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{votedRound:-1},{merge:true});await batch.commit();toast("Retour au lobby");}
+  async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=="result"||room.winner) return;rolesShownForRound=-1;closeRolesReveal();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:"lobby",updatedAt:firebaseFns.serverTimestamp(),resultText:"","current.discussionEndsAt":0,"current.voteEndsAt":0,"current.turnOrder":[],"current.speakerIndex":0});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{votedRound:-1},{merge:true});await batch.commit();toast("Retour au lobby");}
 
-  async function firebaseResetGame(){if(!state.isHost) return;const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:"lobby",roundNumber:0,winner:"",resultText:"",updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});await batch.commit();toast("Partie réinitialisée");}
+  async function firebaseResetGame(){if(!state.isHost) return;rolesShownForRound=-1;closeRolesReveal();const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:"lobby",roundNumber:0,winner:"",resultText:"",updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});await batch.commit();toast("Partie réinitialisée");}
 
   function autoPhaseProgress(){if(state.mode!=="firebase"||!state.isHost) return;const room=getRoom();if(!room) return;if(room.phase==="discussion"&&room.current?.discussionEndsAt&&Date.now()>=room.current.discussionEndsAt)firebaseStartVote();if(room.phase==="vote"&&room.current?.voteEndsAt&&Date.now()>=room.current.voteEndsAt)firebaseResolveVotes();}
 
@@ -1555,13 +1732,110 @@
 
   function offlineResolveVotes(){const room=state.offline;if(!room||!state.isHost||room.phase!=="vote") return;const alive=room.players.filter(p=>p.alive);const tally={};for(const p of alive)tally[p.id]=0;Object.values(room.votes).forEach(v=>{if(v.targetId in tally)tally[v.targetId]++;});const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=room.players.find(p=>p.id===elimId);const ucIds=room.current.undercoverIds||[];if(elimPlayer)elimPlayer.alive=false;const survivors=room.players.filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;room.phase="result";room.resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";if(aliveUC===0)room.winner="civils";else if(aliveUC>=aliveCivil)room.winner="undercover";else room.winner="";room.current.aliveIds=survivors.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;if(elimId)room.current.eliminatedIds.push(elimId);persistOffline();renderPlayers();updateRoomHeader();toast("Résultat prêt");}
 
-  function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result"||room.winner) return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}room.phase="lobby";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast("Retour au lobby");}
+  function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result"||room.winner) return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}room.phase="lobby";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players)p.votedRound=-1;rolesShownForRound=-1;closeRolesReveal();persistOffline();updateRoomHeader();toast("Retour au lobby");}
 
-  function offlineResetGame(){const room=state.offline;if(!room||!state.isHost) return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}persistOffline();renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
+  function offlineResetGame(){const room=state.offline;if(!room||!state.isHost) return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
 
   function offlineAutoProgress(){const room=state.offline;if(!room||!state.isHost) return;if(room.phase==="discussion"&&room.current.discussionEndsAt&&now()>=room.current.discussionEndsAt)offlineStartVote();if(room.phase==="vote"&&room.current.voteEndsAt&&now()>=room.current.voteEndsAt)offlineResolveVotes();}
 
+  /* ─── PEEK WORD (flip card to re-see your word) ─── */
+  let peekFlipped = false;
+
+  function updatePeekButton() {
+    const room = getRoom();
+    const phase = room?.phase;
+    const btn = $("peekWordBtn");
+    // Show peek button during discussion, vote, or result if we have a word
+    const hasWord = state.mode === "firebase" ? !!state.myPrivateWord?.word
+      : (state.offline?.privateWords?.[state.myId]?.word);
+    const showPeek = hasWord && ["discussion","vote","result"].includes(phase);
+    btn.classList.toggle("visible", showPeek);
+  }
+
+  function getMyCurrentWord() {
+    if(state.mode === "firebase") return state.myPrivateWord?.word || "—";
+    return state.offline?.privateWords?.[state.myId]?.word || "—";
+  }
+
+  function openPeek() {
+    $("peekWordText").textContent = getMyCurrentWord();
+    peekFlipped = false;
+    $("flipCard").classList.remove("flipped");
+    $("peekOverlay").classList.add("active");
+  }
+
+  function closePeek() {
+    $("peekOverlay").classList.remove("active");
+    peekFlipped = false;
+    $("flipCard").classList.remove("flipped");
+  }
+
+  function toggleFlip() {
+    peekFlipped = !peekFlipped;
+    $("flipCard").classList.toggle("flipped", peekFlipped);
+    if(peekFlipped) sfxReveal();
+  }
+
+  /* ─── ROLE REVEAL ANIMATION (end of game) ─── */
+  let rolesShownForRound = -1;
+
+  function showRolesReveal() {
+    const room = getRoom();
+    if(!room || !room.winner) return;
+    const roundNum = currentRoundNumber();
+    if(rolesShownForRound === roundNum) return; // already shown
+    rolesShownForRound = roundNum;
+
+    const ucIds = room.current?.undercoverIds || [];
+    const allPlayers = getPlayers();
+    const pairIndex = room.current?.pairIndex ?? -1;
+    const pair = pairIndex >= 0 ? WORD_PAIRS[pairIndex] : null;
+
+    // Sort: civils first, undercovers last for dramatic effect
+    const sorted = [...allPlayers].sort((a,b) => {
+      const aUC = ucIds.includes(a.id) ? 1 : 0;
+      const bUC = ucIds.includes(b.id) ? 1 : 0;
+      return aUC - bUC;
+    });
+
+    const grid = $("rolesGrid");
+    grid.innerHTML = sorted.map((p, i) => {
+      const isUC = ucIds.includes(p.id);
+      const word = isUC ? (pair?.b || "?") : (pair?.a || "?");
+      const delay = 0.3 + i * 0.35; // staggered animation
+      return `<div class="role-card-reveal ${isUC?"undercover":"civil"}" style="animation-delay:${delay}s">
+        <div class="role-card-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div>
+        <div class="role-card-name">${escHtml(p.nickname)}</div>
+        <div class="role-card-role ${isUC?"uc-text":"civil-text"}">${isUC?"🕵️ Undercover":"✅ Civil"}</div>
+        <div class="role-card-word">${escHtml(word)}</div>
+      </div>`;
+    }).join("");
+
+    const isCivil = room.winner === "civils";
+    $("rolesTitle").textContent = isCivil ? "🏆 Victoire des Civils !" : "🕵️ Victoire des Undercovers !";
+    $("rolesTitle").style.color = isCivil ? "#80ffd4" : "#ff8fa3";
+
+    // Set close button delay based on total players
+    const closeDelay = 0.3 + sorted.length * 0.35 + 0.5;
+    $("btnCloseRoles").parentElement.style.animationDelay = `${closeDelay}s`;
+
+    $("rolesOverlay").classList.add("active");
+
+    // Play win sound after a small delay
+    setTimeout(() => sfxWin(isCivil), 500);
+  }
+
+  function closeRolesReveal() {
+    $("rolesOverlay").classList.remove("active");
+  }
+
   /* ─── EVENT LISTENERS ─── */
+  $("peekWordBtn").addEventListener("click", openPeek);
+  $("peekOverlay").addEventListener("click", e => {
+    if(e.target === $("peekOverlay")) closePeek();
+  });
+  $("flipContainer").addEventListener("click", toggleFlip);
+  $("btnCloseRoles").addEventListener("click", closeRolesReveal);
   $("btnStartAudio").addEventListener("click",async()=>{await enableAudio();toast("Ambiance activée");});
   $("soundEnabled").addEventListener("change",updateAudioSettings);
   $("soundVolume").addEventListener("input",updateAudioSettings);
