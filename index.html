@@ -1376,7 +1376,7 @@
   const getPlayers=()=>state.mode==="firebase"?state.players:(state.offline?.players||[]);
   const getAlivePlayers=()=>getPlayers().filter(p=>p.alive);
   const currentRoundNumber=()=>getRoom()?.roundNumber||0;
-  const currentSpeakerId=()=>{const r=getRoom();const order=r?.current?.turnOrder||[];return order[r?.current?.speakerIndex||0]||"";};
+  const currentSpeakerId=()=>{const r=getRoom();const order=r?.current?.turnOrder||[];if(!order.length) return "";return order[(r?.current?.speakerIndex||0) % order.length]||"";};
   const phaseLabel=p=>({lobby:"Lobby",reveal:"Révélation",discussion:"Discussion",vote:"Vote",result:"Résultat"}[p]||"—");
   const setStatus=(t,s)=>{setText("statusTitle",t);setText("statusText",s);};
 
@@ -1391,15 +1391,9 @@
   }
 
   function pickPairIndex() { const max=WORD_PAIRS.length; let idx=randInt(max),tries=0; while(state.recentPairIndexes.includes(idx)&&tries<20){idx=randInt(max);tries++;} state.recentPairIndexes.push(idx); if(state.recentPairIndexes.length>12) state.recentPairIndexes.shift(); return idx; }
-  function buildTurnOrder(alive, turnsPerRound) {
-    const total = turnsPerRound || alive.length;
-    const ids = alive.map(p => p.id);
-    const shuffled = shuffle(ids);
-    const order = [];
-    for(let i = 0; i < total; i++) {
-      order.push(shuffled[i % shuffled.length]);
-    }
-    return order;
+  function buildTurnOrder(alive) {
+    // Just shuffle the players once — the game will cycle through them
+    return shuffle(alive.map(p => p.id));
   }
   const getPlayerName=id=>getPlayers().find(p=>p.id===id)?.nickname||"—";
   const hasSeenCurrentWord=()=>getPlayers().find(p=>p.id===state.myId)?.revealedRound===currentRoundNumber();
@@ -1493,8 +1487,9 @@
     show($("btnStartRound"),state.isHost&&phase==="lobby"&&alive.length>=3);
     show($("btnForceDiscussion"),state.isHost&&phase==="reveal");
     $("btnForceDiscussion").disabled=!allSeen;
+    const totalTurns=room?.settings?.turnsPerRound||order.length;
     show($("btnNextSpeaker"),state.isHost&&phase==="discussion");
-    $("btnNextSpeaker").disabled=idx>=Math.max(0,order.length-1);
+    $("btnNextSpeaker").disabled=idx>=Math.max(0,totalTurns-1);
     show($("btnForceVote"),state.isHost&&phase==="discussion");
     show($("btnResolveVote"),state.isHost&&phase==="vote");
     show($("btnNextRound"),state.isHost&&phase==="result"&&currentRoundNumber()<(room?.settings?.roundsTotal||1));
@@ -1560,13 +1555,25 @@
 
   function updateDiscussionPanel() {
     const room=getRoom(); if(room?.phase!=="discussion") return;
-    const order=room.current?.turnOrder||[]; const idx=room.current?.speakerIndex||0;
-    const curId=order[idx]||"";
+    const order=room.current?.turnOrder||[]; 
+    const idx=room.current?.speakerIndex||0;
+    const totalTurns=room.settings?.turnsPerRound||order.length;
+    const curId=order.length ? order[idx % order.length] : "";
+    
     setText("currentSpeakerText",curId?getPlayerName(curId):"—");
-    setText("speakerProgressBadge",`Tour ${Math.min(idx+1,Math.max(1,order.length))} / ${order.length||0}`);
+    setText("speakerProgressBadge",`Tour ${Math.min(idx+1,totalTurns)} / ${totalTurns}`);
+    
+    // Show each player once with their current status in the cycle
+    const currentPlayerIdx = order.length ? (idx % order.length) : -1;
     $("discussionOrder").innerHTML=order.map((id,i)=>{
-      const cls = i===idx ? "active" : (i<idx ? "done-turn" : "");
-      return `<div class="turn-card ${cls}"><div class="t-num">${i<idx?"✓":"Tour "+(i+1)}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`;
+      const isCurrent = i === currentPlayerIdx;
+      const isDone = !isCurrent && (i < currentPlayerIdx || idx >= totalTurns);
+      const cls = isCurrent ? "active" : (isDone ? "done-turn" : "");
+      const cycleNum = Math.floor(idx / Math.max(1, order.length)) + 1;
+      return `<div class="turn-card ${cls}">
+        <div class="t-num">${isCurrent ? "🎙 En cours" : (isDone ? "✓" : "En attente")}</div>
+        <div class="t-name">${escHtml(getPlayerName(id))}</div>
+      </div>`;
     }).join("");
   }
 
@@ -1688,9 +1695,9 @@
 
   async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=="reveal"||hasSeenCurrentWord()) return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});sfxSeen();hideRevealOverlay();toast("Mot vu","Tu es prêt !");}
 
-  async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=="reveal") return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber())) return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive,room.settings.turnsPerRound);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:"discussion",updatedAt:firebaseFns.serverTimestamp(),"current.discussionEndsAt":end,"current.turnOrder":turnOrder,"current.speakerIndex":0});toast("Discussion lancée","Premier : "+getPlayerName(turnOrder[0]));}
+  async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=="reveal") return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber())) return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:"discussion",updatedAt:firebaseFns.serverTimestamp(),"current.discussionEndsAt":end,"current.turnOrder":turnOrder,"current.speakerIndex":0});toast("Discussion lancée","Premier : "+getPlayerName(turnOrder[0]));}
 
-  async function firebaseNextSpeaker(){const room=getRoom();if(!state.isHost||room.phase!=="discussion") return;const order=room.current?.turnOrder||[],idx=room.current?.speakerIndex||0;if(idx>=order.length-1) return;await firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),"current.speakerIndex":idx+1});toast("Passage suivant",getPlayerName(order[idx+1]));sfxPhase();}
+  async function firebaseNextSpeaker(){const room=getRoom();if(!state.isHost||room.phase!=="discussion") return;const order=room.current?.turnOrder||[],idx=room.current?.speakerIndex||0;const totalTurns=room.settings?.turnsPerRound||order.length;if(idx>=totalTurns-1) return;await firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),"current.speakerIndex":idx+1});const nextId=order[(idx+1)%order.length]||"";toast("Tour suivant",getPlayerName(nextId));sfxPhase();}
 
   async function firebaseStartVote(){const room=getRoom();if(!state.isHost||room.phase!=="discussion") return;const end=Date.now()+Number(room.settings.voteSeconds||45)*1000;await firebaseFns.updateDoc(roomRef(state.roomId),{phase:"vote",updatedAt:firebaseFns.serverTimestamp(),"current.voteEndsAt":end});toast("Vote lancé");}
 
@@ -1734,9 +1741,9 @@
 
   function offlineMarkSeen(){const room=state.offline;if(!room||room.phase!=="reveal") return;const player=offlineCurrentRevealPlayer();if(!player) return;player.revealedRound=room.roundNumber;room.privateWords[player.id].seen=true;room.offlineRevealIndex+=1;state.myPrivateWord=room.offlineRevealIndex<room.offlineRevealQueue.length?room.privateWords[room.offlineRevealQueue[room.offlineRevealIndex]]:null;persistOffline();renderPlayers();updateRoomHeader();sfxSeen();const next=offlineCurrentRevealPlayer();toast("Mot vu",next?`Passe à ${next.nickname}`:"Tous ont vu !");}
 
-  function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=="reveal") return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber)) return;room.phase="discussion";room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive,room.settings.turnsPerRound);room.current.speakerIndex=0;persistOffline();updateRoomHeader();toast("Discussion lancée",`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
+  function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=="reveal") return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber)) return;room.phase="discussion";room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive);room.current.speakerIndex=0;persistOffline();updateRoomHeader();toast("Discussion lancée",`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
 
-  function offlineNextSpeaker(){const room=state.offline;if(!room||!state.isHost||room.phase!=="discussion") return;const order=room.current.turnOrder||[],idx=room.current.speakerIndex||0;if(idx>=order.length-1) return;room.current.speakerIndex+=1;persistOffline();updateRoomHeader();toast("Passage suivant",getPlayerName(order[room.current.speakerIndex]));sfxPhase();}
+  function offlineNextSpeaker(){const room=state.offline;if(!room||!state.isHost||room.phase!=="discussion") return;const order=room.current.turnOrder||[],idx=room.current.speakerIndex||0;const totalTurns=room.settings?.turnsPerRound||order.length;if(idx>=totalTurns-1) return;room.current.speakerIndex+=1;persistOffline();updateRoomHeader();const nextId=order[room.current.speakerIndex%order.length]||"";toast("Tour suivant",getPlayerName(nextId));sfxPhase();}
 
   function offlineStartVote(){const room=state.offline;if(!room||!state.isHost||room.phase!=="discussion") return;room.phase="vote";room.current.voteEndsAt=now()+Number(room.settings.voteSeconds||45)*1000;room.votes={};room.offlineVoteQueue=room.players.filter(p=>p.alive).map(p=>p.id);room.offlineVoteIndex=0;room.current.turnOrder=[];room.current.speakerIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast("Vote lancé","Passe le téléphone à chaque joueur");}
 
