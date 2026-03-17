@@ -11,24 +11,28 @@
       --bg:       #05070f;
       --bg2:      #080c1a;
       --bg3:      #0b1022;
-      --surface:  rgba(255,255,255,.055);
-      --surface2: rgba(255,255,255,.03);
-      --border:   rgba(255,255,255,.1);
-      --border2:  rgba(255,255,255,.06);
+      --surface:  rgba(255,255,255,.065);
+      --surface2: rgba(255,255,255,.04);
+      --surface3: rgba(255,255,255,.025);
+      --border:   rgba(255,255,255,.12);
+      --border2:  rgba(255,255,255,.08);
       --text:     #eef2ff;
-      --muted:    #8899cc;
-      --dim:      #4a5880;
+      --muted:    #a9b6dd;
+      --dim:      #66759f;
       --accent:   #6c5ce7;
       --cyan:     #00d4ff;
       --green:    #00e5a0;
       --yellow:   #ffd166;
       --red:      #ff4d6d;
       --pink:     #f72585;
-      --r:        20px;
-      --r2:       14px;
+      --r:        22px;
+      --r2:       16px;
+      --shadow:   0 18px 48px rgba(0,0,0,.32);
     }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
     body {
       font-family: 'Outfit', sans-serif;
       background: var(--bg);
@@ -37,7 +41,6 @@
       overflow-x: hidden;
     }
 
-    /* ── GRAIN + GLOW ── */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -46,6 +49,7 @@
         radial-gradient(ellipse 80vw 60vh at 20% 0%, rgba(108,92,231,.18), transparent),
         radial-gradient(ellipse 60vw 50vh at 85% 100%, rgba(0,212,255,.1), transparent);
     }
+
     body::after {
       content: '';
       position: fixed; inset: 0;
@@ -62,25 +66,29 @@
       position: relative;
       z-index: 1;
     }
+
     .hidden { display: none !important; }
 
-    /* ── TOPBAR ── */
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 0 20px;
-      position: sticky; top: 0; z-index: 50;
+      padding: 14px 0 18px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
       backdrop-filter: blur(18px);
-      background: linear-gradient(180deg, rgba(5,7,15,.95) 60%, transparent);
+      background: linear-gradient(180deg, rgba(5,7,15,.96) 68%, transparent);
       gap: 12px;
       flex-wrap: wrap;
     }
+
     .brand {
       display: flex;
       align-items: center;
       gap: 14px;
     }
+
     .logo-mark {
       width: 50px; height: 50px;
       border-radius: 15px;
@@ -93,46 +101,52 @@
       position: relative;
       overflow: hidden;
     }
+
     .logo-mark::after {
       content: '';
       position: absolute;
       inset: 0;
       background: linear-gradient(135deg, rgba(255,255,255,.2), transparent);
     }
+
     .brand-name {
       font-family: 'Syne', sans-serif;
-      font-size: 1.2rem;
+      font-size: 1.18rem;
       font-weight: 900;
       letter-spacing: -.02em;
     }
+
     .brand-sub {
-      font-size: .78rem;
+      font-size: .82rem;
       color: var(--muted);
       margin-top: 2px;
-      font-weight: 400;
+      font-weight: 500;
     }
+
     .chips-row {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      align-items: center;
     }
+
     .chip {
       font-family: 'Space Mono', monospace;
-      font-size: .72rem;
-      padding: 6px 12px;
+      font-size: .74rem;
+      padding: 7px 12px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--surface2);
       color: var(--muted);
       white-space: nowrap;
     }
+
     .chip.active {
       border-color: rgba(108,92,231,.5);
-      color: #c4baff;
-      background: rgba(108,92,231,.12);
+      color: #d2caff;
+      background: rgba(108,92,231,.14);
     }
 
-    /* ── CARDS ── */
     .card {
       background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       border: 1px solid var(--border);
@@ -141,119 +155,275 @@
       backdrop-filter: blur(12px);
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow);
     }
+
     .card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
     }
+
     .card-sm {
-      background: var(--surface2);
+      background: var(--surface3);
       border: 1px solid var(--border2);
       border-radius: var(--r2);
       padding: 14px;
     }
 
-    /* ── HERO SECTION ── */
+    .primary-panel {
+      border: 1px solid rgba(0,212,255,.2);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(108,92,231,.18), transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(0,212,255,.12), transparent 42%),
+        linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .section-title h2 {
+      margin-bottom: 4px;
+    }
+
+    .section-desc {
+      font-size: .96rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: .74rem;
+      color: #bfcaf0;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(108,92,231,.24);
+      background: rgba(108,92,231,.1);
+    }
+
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 14px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
+      gap: 16px;
       margin-top: 8px;
     }
-    @media(max-width:860px){
-      .hero-grid, .game-grid { grid-template-columns: 1fr !important; }
-    }
-    .stack { display: flex; flex-direction: column; gap: 14px; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
-    /* ── HERO BANNER ── */
+    @media(max-width:960px){
+      .hero-grid, .game-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
     .hero-banner {
       border-radius: var(--r);
-      padding: 28px;
+      padding: 22px 22px 18px;
       background:
-        radial-gradient(circle at 10% 30%, rgba(108,92,231,.35), transparent 40%),
-        radial-gradient(circle at 90% 70%, rgba(0,212,255,.2), transparent 40%),
-        linear-gradient(160deg, rgba(108,92,231,.15), rgba(0,212,255,.08));
-      border: 1px solid rgba(108,92,231,.3);
+        radial-gradient(circle at 10% 30%, rgba(108,92,231,.28), transparent 40%),
+        radial-gradient(circle at 90% 70%, rgba(0,212,255,.16), transparent 40%),
+        linear-gradient(160deg, rgba(108,92,231,.12), rgba(0,212,255,.07));
+      border: 1px solid rgba(108,92,231,.25);
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow);
     }
+
     .hero-banner::after {
       content: '🕵️';
       position: absolute;
-      right: 24px; top: 50%;
+      right: 22px;
+      top: 50%;
       transform: translateY(-50%);
-      font-size: 5rem;
-      opacity: .15;
+      font-size: 4rem;
+      opacity: .11;
       filter: blur(1px);
       pointer-events: none;
     }
+
     .hero-title {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-size: clamp(1.45rem, 3vw, 2.25rem);
       font-weight: 900;
       letter-spacing: -.04em;
       line-height: 1.05;
-      background: linear-gradient(135deg, #fff, #c4baff 60%, var(--cyan));
+      max-width: 640px;
+      background: linear-gradient(135deg, #fff, #d4cdff 60%, var(--cyan));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+
     .hero-desc {
       margin-top: 10px;
       color: var(--muted);
-      font-size: .95rem;
-      line-height: 1.6;
-      max-width: 420px;
+      font-size: 1rem;
+      line-height: 1.55;
+      max-width: 640px;
     }
 
-    /* ── FORM ELEMENTS ── */
-    .field { display: flex; flex-direction: column; gap: 7px; }
+    .quick-steps {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+    }
+
+    @media(max-width:700px){
+      .quick-steps { grid-template-columns: 1fr; }
+    }
+
+    .quick-step {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border2);
+      background: rgba(255,255,255,.04);
+    }
+
+    .quick-step-k {
+      font-family: 'Space Mono', monospace;
+      font-size: .7rem;
+      color: #b8c3ea;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 6px;
+    }
+
+    .quick-step-v {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .setup-actions-grid {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap: 16px;
+    }
+
+    @media(max-width:960px){
+      .setup-actions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-strip {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .info-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 600;
+    }
+
+    .field-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media(max-width:680px){
+      .field-group {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     label {
       font-size: .82rem;
-      font-weight: 600;
-      color: var(--muted);
+      font-weight: 700;
+      color: #c3ceed;
       text-transform: uppercase;
       letter-spacing: .06em;
     }
-    input[type=text], input[type=number], input[type=password] {
+
+    .field-hint {
+      font-size: .83rem;
+      line-height: 1.45;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    input[type=text],
+    input[type=number],
+    input[type=password] {
       font-family: 'Outfit', sans-serif;
       width: 100%;
-      padding: 11px 14px;
+      padding: 12px 14px;
       border-radius: var(--r2);
       border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.055);
       color: var(--text);
-      font-size: .95rem;
+      font-size: .98rem;
       outline: none;
       transition: all .2s;
     }
+
     input:focus {
-      border-color: rgba(108,92,231,.7);
-      background: rgba(108,92,231,.08);
+      border-color: rgba(108,92,231,.75);
+      background: rgba(108,92,231,.1);
       box-shadow: 0 0 0 3px rgba(108,92,231,.15);
       transform: translateY(-1px);
     }
+
     input::placeholder { color: var(--dim); }
+
     input[type=range] {
       accent-color: var(--accent);
       width: 100%;
       cursor: pointer;
     }
+
     input[readonly] { cursor: default; }
     input[readonly]:focus { transform: none; }
 
-    /* ── BUTTONS ── */
     .btn {
       font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: .92rem;
+      font-weight: 800;
+      font-size: .95rem;
       border: 0;
       border-radius: var(--r2);
-      padding: 11px 18px;
+      padding: 12px 18px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -263,7 +433,9 @@
       position: relative;
       overflow: hidden;
       white-space: nowrap;
+      min-height: 46px;
     }
+
     .btn::after {
       content: '';
       position: absolute; inset: 0;
@@ -271,120 +443,189 @@
       transform: translateX(-100%);
       transition: .4s ease;
     }
+
     .btn:hover::after { transform: translateX(100%); }
     .btn:hover { transform: translateY(-2px); }
     .btn:active { transform: scale(.97); }
-    .btn:disabled { opacity: .35; cursor: not-allowed; transform: none; pointer-events: none; }
+    .btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+      transform: none;
+      pointer-events: none;
+    }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), #9b59b6);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(108,92,231,.35);
+      box-shadow: 0 10px 28px rgba(108,92,231,.35);
     }
+
     .btn-cyan {
       background: linear-gradient(135deg, #0098c7, var(--cyan));
-      color: #000;
-      box-shadow: 0 8px 24px rgba(0,212,255,.25);
+      color: #001218;
+      box-shadow: 0 10px 28px rgba(0,212,255,.25);
     }
+
     .btn-green {
       background: linear-gradient(135deg, #009f6b, var(--green));
       color: #001a0f;
       box-shadow: 0 8px 24px rgba(0,229,160,.25);
     }
+
     .btn-yellow {
       background: linear-gradient(135deg, #e6a800, var(--yellow));
       color: #1a0e00;
       box-shadow: 0 8px 24px rgba(255,209,102,.2);
     }
+
     .btn-red {
       background: linear-gradient(135deg, #c4003d, var(--red));
       color: #fff;
       box-shadow: 0 8px 24px rgba(255,77,109,.25);
     }
+
     .btn-ghost {
-      background: var(--surface);
+      background: rgba(255,255,255,.05);
       border: 1px solid var(--border);
       color: var(--text);
     }
+
     .btn-ghost:hover { background: rgba(255,255,255,.1); }
-    .btn-sm { padding: 7px 13px; font-size: .85rem; border-radius: 10px; }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,.1);
+    }
+
+    .btn-sm {
+      padding: 8px 13px;
+      font-size: .86rem;
+      border-radius: 12px;
+      min-height: 38px;
+    }
+
     .btn-icon {
-      width: 38px; height: 38px;
+      width: 40px;
+      height: 40px;
       padding: 0;
       border-radius: 12px;
       font-size: 1rem;
     }
+
+    .btn-cta {
+      min-height: 52px;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: -.01em;
+    }
+
     .btn-confirm {
       background: linear-gradient(135deg, #009f6b, var(--green));
       color: #001a0f;
       box-shadow: 0 4px 16px rgba(0,229,160,.3);
       animation: pulse-confirm 1.4s ease infinite;
     }
+
     @keyframes pulse-confirm {
       0%,100% { box-shadow: 0 4px 16px rgba(0,229,160,.3); }
       50% { box-shadow: 0 6px 24px rgba(0,229,160,.55); }
     }
 
-    /* ── BADGES ── */
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    @media(max-width:680px){
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 5px 11px;
       border-radius: 999px;
-      font-size: .8rem;
-      font-weight: 700;
+      font-size: .82rem;
+      font-weight: 800;
       font-family: 'Space Mono', monospace;
     }
+
     .badge-ok { background: rgba(0,229,160,.12); color: #80ffd4; border: 1px solid rgba(0,229,160,.25); }
     .badge-warn { background: rgba(255,209,102,.12); color: #ffe580; border: 1px solid rgba(255,209,102,.25); }
     .badge-danger { background: rgba(255,77,109,.12); color: #ffb3c1; border: 1px solid rgba(255,77,109,.25); }
     .badge-info { background: rgba(0,212,255,.1); color: #80eaff; border: 1px solid rgba(0,212,255,.2); }
     .badge-purple { background: rgba(108,92,231,.15); color: #c4baff; border: 1px solid rgba(108,92,231,.3); }
 
-    /* ── PHASE BAR ── */
     .phasebar {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
     }
+
     .phase-step {
       font-family: 'Space Mono', monospace;
-      font-size: .75rem;
+      font-size: .76rem;
       padding: 6px 12px;
       border-radius: 999px;
       border: 1px solid var(--border2);
       color: var(--dim);
       transition: all .3s;
     }
+
     .phase-step.active {
       border-color: rgba(108,92,231,.5);
       background: rgba(108,92,231,.15);
-      color: #c4baff;
+      color: #d2caff;
     }
 
-    /* ── STATS ── */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4,1fr);
       gap: 10px;
     }
-    @media(max-width:600px){ .stats-grid { grid-template-columns: repeat(2,1fr); } }
+
+    @media(max-width:600px){
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
     .stat {
-      padding: 13px;
+      padding: 14px;
       border-radius: var(--r2);
       border: 1px solid var(--border2);
-      background: var(--surface2);
+      background: var(--surface3);
     }
-    .stat-k { font-size: .73rem; font-weight: 600; color: var(--dim); text-transform: uppercase; letter-spacing: .05em; }
-    .stat-v { font-size: 1.3rem; font-weight: 900; font-family: 'Syne', sans-serif; margin-top: 5px; }
 
-    /* ── PLAYERS GRID ── */
+    .stat-k {
+      font-size: .74rem;
+      font-weight: 700;
+      color: #b3bfdf;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .stat-v {
+      font-size: 1.3rem;
+      font-weight: 900;
+      font-family: 'Syne', sans-serif;
+      margin-top: 5px;
+    }
+
     .players-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(190px,1fr));
       gap: 10px;
     }
+
     .player-card {
       border: 1px solid var(--border2);
       background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
@@ -394,6 +635,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .player-card::before {
       content: '';
       position: absolute;
@@ -402,6 +644,7 @@
       opacity: 0;
       transition: opacity .2s;
     }
+
     .player-card:hover::before { opacity: 1; }
     .player-card.is-me { border-color: rgba(108,92,231,.4); }
     .player-card.is-me::before { opacity: .6; }
@@ -410,12 +653,24 @@
       border-color: rgba(255,209,102,.5);
       box-shadow: 0 0 0 2px rgba(255,209,102,.15);
     }
+
     .player-card.speaking::before {
       background: linear-gradient(90deg, var(--yellow), #f97316);
       opacity: 1;
     }
-    .player-name { font-weight: 700; font-size: .98rem; }
-    .player-meta { font-size: .8rem; color: var(--muted); margin-top: 3px; }
+
+    .player-name {
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .player-meta {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
     .player-avatar {
       width: 32px; height: 32px;
       border-radius: 10px;
@@ -426,7 +681,6 @@
       flex-shrink: 0;
     }
 
-    /* ── REVEAL PANEL ── */
     .word-stage {
       border-radius: 24px;
       padding: 40px 28px;
@@ -439,20 +693,23 @@
       position: relative;
       overflow: hidden;
     }
+
     .word-stage::before {
       content: '';
       position: absolute; inset: 0;
       background: linear-gradient(135deg, rgba(255,255,255,.04), transparent);
       pointer-events: none;
     }
+
     .reveal-label {
       font-family: 'Space Mono', monospace;
-      font-size: .78rem;
+      font-size: .8rem;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: .1em;
       margin-bottom: 14px;
     }
+
     .big-word {
       font-family: 'Syne', sans-serif;
       font-size: clamp(2.5rem, 8vw, 5rem);
@@ -464,17 +721,17 @@
       background-clip: text;
       line-height: 1;
     }
+
     .reveal-warn {
       margin-top: 14px;
-      font-size: .85rem;
-      color: rgba(255,209,102,.8);
+      font-size: .88rem;
+      color: rgba(255,209,102,.9);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
     }
 
-    /* ── TIMER ── */
     .timer-display {
       font-family: 'Space Mono', monospace;
       font-size: clamp(2rem,5vw,3.5rem);
@@ -482,15 +739,18 @@
       letter-spacing: .05em;
       transition: color .3s;
     }
+
     .timer-display.urgent {
       color: #ff4d6d;
       animation: urgent-pulse .6s ease infinite alternate;
       text-shadow: 0 0 30px rgba(255,77,109,.4);
     }
+
     @keyframes urgent-pulse {
       from { transform: scale(1); }
       to { transform: scale(1.04); }
     }
+
     .progress-bar {
       height: 6px;
       border-radius: 999px;
@@ -498,6 +758,7 @@
       overflow: hidden;
       margin-top: 10px;
     }
+
     .progress-fill {
       height: 100%;
       width: 0%;
@@ -506,19 +767,26 @@
       transition: width .25s linear;
     }
 
-    /* ── TIMER EDIT ── */
     .timer-controls {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
-    .timer-adj {
-      display: flex; gap: 4px;
-    }
-    .timer-adj .btn { min-width: 36px; padding: 6px 10px; font-size: .85rem; }
 
-    /* ── CHAT ── */
+    .timer-adj {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .timer-adj .btn {
+      min-width: 36px;
+      padding: 6px 10px;
+      font-size: .85rem;
+    }
+
     .chat-panel {
       display: flex;
       flex-direction: column;
@@ -528,17 +796,20 @@
       background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
       overflow: hidden;
       position: relative;
+      box-shadow: var(--shadow);
     }
+
     .chat-header {
       padding: 12px 16px;
       border-bottom: 1px solid var(--border2);
-      font-weight: 700;
-      font-size: .9rem;
+      font-weight: 800;
+      font-size: .92rem;
       display: flex;
       align-items: center;
       gap: 8px;
       flex-shrink: 0;
     }
+
     .chat-messages {
       flex: 1;
       overflow-y: auto;
@@ -548,48 +819,56 @@
       gap: 6px;
       scroll-behavior: smooth;
     }
+
     .chat-messages::-webkit-scrollbar { width: 4px; }
     .chat-messages::-webkit-scrollbar-track { background: transparent; }
     .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+
     .chat-msg {
       padding: 8px 12px;
       border-radius: 12px;
-      font-size: .88rem;
-      line-height: 1.4;
+      font-size: .9rem;
+      line-height: 1.45;
       max-width: 85%;
       position: relative;
     }
+
     .chat-msg.mine {
       background: rgba(108,92,231,.2);
       border: 1px solid rgba(108,92,231,.25);
       align-self: flex-end;
     }
+
     .chat-msg.other {
       background: rgba(255,255,255,.06);
       border: 1px solid var(--border2);
       align-self: flex-start;
     }
+
     .chat-msg.system {
       background: rgba(255,209,102,.08);
       border: 1px solid rgba(255,209,102,.15);
       align-self: center;
       text-align: center;
-      font-size: .8rem;
-      color: rgba(255,209,102,.7);
+      font-size: .84rem;
+      color: rgba(255,209,102,.78);
       font-style: italic;
       max-width: 100%;
     }
+
     .chat-msg.word-submitted {
       background: rgba(0,229,160,.1);
       border: 1px solid rgba(0,229,160,.2);
     }
+
     .msg-author {
-      font-size: .72rem;
-      font-weight: 700;
+      font-size: .73rem;
+      font-weight: 800;
       color: var(--muted);
       margin-bottom: 3px;
       font-family: 'Space Mono', monospace;
     }
+
     .msg-word-tag {
       display: inline-flex;
       align-items: center;
@@ -600,11 +879,10 @@
       padding: 3px 9px;
       font-size: .82rem;
       color: var(--green);
-      font-weight: 700;
+      font-weight: 800;
       margin-top: 4px;
     }
 
-    /* ── PENDING WORD CONFIRM ── */
     .pending-confirm {
       padding: 10px 14px;
       border-top: 1px solid var(--border2);
@@ -615,12 +893,14 @@
       gap: 10px;
       flex-wrap: wrap;
     }
+
     .pending-word {
       font-weight: 700;
-      font-size: .9rem;
+      font-size: .92rem;
       flex: 1;
       min-width: 0;
     }
+
     .pending-word span {
       color: var(--green);
       font-family: 'Space Mono', monospace;
@@ -633,73 +913,91 @@
       gap: 8px;
       flex-shrink: 0;
     }
+
     .chat-input {
       flex: 1;
-      padding: 9px 13px;
+      padding: 10px 13px;
       border-radius: 12px;
       border: 1px solid var(--border);
       background: rgba(255,255,255,.05);
       color: var(--text);
       font-family: 'Outfit', sans-serif;
-      font-size: .9rem;
+      font-size: .92rem;
       outline: none;
       transition: all .2s;
     }
+
     .chat-input:focus {
       border-color: rgba(108,92,231,.6);
       background: rgba(108,92,231,.07);
     }
 
-    /* ── DISCUSSION ORDER ── */
     .turn-order {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 8px;
       margin-top: 10px;
     }
+
     .turn-card {
       padding: 10px 12px;
       border-radius: var(--r2);
       border: 1px solid var(--border2);
-      background: var(--surface2);
+      background: var(--surface3);
       transition: all .2s;
     }
+
     .turn-card.active {
       border-color: rgba(255,209,102,.5);
       background: rgba(255,209,102,.08);
       box-shadow: 0 0 0 2px rgba(255,209,102,.1);
     }
-    .turn-card .t-num { font-size: .7rem; color: var(--dim); font-family: 'Space Mono', monospace; }
-    .turn-card .t-name { font-weight: 700; font-size: .95rem; margin-top: 3px; }
 
-    /* ── VOTE GRID ── */
+    .turn-card .t-num {
+      font-size: .72rem;
+      color: var(--dim);
+      font-family: 'Space Mono', monospace;
+    }
+
+    .turn-card .t-name {
+      font-weight: 800;
+      font-size: .95rem;
+      margin-top: 3px;
+    }
+
     .vote-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 10px;
     }
+
     .vote-item {
       padding: 12px 14px;
       border-radius: var(--r2);
       border: 1px solid var(--border2);
-      background: var(--surface2);
+      background: var(--surface3);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
       transition: all .2s;
     }
-    .vote-item:hover { border-color: var(--border); background: var(--surface); }
-    .vote-name { font-weight: 700; }
-    .vote-sub { font-size: .78rem; color: var(--muted); margin-top: 2px; }
 
-    /* ── RESULT ── */
+    .vote-item:hover {
+      border-color: var(--border);
+      background: var(--surface);
+    }
+
+    .vote-name { font-weight: 800; }
+    .vote-sub { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+
     .result-big {
       font-family: 'Syne', sans-serif;
       font-size: clamp(1.5rem, 4vw, 2.5rem);
       font-weight: 900;
       line-height: 1.1;
     }
+
     .winner-banner {
       border-radius: var(--r);
       padding: 20px 24px;
@@ -708,24 +1006,27 @@
       gap: 14px;
       margin-top: 12px;
     }
+
     .winner-banner.civils {
       background: linear-gradient(135deg, rgba(0,229,160,.15), rgba(0,229,160,.05));
       border: 1px solid rgba(0,229,160,.3);
     }
+
     .winner-banner.undercover {
       background: linear-gradient(135deg, rgba(255,77,109,.15), rgba(255,77,109,.05));
       border: 1px solid rgba(255,77,109,.3);
     }
+
     .winner-icon { font-size: 2.5rem; }
     .winner-label { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 900; }
-    .winner-desc { font-size: .88rem; color: var(--muted); margin-top: 3px; }
+    .winner-desc { font-size: .9rem; color: var(--muted); margin-top: 3px; }
 
-    /* ── ROUNDS COUNTER ── */
     .rounds-display {
       display: flex;
       align-items: center;
       gap: 6px;
     }
+
     .round-dot {
       width: 10px; height: 10px;
       border-radius: 50%;
@@ -733,23 +1034,27 @@
       border: 1px solid var(--border2);
       transition: all .3s;
     }
-    .round-dot.done { background: var(--accent); border-color: rgba(108,92,231,.5); }
+
+    .round-dot.done {
+      background: var(--accent);
+      border-color: rgba(108,92,231,.5);
+    }
+
     .round-dot.current {
       background: var(--yellow);
       border-color: rgba(255,209,102,.5);
       box-shadow: 0 0 8px rgba(255,209,102,.4);
       animation: dot-pulse 1s ease infinite alternate;
     }
+
     @keyframes dot-pulse {
       from { transform: scale(1); }
       to { transform: scale(1.3); }
     }
 
-    /* ── COPY LINE ── */
     .copy-row { display: flex; gap: 8px; }
     .copy-row input { flex: 1; }
 
-    /* ── SCROLLABLE PANEL ── */
     .game-grid {
       display: grid;
       grid-template-columns: 1.2fr .8fr;
@@ -757,7 +1062,6 @@
       margin-top: 14px;
     }
 
-    /* ── GAME HEADER ── */
     .game-header {
       display: flex;
       justify-content: space-between;
@@ -767,16 +1071,17 @@
       margin-bottom: 14px;
     }
 
-    /* ── TOASTS ── */
     .toast-wrap {
       position: fixed;
-      bottom: 18px; right: 18px;
+      bottom: 18px;
+      right: 18px;
       z-index: 100;
       display: flex;
       flex-direction: column;
       gap: 8px;
       pointer-events: none;
     }
+
     .toast {
       padding: 12px 16px;
       border-radius: 14px;
@@ -788,52 +1093,81 @@
       box-shadow: 0 12px 40px rgba(0,0,0,.4);
       animation: toast-in .2s ease;
     }
-    .toast-t { font-weight: 700; font-size: .92rem; }
-    .toast-s { font-size: .82rem; color: var(--muted); margin-top: 3px; }
+
+    .toast-t { font-weight: 800; font-size: .94rem; }
+    .toast-s { font-size: .84rem; color: var(--muted); margin-top: 3px; }
+
     @keyframes toast-in {
       from { transform: translateY(10px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* ── MISC ── */
-    h2 { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; }
-    h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
-    .sep { height: 1px; background: var(--border2); margin: 4px 0; }
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.22rem;
+      font-weight: 900;
+      letter-spacing: -.02em;
+    }
+
+    h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #d2dbf6;
+      margin-bottom: 4px;
+      letter-spacing: -.01em;
+    }
+
+    .sep {
+      height: 1px;
+      background: var(--border2);
+      margin: 4px 0;
+    }
+
     .mono { font-family: 'Space Mono', monospace; }
     .muted { color: var(--muted); }
-    .small { font-size: .83rem; }
+    .small { font-size: .86rem; line-height: 1.45; }
     .text-green { color: var(--green); }
     .text-yellow { color: var(--yellow); }
     .text-red { color: var(--red); }
 
-    /* rules */
-    .rules-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .rules-list li {
-      display: flex; align-items: flex-start; gap: 10px;
-      font-size: .9rem; color: var(--muted); line-height: 1.4;
+    .rules-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
+
+    .rules-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .95rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
     .rules-list li::before {
       content: '→';
       color: var(--accent);
       font-family: 'Space Mono', monospace;
       flex-shrink: 0;
+      margin-top: 1px;
     }
 
-    /* scrollbar global */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
 
     .pill {
-      padding: 5px 11px;
+      padding: 6px 11px;
       border-radius: 999px;
       border: 1px solid var(--border2);
-      background: var(--surface2);
-      font-size: .8rem;
-      color: var(--muted);
+      background: var(--surface3);
+      font-size: .84rem;
+      color: #c0caea;
     }
 
-    /* speaker indicator */
     .speaker-now {
       display: flex;
       align-items: center;
@@ -843,6 +1177,7 @@
       background: rgba(255,209,102,.07);
       border: 1px solid rgba(255,209,102,.2);
     }
+
     .speaker-dot {
       width: 10px; height: 10px;
       border-radius: 50%;
@@ -851,60 +1186,217 @@
       animation: dot-pulse 1s ease infinite alternate;
       flex-shrink: 0;
     }
-    .speaker-name { font-weight: 700; font-size: 1.05rem; }
-    .speaker-sub { font-size: .82rem; color: var(--muted); }
 
-    /* audio toggle */
-    .audio-row {
-      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    .speaker-name {
+      font-weight: 800;
+      font-size: 1.05rem;
     }
+
+    .speaker-sub {
+      font-size: .84rem;
+      color: var(--muted);
+    }
+
+    .audio-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .toggle-wrap {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
       border-radius: var(--r2);
       border: 1px solid var(--border2);
-      background: var(--surface2);
+      background: var(--surface3);
       cursor: pointer;
-      font-size: .85rem;
-      font-weight: 600;
+      font-size: .88rem;
+      font-weight: 700;
       color: var(--muted);
       transition: all .2s;
     }
-    .toggle-wrap:hover { border-color: var(--border); color: var(--text); }
-    input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
 
-    /* number control */
-    .num-ctrl {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      border: 1px solid var(--border);
-      border-radius: var(--r2);
-      overflow: hidden;
-      background: rgba(255,255,255,.04);
-    }
-    .num-ctrl button {
-      border: none;
-      background: transparent;
+    .toggle-wrap:hover {
+      border-color: var(--border);
       color: var(--text);
-      width: 36px; height: 38px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      font-weight: 700;
-      transition: background .15s;
     }
-    .num-ctrl button:hover { background: rgba(255,255,255,.08); }
+
+    input[type=checkbox] {
+      accent-color: var(--accent);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    .num-card {
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      background: rgba(255,255,255,.035);
+      padding: 12px;
+    }
+
+    .num-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .num-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #fff;
+      min-width: 26px;
+      text-align: right;
+    }
+
+    .num-ctrl {
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .num-ctrl button {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      height: 42px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.15rem;
+      font-weight: 900;
+      transition: all .15s;
+    }
+
+    .num-ctrl button:hover {
+      background: rgba(255,255,255,.1);
+      transform: translateY(-1px);
+    }
+
     .num-ctrl input {
-      border: none !important;
-      border-left: 1px solid var(--border2) !important;
-      border-right: 1px solid var(--border2) !important;
-      background: transparent !important;
-      width: 54px;
+      border: 1px solid var(--border) !important;
+      background: rgba(255,255,255,.04) !important;
       text-align: center;
-      padding: 8px 4px;
-      border-radius: 0 !important;
+      padding: 10px 6px;
+      border-radius: 12px !important;
       box-shadow: none !important;
       transform: none !important;
+      font-weight: 800;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .details-card summary {
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .details-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .details-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .details-arrow {
+      transition: transform .2s ease;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    details[open] .details-arrow {
+      transform: rotate(180deg);
+    }
+
+    .subtle-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .feature-mini {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border2);
+      background: var(--surface3);
+    }
+
+    .feature-mini-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .feature-mini-title {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .feature-mini-desc {
+      font-size: .87rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 2px;
+    }
+
+    .helper-note {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,212,255,.16);
+      background: rgba(0,212,255,.05);
+      color: #c7f6ff;
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+
+    .setup-side {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .ghost-link {
+      color: #c9d4f5;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .ghost-link:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .setup-summary-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .setup-summary-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: .93rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .setup-summary-item strong {
+      color: var(--text);
     }
   </style>
 </head>
@@ -917,186 +1409,293 @@
       <div class="logo-mark">U∞</div>
       <div>
         <div class="brand-name">Undercover Infinity</div>
-        <div class="brand-sub">Le jeu de déduction sociale</div>
+        <div class="brand-sub">Jeu de déduction sociale</div>
       </div>
     </div>
     <div class="chips-row">
-      <span id="modeBadge" class="chip">Mode : Local</span>
-      <span id="roomBadge" class="chip">Room : —</span>
-      <span id="roundBadge" class="chip">Manche : 0/0</span>
+      <span id="modeBadge" class="chip active">Mode : accueil</span>
+      <span id="roomBadge" class="chip hidden">Salle : —</span>
+      <span id="roundBadge" class="chip hidden">Manche : 0/0</span>
     </div>
   </div>
 
   <!-- SETUP SCREEN -->
   <div id="screen-setup">
     <div class="hero-grid">
+
       <!-- LEFT -->
       <div class="stack">
         <div class="hero-banner">
-          <div class="hero-title">Démasque l'undercover<br>avant qu'il soit trop tard</div>
-          <p class="hero-desc">Mots proches, suspects différents. Discute, vote, élimine. Mais n'accuse pas le mauvais joueur.</p>
+          <div class="eyebrow">Prêt en quelques secondes</div>
+          <div class="hero-title">Lance une partie, rejoins une salle, et commence à accuser.</div>
+          <p class="hero-desc">
+            La majorité partage presque le même mot. Les undercovers ont un mot proche. Discutez, votez, éliminez… sans tomber sur le mauvais joueur.
+          </p>
+
+          <div class="quick-steps">
+            <div class="quick-step">
+              <div class="quick-step-k">1</div>
+              <div class="quick-step-v">Crée une salle ou rejoins-en une</div>
+            </div>
+            <div class="quick-step">
+              <div class="quick-step-k">2</div>
+              <div class="quick-step-v">Chacun découvre son mot en privé</div>
+            </div>
+            <div class="quick-step">
+              <div class="quick-step-k">3</div>
+              <div class="quick-step-v">Discutez, votez, démasquez</div>
+            </div>
+          </div>
+
           <div style="margin-top:16px">
             <div class="audio-row">
               <label class="toggle-wrap">
                 <input id="soundEnabled" type="checkbox" checked>
-                🔊 Son
+                🔊 Son activé
               </label>
-              <input id="soundVolume" type="range" min="0" max="100" value="45" style="width:100px" />
+              <input id="soundVolume" type="range" min="0" max="100" value="45" style="width:110px" />
               <button id="btnStartAudio" class="btn btn-ghost btn-sm">Activer l'ambiance</button>
             </div>
           </div>
         </div>
 
-        <div class="stats-grid">
-          <div class="stat">
-            <div class="stat-k">Paires de mots</div>
-            <div class="stat-v" id="wordsCount">0</div>
-          </div>
-          <div class="stat">
-            <div class="stat-k">Ordre passage</div>
-            <div class="stat-v">✓</div>
-          </div>
-          <div class="stat">
-            <div class="stat-k">Chat intégré</div>
-            <div class="stat-v">✓</div>
-          </div>
-          <div class="stat">
-            <div class="stat-k">Multi-tours</div>
-            <div class="stat-v">✓</div>
-          </div>
-        </div>
+        <div class="setup-actions-grid">
+          <!-- CREATE -->
+          <div class="card primary-panel">
+            <div class="section-title">
+              <div>
+                <div class="eyebrow" style="margin-bottom:8px;">Action principale</div>
+                <h2>Créer une salle</h2>
+                <div class="section-desc">Le plus rapide pour lancer une partie avec ton groupe.</div>
+              </div>
+              <span class="badge badge-info">Conseillé</span>
+            </div>
 
-        <!-- CREATE ROOM -->
-        <div class="card">
-          <h2 style="margin-bottom:14px">Créer une room</h2>
-          <div class="stack">
-            <div class="field">
-              <label>Ton pseudo</label>
-              <input id="createNickname" type="text" placeholder="Ex : Ulrich" maxlength="20" />
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+            <div class="stack" style="gap:14px">
               <div class="field">
-                <label>Discussion (sec)</label>
-                <div class="num-ctrl">
-                  <button onclick="adjInput('createDiscussion',-15)">−</button>
-                  <input id="createDiscussion" type="number" min="20" max="600" value="90" />
-                  <button onclick="adjInput('createDiscussion',15)">+</button>
+                <label>Ton pseudo</label>
+                <input id="createNickname" type="text" placeholder="Ex : Ulrich" maxlength="20" />
+              </div>
+
+              <div class="field-group">
+                <div class="num-card">
+                  <div class="num-head">
+                    <label style="margin:0">Discussion</label>
+                    <div id="createDiscussionValue" class="num-value">90s</div>
+                  </div>
+                  <div class="num-ctrl">
+                    <button type="button" onclick="adjInput('createDiscussion',-15)">−</button>
+                    <input id="createDiscussion" type="number" min="20" max="600" value="90" />
+                    <button type="button" onclick="adjInput('createDiscussion',15)">+</button>
+                  </div>
+                  <div class="field-hint">Temps pour décrire ton mot.</div>
+                </div>
+
+                <div class="num-card">
+                  <div class="num-head">
+                    <label style="margin:0">Vote</label>
+                    <div id="createVoteValue" class="num-value">45s</div>
+                  </div>
+                  <div class="num-ctrl">
+                    <button type="button" onclick="adjInput('createVote',-10)">−</button>
+                    <input id="createVote" type="number" min="10" max="300" value="45" />
+                    <button type="button" onclick="adjInput('createVote',10)">+</button>
+                  </div>
+                  <div class="field-hint">Temps pour choisir un suspect.</div>
                 </div>
               </div>
-              <div class="field">
-                <label>Vote (sec)</label>
-                <div class="num-ctrl">
-                  <button onclick="adjInput('createVote',-10)">−</button>
-                  <input id="createVote" type="number" min="10" max="300" value="45" />
-                  <button onclick="adjInput('createVote',10)">+</button>
+
+              <div class="field-group">
+                <div class="num-card">
+                  <div class="num-head">
+                    <label style="margin:0">Undercovers</label>
+                    <div id="createUndercoverValue" class="num-value">1</div>
+                  </div>
+                  <div class="num-ctrl">
+                    <button type="button" onclick="adjInput('createUndercover',-1)">−</button>
+                    <input id="createUndercover" type="number" min="1" max="4" value="1" />
+                    <button type="button" onclick="adjInput('createUndercover',1)">+</button>
+                  </div>
+                  <div class="field-hint">Nombre de joueurs infiltrés.</div>
+                </div>
+
+                <div class="num-card">
+                  <div class="num-head">
+                    <label style="margin:0">Manches</label>
+                    <div id="createRoundsValue" class="num-value">3</div>
+                  </div>
+                  <div class="num-ctrl">
+                    <button type="button" onclick="adjInput('createRounds',-1)">−</button>
+                    <input id="createRounds" type="number" min="1" max="20" value="3" />
+                    <button type="button" onclick="adjInput('createRounds',1)">+</button>
+                  </div>
+                  <div class="field-hint">Nombre total de manches.</div>
                 </div>
               </div>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
-              <div class="field">
-                <label>Undercovers</label>
-                <div class="num-ctrl">
-                  <button onclick="adjInput('createUndercover',-1)">−</button>
-                  <input id="createUndercover" type="number" min="1" max="4" value="1" />
-                  <button onclick="adjInput('createUndercover',1)">+</button>
-                </div>
+
+              <div class="action-buttons">
+                <button id="btnCreateOnline" class="btn btn-cyan btn-cta">🌐 Créer une salle en ligne</button>
+                <button id="btnCreateOffline" class="btn btn-secondary">📱 Partie locale hors ligne</button>
               </div>
-              <div class="field">
-                <label>Nombre de tours</label>
-                <div class="num-ctrl">
-                  <button onclick="adjInput('createRounds',-1)">−</button>
-                  <input id="createRounds" type="number" min="1" max="20" value="3" />
-                  <button onclick="adjInput('createRounds',1)">+</button>
-                </div>
+
+              <div class="helper-note">
+                En ligne, chaque joueur rejoint avec un code. En local, tout se passe sur un seul appareil.
               </div>
-            </div>
-            <div class="row">
-              <button id="btnCreateOnline" class="btn btn-primary">🌐 Créer en ligne (Firebase)</button>
-              <button id="btnCreateOffline" class="btn btn-ghost">📱 Local offline</button>
             </div>
           </div>
-        </div>
 
-        <!-- JOIN ROOM -->
-        <div class="card">
-          <h2 style="margin-bottom:14px">Rejoindre une room</h2>
-          <div class="stack">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+          <!-- JOIN -->
+          <div class="card">
+            <div class="section-title">
+              <div>
+                <h2>Rejoindre une salle</h2>
+                <div class="section-desc">Entre le code et rejoins une partie déjà créée.</div>
+              </div>
+            </div>
+
+            <div class="stack" style="gap:14px">
               <div class="field">
-                <label>Code room</label>
+                <label>Code de la salle</label>
                 <input id="joinRoomCode" type="text" placeholder="ABCD" maxlength="8" />
               </div>
+
               <div class="field">
                 <label>Ton pseudo</label>
                 <input id="joinNickname" type="text" placeholder="Ex : Maya" maxlength="20" />
               </div>
+
+              <button id="btnJoinRoom" class="btn btn-primary btn-cta">🔗 Rejoindre la salle</button>
+
+              <div class="small muted">
+                Astuce : le code peut aussi venir de l’URL
+                <span class="mono">?room=ABCD</span>
+              </div>
             </div>
-            <button id="btnJoinRoom" class="btn btn-cyan">🔗 Rejoindre la room</button>
-            <p class="small muted">Astuce : le code peut venir de l'URL (<span class="mono">?room=ABCD</span>)</p>
           </div>
         </div>
       </div>
 
       <!-- RIGHT -->
-      <div class="stack">
+      <div class="setup-side">
         <div class="card">
-          <h2 style="margin-bottom:12px">Comment jouer</h2>
-          <ul class="rules-list">
-            <li>La majorité reçoit le mot <strong>A</strong></li>
-            <li>Les undercovers reçoivent un mot proche <strong>B</strong></li>
-            <li>Personne ne voit son rôle affiché</li>
-            <li>Chaque joueur décrit son mot dans le chat</li>
-            <li>Confirme ton mot avant d'envoyer (anti-missclick)</li>
-            <li>L'hôte contrôle l'ordre de passage</li>
-            <li>Votez pour éliminer un suspect</li>
-            <li>Civils gagnent si tous les undercovers sont éliminés</li>
-            <li>Undercovers gagnent à parité favorable</li>
-          </ul>
-          <div class="sep" style="margin: 14px 0"></div>
-          <h3>Catégories</h3>
-          <div class="row" style="margin-top:8px; gap:6px">
-            <span class="pill">🎬 Films</span>
-            <span class="pill">🎮 Jeux vidéo</span>
-            <span class="pill">🌍 Lieux</span>
-            <span class="pill">🍕 Nourriture</span>
-            <span class="pill">🦁 Animaux</span>
-            <span class="pill">🔧 Objets</span>
-            <span class="pill">🚗 Transports</span>
-            <span class="pill">⚡ Nature</span>
+          <div class="section-title">
+            <div>
+              <h2>Comment jouer</h2>
+              <div class="section-desc">L’essentiel pour comprendre en quelques secondes.</div>
+            </div>
           </div>
+
+          <ul class="rules-list">
+            <li>La majorité reçoit le mot <strong>A</strong>.</li>
+            <li>Les undercovers reçoivent un mot proche <strong>B</strong>.</li>
+            <li>Chaque joueur donne un indice sans dire le mot.</li>
+            <li>Tout le monde vote pour éliminer un suspect.</li>
+          </ul>
+
+          <div class="sep" style="margin: 14px 0"></div>
+
+          <details class="details-card">
+            <summary class="details-head">
+              <div>
+                <h3 style="margin:0">Voir plus</h3>
+                <div class="small muted">Catégories et règles complètes</div>
+              </div>
+              <span class="details-arrow">⌄</span>
+            </summary>
+
+            <div style="margin-top:14px">
+              <div class="setup-summary-list">
+                <div class="setup-summary-item">
+                  <span>•</span>
+                  <div><strong>Révélation privée :</strong> chaque joueur voit son mot sans montrer l’écran.</div>
+                </div>
+                <div class="setup-summary-item">
+                  <span>•</span>
+                  <div><strong>Discussion :</strong> l’hôte contrôle l’ordre de passage.</div>
+                </div>
+                <div class="setup-summary-item">
+                  <span>•</span>
+                  <div><strong>Victoire des civils :</strong> tous les undercovers sont éliminés.</div>
+                </div>
+                <div class="setup-summary-item">
+                  <span>•</span>
+                  <div><strong>Victoire des undercovers :</strong> ils atteignent une parité favorable.</div>
+                </div>
+              </div>
+
+              <div class="sep" style="margin: 14px 0"></div>
+
+              <h3>Catégories</h3>
+              <div class="row" style="margin-top:8px; gap:6px">
+                <span class="pill">🎬 Films</span>
+                <span class="pill">🎮 Jeux vidéo</span>
+                <span class="pill">🌍 Lieux</span>
+                <span class="pill">🍕 Nourriture</span>
+                <span class="pill">🦁 Animaux</span>
+                <span class="pill">🔧 Objets</span>
+                <span class="pill">🚗 Transports</span>
+                <span class="pill">⚡ Nature</span>
+              </div>
+            </div>
+          </details>
         </div>
 
+        <details class="card details-card">
+          <summary class="details-head">
+            <div>
+              <h2 style="margin:0">Nouveautés</h2>
+              <div class="section-desc">Optionnel, pour ne pas gêner le lancement rapide.</div>
+            </div>
+            <span class="details-arrow">⌄</span>
+          </summary>
+
+          <div class="subtle-grid" style="margin-top:14px">
+            <div class="feature-mini">
+              <div class="feature-mini-icon">💬</div>
+              <div>
+                <div class="feature-mini-title">Chat intégré</div>
+                <div class="feature-mini-desc">Les indices sont envoyés directement dans la partie.</div>
+              </div>
+            </div>
+
+            <div class="feature-mini">
+              <div class="feature-mini-icon">✅</div>
+              <div>
+                <div class="feature-mini-title">Confirmation avant envoi</div>
+                <div class="feature-mini-desc">Une validation évite les missclicks.</div>
+              </div>
+            </div>
+
+            <div class="feature-mini">
+              <div class="feature-mini-icon">🔢</div>
+              <div>
+                <div class="feature-mini-title">Plusieurs manches</div>
+                <div class="feature-mini-desc">De 1 à 20 manches selon votre soirée.</div>
+              </div>
+            </div>
+
+            <div class="feature-mini">
+              <div class="feature-mini-icon">⏱️</div>
+              <div>
+                <div class="feature-mini-title">Timer ajustable</div>
+                <div class="feature-mini-desc">L’hôte peut ajuster le temps pendant la partie.</div>
+              </div>
+            </div>
+          </div>
+        </details>
+
         <div class="card">
-          <h3>Nouveautés v2</h3>
-          <div class="stack" style="gap:8px; margin-top:8px">
-            <div class="card-sm" style="display:flex; gap:10px; align-items:center">
-              <span style="font-size:1.4rem">💬</span>
-              <div>
-                <div style="font-weight:700; font-size:.9rem">Chat intégré</div>
-                <div class="small muted">Écris ton indice dans le chat en temps réel</div>
-              </div>
+          <div class="section-title" style="margin-bottom:12px">
+            <div>
+              <h2>En bref</h2>
+              <div class="section-desc">Les points utiles, sans surcharger l’accueil.</div>
             </div>
-            <div class="card-sm" style="display:flex; gap:10px; align-items:center">
-              <span style="font-size:1.4rem">✅</span>
-              <div>
-                <div style="font-weight:700; font-size:.9rem">Confirmation de mot</div>
-                <div class="small muted">Un bouton valider avant d'envoyer — anti-missclick</div>
-              </div>
-            </div>
-            <div class="card-sm" style="display:flex; gap:10px; align-items:center">
-              <span style="font-size:1.4rem">🔢</span>
-              <div>
-                <div style="font-weight:700; font-size:.9rem">Multi-tours configurables</div>
-                <div class="small muted">Choisis 1 à 20 tours avant de lancer</div>
-              </div>
-            </div>
-            <div class="card-sm" style="display:flex; gap:10px; align-items:center">
-              <span style="font-size:1.4rem">⏱️</span>
-              <div>
-                <div style="font-weight:700; font-size:.9rem">Timer ajustable en jeu</div>
-                <div class="small muted">L'hôte peut modifier les secondes pendant la partie</div>
-              </div>
-            </div>
+          </div>
+          <div class="info-strip">
+            <span class="info-pill">Paires de mots : <strong id="wordsCount">0</strong></span>
+            <span class="info-pill">Ordre de passage</span>
+            <span class="info-pill">Multi-manches</span>
+            <span class="info-pill">Chat intégré</span>
           </div>
         </div>
       </div>
@@ -1106,13 +1705,13 @@
   <!-- GAME SCREEN -->
   <div id="screen-room" class="hidden">
     <div class="game-grid">
+
       <!-- LEFT COLUMN -->
       <div class="stack">
-        <!-- GAME HEADER CARD -->
         <div class="card">
           <div class="game-header">
             <div>
-              <h2 id="roomTitle">Room —</h2>
+              <h2 id="roomTitle">Salle —</h2>
               <div class="small muted" id="roomMeta">En attente…</div>
             </div>
             <div class="row">
@@ -1129,9 +1728,8 @@
             <div id="step-result" class="phase-step">Résultat</div>
           </div>
 
-          <!-- ROUNDS DISPLAY -->
           <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap">
-            <span class="small muted">Tours :</span>
+            <span class="small muted">Manches :</span>
             <div id="roundsDots" class="rounds-display"></div>
             <span id="roundsLabel" class="badge badge-purple small mono">0 / 0</span>
           </div>
@@ -1160,18 +1758,16 @@
             </div>
           </div>
 
-          <!-- HOST ACTIONS -->
           <div class="row" id="hostActions">
-            <button id="btnStartRound" class="btn btn-primary hidden">▶ Démarrer manche</button>
-            <button id="btnForceDiscussion" class="btn btn-cyan hidden">💬 Lancer discussion</button>
+            <button id="btnStartRound" class="btn btn-primary hidden">▶ Démarrer la manche</button>
+            <button id="btnForceDiscussion" class="btn btn-cyan hidden">💬 Lancer la discussion</button>
             <button id="btnNextSpeaker" class="btn btn-yellow hidden">⏭ Joueur suivant</button>
             <button id="btnForceVote" class="btn btn-red hidden">🗳 Passer au vote</button>
-            <button id="btnResolveVote" class="btn btn-red hidden">⚡ Résoudre votes</button>
+            <button id="btnResolveVote" class="btn btn-red hidden">⚡ Résoudre les votes</button>
             <button id="btnNextRound" class="btn btn-primary hidden">↺ Manche suivante</button>
             <button id="btnResetGame" class="btn btn-ghost hidden">🔄 Réinitialiser</button>
           </div>
 
-          <!-- OFFLINE ADD PLAYER -->
           <div id="panel-offline-admin" class="hidden" style="margin-top:12px">
             <div class="sep" style="margin-bottom:12px"></div>
             <h3>Ajouter des joueurs (local)</h3>
@@ -1181,14 +1777,12 @@
             </div>
           </div>
 
-          <!-- STATUS -->
           <div id="statusBox" class="card-sm" style="margin-top:12px">
-            <div id="statusTitle" style="font-weight:700; font-size:.9rem">Prêt</div>
-            <div id="statusText" class="small muted" style="margin-top:3px">Configure la room et démarre quand tout le monde est là.</div>
+            <div id="statusTitle" style="font-weight:800; font-size:.92rem">Prêt</div>
+            <div id="statusText" class="small muted" style="margin-top:3px">Configure la salle et démarre quand tout le monde est là.</div>
           </div>
         </div>
 
-        <!-- REVEAL PANEL -->
         <div id="panel-reveal" class="card hidden">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px">
             <h2>Révélation privée</h2>
@@ -1204,16 +1798,14 @@
           </div>
         </div>
 
-        <!-- DISCUSSION PANEL -->
         <div id="panel-discussion" class="card hidden">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:10px">
             <div>
               <h2>Discussion</h2>
-              <div class="small muted">Décris ton mot dans le chat sans le dire directement</div>
+              <div class="small muted">Décris ton mot dans le chat sans le dire directement.</div>
             </div>
             <div style="text-align:right">
               <div id="discussionTimer" class="timer-display">00:00</div>
-              <!-- HOST TIMER ADJUST -->
               <div id="timerAdjust" class="hidden" style="margin-top:6px">
                 <div class="timer-adj">
                   <button class="btn btn-ghost btn-sm" onclick="adjustTimer('discussion',-30)">−30s</button>
@@ -1226,7 +1818,6 @@
           </div>
           <div class="progress-bar"><div id="discussionProgress" class="progress-fill"></div></div>
 
-          <!-- SPEAKER NOW -->
           <div id="speakerNow" class="speaker-now" style="margin-top:14px">
             <div class="speaker-dot"></div>
             <div>
@@ -1238,12 +1829,11 @@
           <div id="discussionOrder" class="turn-order"></div>
         </div>
 
-        <!-- VOTE PANEL -->
         <div id="panel-vote" class="card hidden">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; flex-wrap:wrap; gap:10px">
             <div>
               <h2>Vote</h2>
-              <div class="small muted">Un seul vote par joueur vivant</div>
+              <div class="small muted">Un seul vote par joueur vivant.</div>
             </div>
             <div style="text-align:right">
               <div id="voteTimer" class="timer-display" style="font-size:1.8rem">00:00</div>
@@ -1256,12 +1846,11 @@
             </div>
           </div>
           <div class="progress-bar" style="margin-bottom:14px"><div id="voteProgress" class="progress-fill"></div></div>
-          <div id="voteInfo" class="badge badge-warn" style="margin-bottom:12px; display:inline-flex">En attente de vote…</div>
+          <div id="voteInfo" class="badge badge-warn" style="margin-bottom:12px; display:inline-flex">En attente du vote…</div>
           <div id="offlineVoteVoter" class="hidden card-sm small muted" style="margin-bottom:10px"></div>
           <div id="voteGrid" class="vote-grid"></div>
         </div>
 
-        <!-- RESULT PANEL -->
         <div id="panel-result" class="card hidden">
           <h2 style="margin-bottom:14px">Résultat du vote</h2>
           <div id="resultText" class="result-big">—</div>
@@ -1272,23 +1861,20 @@
 
       <!-- RIGHT COLUMN -->
       <div class="stack">
-        <!-- PLAYERS -->
         <div class="card">
           <h2 style="margin-bottom:12px">Joueurs</h2>
           <div id="playersList" class="players-grid"></div>
         </div>
 
-        <!-- CHAT -->
         <div class="chat-panel" id="chatPanel">
           <div class="chat-header">
             <span>💬</span>
             <span>Chat de la partie</span>
-            <span id="chatOnlineIndicator" class="badge badge-info" style="margin-left:auto; font-size:.7rem">Local</span>
+            <span id="chatOnlineIndicator" class="badge badge-info" style="margin-left:auto; font-size:.72rem">Local</span>
           </div>
           <div class="chat-messages" id="chatMessages">
             <div class="chat-msg system">Bienvenue ! Le chat sera actif pendant la discussion.</div>
           </div>
-          <!-- PENDING CONFIRMATION -->
           <div id="pendingConfirm" class="pending-confirm hidden">
             <div class="pending-word">Envoyer : <span id="pendingWordText">—</span> ?</div>
             <button id="btnCancelPending" class="btn btn-ghost btn-sm">✕ Annuler</button>
@@ -1411,12 +1997,20 @@
     setTimeout(()=> el.remove(), 3200);
   }
 
+  function syncSetupValues() {
+    setText("createDiscussionValue", `${$("createDiscussion").value}s`);
+    setText("createVoteValue", `${$("createVote").value}s`);
+    setText("createUndercoverValue", `${$("createUndercover").value}`);
+    setText("createRoundsValue", `${$("createRounds").value}`);
+  }
+
   function adjInput(id, delta) {
     const el = $(id);
     if(!el) return;
     const min = Number(el.min) || 1;
     const max = Number(el.max) || 9999;
     el.value = clamp(Number(el.value) + delta, min, max);
+    syncSetupValues();
   }
   window.adjInput = adjInput;
 
@@ -1434,7 +2028,6 @@
   }
   const PROFILE = getProfile();
 
-  // Avatar colors
   const AVATAR_COLORS = [
     "linear-gradient(135deg,#6c5ce7,#a29bfe)",
     "linear-gradient(135deg,#00b894,#00cec9)",
@@ -1445,6 +2038,7 @@
     "linear-gradient(135deg,#00cec9,#55efc4)",
     "linear-gradient(135deg,#6c5ce7,#fd79a8)"
   ];
+
   function avatarColor(id) {
     let hash = 0;
     for(let i=0;i<(id||"").length;i++) hash = (hash*31 + id.charCodeAt(i)) & 0xffffffff;
@@ -1464,9 +2058,11 @@
     $("soundEnabled").checked = audio.enabled;
     $("soundVolume").value = Math.round(audio.vol*100);
   }
+
   function saveSoundPrefs() {
     saveLocal(STORAGE.sound, {enabled:$("soundEnabled").checked, volume:Number($("soundVolume").value)});
   }
+
   async function ensureAudio() {
     if(audio.ctx) return audio.ctx;
     const Ctx = window.AudioContext||window.webkitAudioContext;
@@ -1480,6 +2076,7 @@
     audio.ambGain.connect(audio.master);
     return audio.ctx;
   }
+
   function updateAudioSettings() {
     audio.enabled = $("soundEnabled").checked;
     audio.vol = Number($("soundVolume").value||45)/100;
@@ -1490,6 +2087,7 @@
     }
     saveSoundPrefs();
   }
+
   function tone(freq,dur,type,gain,when) {
     if(!audio.ctx||!audio.enabled) return;
     const ctx=audio.ctx, osc=ctx.createOscillator(), g=ctx.createGain();
@@ -1501,6 +2099,7 @@
     osc.start(ctx.currentTime+(when||0));
     osc.stop(ctx.currentTime+(when||0)+dur+.02);
   }
+
   const sfxReveal = () => { tone(370,.14,"triangle",.04,0); tone(510,.18,"sine",.03,.07); tone(660,.22,"triangle",.025,.12); };
   const sfxSeen = () => { tone(690,.08,"sine",.035,0); tone(920,.12,"triangle",.028,.05); };
   const sfxVote = () => { tone(220,.07,"square",.025,0); tone(180,.1,"triangle",.02,.04); };
@@ -1582,7 +2181,6 @@
     const input = $("chatInput");
     const text = (input.value || "").trim();
     if(!text) return;
-    // Show pending confirmation
     chatState.pendingText = text;
     $("pendingWordText").textContent = text;
     show($("pendingConfirm"), true);
@@ -1645,12 +2243,23 @@
   const setStatus = (t,s) => { setText("statusTitle",t); setText("statusText",s); };
 
   function updateBadges() {
-    setText("modeBadge", `Mode : ${state.mode==="firebase"?"Firebase":"Local"}`);
+    const inRoom = !$("screen-room").classList.contains("hidden");
+    if(!inRoom) {
+      setText("modeBadge", "Mode : accueil");
+      $("modeBadge").classList.add("active");
+      show($("roomBadge"), false);
+      show($("roundBadge"), false);
+      return;
+    }
+
     const room = getRoom();
     const total = room?.settings?.roundsTotal || 1;
     const cur = currentRoundNumber();
-    setText("roomBadge", `Room : ${state.roomId||"—"}`);
+    setText("modeBadge", `Mode : ${state.mode==="firebase"?"en ligne":"local"}`);
+    setText("roomBadge", `Salle : ${state.roomId||"—"}`);
     setText("roundBadge", `Manche : ${cur}/${total}`);
+    show($("roomBadge"), true);
+    show($("roundBadge"), true);
   }
 
   function pickPairIndex() {
@@ -1673,7 +2282,6 @@
       if(room.phase==="reveal") sfxReveal();
       else if(["discussion","vote","result"].includes(room.phase)) sfxPhase();
       state.lastPhase = room.phase;
-      // Add chat system msg
       if(room.phase === "discussion") addChatMessage("","Phase de discussion — à vos descriptions !","system");
       if(room.phase === "vote") addChatMessage("","Phase de vote — choisissez votre suspect !","system");
       if(room.phase === "result") addChatMessage("","Le résultat est tombé…","system");
@@ -1754,7 +2362,6 @@
     show($("btnNextRound"), state.isHost && phase==="result" && !room?.winner);
     show($("btnResetGame"), state.isHost);
 
-    // Timer adjust for host
     show($("timerAdjust"), state.isHost && phase==="discussion");
     show($("voteTimerAdjust"), state.isHost && phase==="vote");
 
@@ -1766,7 +2373,7 @@
   function updateRoomHeader() {
     const room = getRoom();
     const settings = room?.settings || {};
-    setText("roomTitle", `Room ${state.roomId||"—"}`);
+    setText("roomTitle", `Salle ${state.roomId||"—"}`);
     setText("roomMeta", state.mode==="firebase" ? "Multijoueur en ligne (Firebase)" : "Partie locale sur un seul appareil");
     setText("settingsUndercover", settings.undercoverCount||1);
     setText("settingsDiscussion", `${settings.discussionSeconds||90}s`);
@@ -1896,7 +2503,7 @@
       wb.innerHTML = `
         <div class="winner-icon">${isCivil?"🏆":"🕵️"}</div>
         <div>
-          <div class="winner-label">${isCivil?"Victoire des Civils !":"Victoire des Undercovers !"}</div>
+          <div class="winner-label">${isCivil?"Victoire des civils !":"Victoire des undercovers !"}</div>
           <div class="winner-desc">${isCivil?"Tous les undercovers ont été démasqués.":"Les undercovers ont atteint une parité favorable."}</div>
         </div>`;
       setText("resultSub","");
@@ -2014,12 +2621,12 @@
     state.mode="firebase"; state.roomId=roomId; state.myName=nickname; state.isHost=true;
     history.replaceState(null,"",(location.pathname+"?room="+encodeURIComponent(roomId)));
     await subscribeFirebaseRoom(roomId);
-    toast("Room créée","Code : "+roomId);
+    toast("Salle créée","Code : "+roomId);
   }
 
   async function joinFirebaseRoom(roomId, nickname) {
     const snap = await firebaseFns.getDoc(roomRef(roomId));
-    if(!snap.exists()) throw new Error("Room introuvable.");
+    if(!snap.exists()) throw new Error("Salle introuvable.");
     state.mode="firebase"; state.roomId=roomId; state.myName=nickname;
     state.isHost = snap.data().hostId === state.myId;
     await firebaseFns.setDoc(playerRef(roomId,state.myId),{
@@ -2028,7 +2635,7 @@
     },{merge:true});
     history.replaceState(null,"",(location.pathname+"?room="+encodeURIComponent(roomId)));
     await subscribeFirebaseRoom(roomId);
-    toast("Room rejointe","Bienvenue "+nickname);
+    toast("Salle rejointe","Bienvenue "+nickname);
   }
 
   async function subscribeFirebaseRoom(roomId) {
@@ -2037,7 +2644,7 @@
     show($("screen-setup"),false); show($("screen-room"),true);
     updateBadges(); initChat();
     state.unsubRoom = firebaseFns.onSnapshot(roomRef(roomId), async snap=>{
-      if(!snap.exists()){ alert("Room supprimée."); location.href=location.pathname; return; }
+      if(!snap.exists()){ alert("Salle supprimée."); location.href=location.pathname; return; }
       state.roomData=snap.data(); state.isHost=state.roomData.hostId===state.myId;
       updateRoomHeader(); renderPlayers(); await fetchMyPrivateWord(); autoPhaseProgress();
     });
@@ -2076,7 +2683,7 @@
     for(const p of getPlayers()) batch.set(playerRef(state.roomId,p.id),{...p,revealedRound:p.alive?-999999:p.revealedRound,votedRound:-1},{merge:true});
     for(const p of alive) batch.set(privateRef(state.roomId,p.secretId),{roundNumber,pairIndex,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false});
     await batch.commit();
-    setStatus("Révélation","Chaque joueur voit son mot et clique J'ai vu.");
+    setStatus("Révélation","Chaque joueur voit son mot puis confirme qu’il l’a bien vu.");
     toast("Manche "+roundNumber+" lancée");
   }
 
@@ -2124,14 +2731,14 @@
     await firebaseFns.runTransaction(state.db, async tx=>{
       const rSnap=await tx.get(roomRef(state.roomId)), mSnap=await tx.get(playerRef(state.roomId,state.myId));
       const vSnap=await tx.get(voteRef(state.roomId,state.myId));
-      if(!rSnap.exists()) throw new Error("Room inexistante");
+      if(!rSnap.exists()) throw new Error("Salle inexistante");
       const rd=rSnap.data(), md=mSnap.data();
       if(rd.phase!=="vote") throw new Error("Vote fermé");
       if(!md.alive) throw new Error("Éliminé");
       if(md.votedRound===rd.roundNumber||vSnap.exists()) throw new Error("Déjà voté");
       tx.set(voteRef(state.roomId,state.myId),{playerId:state.myId,targetId,roundNumber:rd.roundNumber,createdAt:Date.now()});
       tx.set(playerRef(state.roomId,state.myId),{votedRound:rd.roundNumber},{merge:true});
-    }).then(()=>{ sfxVote(); toast("Vote enregistré"); }).catch(e=>alert(e.message||"Erreur vote."));
+    }).then(()=>{ sfxVote(); toast("Vote enregistré"); }).catch(e=>alert(e.message||"Erreur de vote."));    
   }
 
   async function firebaseResolveVotes() {
@@ -2169,7 +2776,7 @@
     const room=getRoom();
     if(!state.isHost||room.phase!=="result"||room.winner) return;
     const total=room.settings?.roundsTotal||1;
-    if(currentRoundNumber()>=total){ toast("Fin des tours","Toutes les manches ont été jouées !"); return; }
+    if(currentRoundNumber()>=total){ toast("Fin des manches","Toutes les manches ont été jouées !"); return; }
     const vs=await firebaseFns.getDocs(votesCol(state.roomId));
     const batch=firebaseFns.writeBatch(state.db);
     vs.forEach(d=>batch.delete(d.ref));
@@ -2353,7 +2960,7 @@
     const room=state.offline;
     if(!room||!state.isHost||room.phase!=="result"||room.winner) return;
     const total=room.settings?.roundsTotal||1;
-    if(currentRoundNumber()>=total){ toast("Fin des tours","Toutes les manches sont jouées !"); return; }
+    if(currentRoundNumber()>=total){ toast("Fin des manches","Toutes les manches sont jouées !"); return; }
     room.phase="lobby"; room.resultText=""; room.votes={};
     room.current.discussionEndsAt=0; room.current.voteEndsAt=0; room.current.turnOrder=[]; room.current.speakerIndex=0;
     room.offlineVoteQueue=[]; room.offlineVoteIndex=0;
@@ -2400,7 +3007,7 @@
       roundsTotal: clamp(Number($("createRounds").value||3),1,20)
     };
     try { await createFirebaseRoom(nickname, settings); }
-    catch(e) { alert(e.message||"Erreur création room."); }
+    catch(e) { alert(e.message||"Erreur de création de salle."); }
   });
 
   $("btnCreateOffline").addEventListener("click", async () => {
@@ -2420,11 +3027,11 @@
     await enableAudio();
     const roomId = $("joinRoomCode").value.trim().toUpperCase();
     const nickname = $("joinNickname").value.trim();
-    if(!roomId) return alert("Entre le code de room.");
+    if(!roomId) return alert("Entre le code de la salle.");
     if(!nickname) return alert("Entre un pseudo.");
     if(!state.firebaseReady) return alert("Firebase non disponible.");
     try { await joinFirebaseRoom(roomId, nickname); }
-    catch(e) { alert(e.message||"Erreur rejoindre room."); }
+    catch(e) { alert(e.message||"Erreur pour rejoindre la salle."); }
   });
 
   $("btnStartRound").addEventListener("click", async () => {
@@ -2480,12 +3087,17 @@
     if(e.key==="Enter") $("btnAddOfflinePlayer").click();
   });
 
+  ["createDiscussion","createVote","createUndercover","createRounds"].forEach(id => {
+    $(id).addEventListener("input", syncSetupValues);
+  });
+
   /******************************************************************
    * BOOT
    ******************************************************************/
   async function boot() {
     loadSoundPrefs();
     setText("wordsCount", WORD_PAIRS.length);
+    syncSetupValues();
     await initFirebase();
     updateBadges();
     const roomFromUrl = (qs.get("room")||"").trim().toUpperCase();
