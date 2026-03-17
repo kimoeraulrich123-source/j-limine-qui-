@@ -1047,32 +1047,72 @@
   function startAmbience() { if(audio.ambStarted||!audio.ctx) return; const ctx=audio.ctx; const lo=ctx.createOscillator(),lg=ctx.createGain(); lo.type="sine"; lo.frequency.value=52; lg.gain.value=.008; lo.connect(lg); lg.connect(audio.ambGain); lo.start(); const mo=ctx.createOscillator(),mg=ctx.createGain(); mo.type="triangle"; mo.frequency.value=96; mg.gain.value=.004; mo.connect(mg); mg.connect(audio.ambGain); mo.start(); const buf=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate); const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*.3; const ns=ctx.createBufferSource(); ns.buffer=buf; ns.loop=true; const bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=620; bp.Q.value=.6; const ng=ctx.createGain(); ng.gain.value=.005; ns.connect(bp); bp.connect(ng); ng.connect(audio.ambGain); ns.start(); audio.ambStarted=true; const t=ctx.currentTime; audio.ambGain.gain.cancelScheduledValues(t); audio.ambGain.gain.linearRampToValueAtTime(.026,t+1.5); }
   async function enableAudio() { const ctx=await ensureAudio(); if(!ctx) return; if(ctx.state==="suspended") await ctx.resume(); updateAudioSettings(); startAmbience(); sfxPhase(); }
 
-  /* ─── CHAT — SHARED, TURN-BASED ─── */
+  /* ─── CHAT — SHARED FOR ALL PLAYERS ─── */
   const chatState={messages:[]};
 
-  function addChatMessage(author, text, type="other") {
-    const msg={id:uid("m"),author,text,type,ts:Date.now()};
+  /* Add a message locally (renders immediately) */
+  function addChatMessageLocal(msg) {
+    // Avoid duplicates by id
+    if(chatState.messages.find(m=>m.id===msg.id)) return;
     chatState.messages.push(msg);
-    // For offline: store in room state so all can see
-    if(state.mode==="offline" && state.offline) {
-      if(!state.offline.chatMessages) state.offline.chatMessages=[];
-      state.offline.chatMessages.push(msg);
-      persistOffline();
-    }
+    chatState.messages.sort((a,b)=>(a.ts||0)-(b.ts||0));
     renderChat();
-    if(type!=="system") sfxChat();
+    if(msg.type!=="system") sfxChat();
+  }
+
+  /* Send a chat message — routes to Firebase or offline storage */
+  async function sendChatMessage(author, text, type="other") {
+    const msg={id:uid("m"),author,text,type,ts:Date.now(),playerId:state.myId};
+
+    if(state.mode==="firebase" && state.db && firebaseFns && state.roomId) {
+      // Write to Firebase — the onSnapshot listener will pick it up for ALL players
+      try {
+        await firebaseFns.addDoc(chatCol(state.roomId), msg);
+      } catch(e) {
+        console.error("Chat send error:", e);
+        // Fallback: show locally anyway
+        addChatMessageLocal(msg);
+      }
+    } else {
+      // Offline mode: store in shared room state
+      addChatMessageLocal(msg);
+      if(state.offline) {
+        if(!state.offline.chatMessages) state.offline.chatMessages=[];
+        state.offline.chatMessages.push(msg);
+        persistOffline();
+      }
+    }
+  }
+
+  /* Add a system message (local-only, not synced to Firebase) */
+  function addSystemMessage(text) {
+    const msg={id:uid("m"),author:"",text,type:"system",ts:Date.now(),playerId:""};
+    addChatMessageLocal(msg);
   }
 
   function renderChat() {
     const container=$("chatMessages");
-    // In offline mode, render from shared room state
-    const msgs = (state.mode==="offline" && state.offline?.chatMessages) ? state.offline.chatMessages : chatState.messages;
+    const msgs = chatState.messages;
     container.innerHTML=msgs.map(m=>{
-      const cls=m.type==="system"?"system":(m.author===state.myName?"mine":"other");
+      const cls=m.type==="system"?"system":(m.playerId===state.myId || m.author===state.myName?"mine":"other");
       const author=m.type!=="system"?`<div class="msg-author">${escHtml(m.author)}</div>`:"";
       return `<div class="chat-msg ${cls}">${author}${escHtml(m.text)}</div>`;
     }).join("");
     container.scrollTop=container.scrollHeight;
+  }
+
+  /* Subscribe to Firebase chat collection — real-time sync for all players */
+  function subscribeFirebaseChat(roomId) {
+    if(state.unsubChat) state.unsubChat();
+    const q = firebaseFns.query(chatCol(roomId), firebaseFns.orderBy("ts","asc"));
+    state.unsubChat = firebaseFns.onSnapshot(q, snap => {
+      snap.docChanges().forEach(change => {
+        if(change.type === "added") {
+          const msg = change.doc.data();
+          addChatMessageLocal(msg);
+        }
+      });
+    });
   }
 
   /* Determine if the current player can type in chat */
@@ -1138,7 +1178,7 @@
     if(!text) return;
     input.value="";
     // Send directly — no confirmation needed
-    addChatMessage(state.myName||"Joueur", text, "other");
+    sendChatMessage(state.myName||"Joueur", text, "other");
     sfxConfirm();
   }
 
@@ -1148,13 +1188,13 @@
       state.offline.chatMessages = [];
       persistOffline();
     }
-    addChatMessage("","Partie lancée — bonne chance !","system");
+    addSystemMessage("Partie lancée — bonne chance !");
     $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter") handleChatSend();});
     $("btnSendChat").addEventListener("click",handleChatSend);
   }
 
   /* ─── STATE ─── */
-  const state={mode:"offline",db:null,firebaseReady:false,roomId:null,myId:PROFILE.playerId,mySecret:PROFILE.secretId,isHost:false,myName:"",roomData:null,players:[],myPrivateWord:null,unsubRoom:null,unsubPlayers:null,tickInterval:null,offline:null,lastPhase:"",lastWinner:"",recentPairIndexes:[]};
+  const state={mode:"offline",db:null,firebaseReady:false,roomId:null,myId:PROFILE.playerId,mySecret:PROFILE.secretId,isHost:false,myName:"",roomData:null,players:[],myPrivateWord:null,unsubRoom:null,unsubPlayers:null,unsubChat:null,tickInterval:null,offline:null,lastPhase:"",lastWinner:"",recentPairIndexes:[]};
 
   const getRoom=()=>state.mode==="firebase"?state.roomData:state.offline;
   const getPlayers=()=>state.mode==="firebase"?state.players:(state.offline?.players||[]);
@@ -1212,9 +1252,9 @@
       if(room.phase==="reveal") {} // handled by overlay
       else if(["discussion","vote","result"].includes(room.phase)) sfxPhase();
       state.lastPhase=room.phase;
-      if(room.phase==="discussion") addChatMessage("","Phase de discussion — décrivez vos mots à tour de rôle !","system");
-      if(room.phase==="vote") addChatMessage("","Phase de vote — débattez librement puis votez !","system");
-      if(room.phase==="result") addChatMessage("","Le résultat est tombé…","system");
+      if(room.phase==="discussion") addSystemMessage("Phase de discussion — décrivez vos mots à tour de rôle !");
+      if(room.phase==="vote") addSystemMessage("Phase de vote — débattez librement puis votez !");
+      if(room.phase==="result") addSystemMessage("Le résultat est tombé…");
     }
     if(room.winner&&state.lastWinner!==room.winner){sfxWin(room.winner==="civils");state.lastWinner=room.winner;}
     if(!room.winner)state.lastWinner="";
@@ -1443,12 +1483,13 @@
   const privateRef=(r,s)=>firebaseFns.doc(state.db,"rooms",r,"private",s);
   const votesCol=r=>firebaseFns.collection(state.db,"rooms",r,"votes");
   const voteRef=(r,p)=>firebaseFns.doc(state.db,"rooms",r,"votes",p);
+  const chatCol=r=>firebaseFns.collection(state.db,"rooms",r,"chat");
 
   async function createFirebaseRoom(nickname,settings){const roomId=roomCode();const room={roomId,mode:"firebase",hostId:state.myId,phase:"lobby",roundNumber:0,createdAt:firebaseFns.serverTimestamp(),updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",settings,current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}};await firebaseFns.setDoc(roomRef(roomId),room);await firebaseFns.setDoc(playerRef(roomId,state.myId),{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:Date.now(),revealedRound:-1,votedRound:-1});state.mode="firebase";state.roomId=roomId;state.myName=nickname;state.isHost=true;history.replaceState(null,"",(location.pathname+"?room="+encodeURIComponent(roomId)));await subscribeFirebaseRoom(roomId);toast("Salle créée","Code : "+roomId);}
 
   async function joinFirebaseRoom(roomId,nickname){const snap=await firebaseFns.getDoc(roomRef(roomId));if(!snap.exists()) throw new Error("Salle introuvable.");state.mode="firebase";state.roomId=roomId;state.myName=nickname;state.isHost=snap.data().hostId===state.myId;await firebaseFns.setDoc(playerRef(roomId,state.myId),{id:state.myId,secretId:state.mySecret,nickname,host:state.isHost,alive:true,joinedAt:Date.now(),revealedRound:-1,votedRound:-1},{merge:true});history.replaceState(null,"",(location.pathname+"?room="+encodeURIComponent(roomId)));await subscribeFirebaseRoom(roomId);toast("Salle rejointe","Bienvenue "+nickname);}
 
-  async function subscribeFirebaseRoom(roomId){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();show($("screen-setup"),false);show($("screen-room"),true);updateBadges();initChat();state.unsubRoom=firebaseFns.onSnapshot(roomRef(roomId),async snap=>{if(!snap.exists()){alert("Salle supprimée.");location.href=location.pathname;return;}state.roomData=snap.data();state.isHost=state.roomData.hostId===state.myId;updateRoomHeader();renderPlayers();await fetchMyPrivateWord();autoPhaseProgress();});state.unsubPlayers=firebaseFns.onSnapshot(playersCol(roomId),qsnap=>{state.players=qsnap.docs.map(d=>d.data()).sort((a,b)=>(a.joinedAt||0)-(b.joinedAt||0));renderPlayers();updateRoomHeader();});startTick();}
+  async function subscribeFirebaseRoom(roomId){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();if(state.unsubChat)state.unsubChat();show($("screen-setup"),false);show($("screen-room"),true);updateBadges();initChat();subscribeFirebaseChat(roomId);state.unsubRoom=firebaseFns.onSnapshot(roomRef(roomId),async snap=>{if(!snap.exists()){alert("Salle supprimée.");location.href=location.pathname;return;}state.roomData=snap.data();state.isHost=state.roomData.hostId===state.myId;updateRoomHeader();renderPlayers();await fetchMyPrivateWord();autoPhaseProgress();});state.unsubPlayers=firebaseFns.onSnapshot(playersCol(roomId),qsnap=>{state.players=qsnap.docs.map(d=>d.data()).sort((a,b)=>(a.joinedAt||0)-(b.joinedAt||0));renderPlayers();updateRoomHeader();});startTick();}
 
   async function fetchMyPrivateWord(){if(state.mode!=="firebase"||!state.roomId) return;const room=getRoom();if(!["reveal","discussion","vote","result"].includes(room?.phase)){state.myPrivateWord=null;return;}const snap=await firebaseFns.getDoc(privateRef(state.roomId,state.mySecret));if(snap.exists()){const d=snap.data();if(d.roundNumber===currentRoundNumber())state.myPrivateWord=d;}updateRevealPanel();}
 
@@ -1487,7 +1528,10 @@
 
   function mountOfflineRoom(){show($("screen-setup"),false);show($("screen-room"),true);updateBadges();renderPlayers();updateRoomHeader();initChat();
     // Restore chat from saved state
-    if(state.offline?.chatMessages?.length) renderChat();
+    if(state.offline?.chatMessages?.length) {
+      chatState.messages = [...state.offline.chatMessages];
+      renderChat();
+    }
     startTick();
   }
 
