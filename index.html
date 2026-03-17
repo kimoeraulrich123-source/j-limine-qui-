@@ -970,7 +970,7 @@
             <div class="speaker-dot"></div>
             <div>
               <div id="currentSpeakerText" class="speaker-name">—</div>
-              <div id="speakerProgressBadge" class="speaker-sub">Tour 0 / 0</div>
+              <div id="speakerProgressBadge" class="speaker-sub">Passage 0 / 0</div>
             </div>
           </div>
           <div id="discussionOrder" class="turn-order"></div>
@@ -1548,7 +1548,7 @@
     const order=room.current?.turnOrder||[]; const idx=room.current?.speakerIndex||0;
     const curId=order[idx]||"";
     setText("currentSpeakerText",curId?getPlayerName(curId):"—");
-    setText("speakerProgressBadge",`Tour ${Math.min(idx+1,Math.max(1,order.length))} / ${order.length||0}`);
+    setText("speakerProgressBadge",`Passage ${Math.min(idx+1,Math.max(1,order.length))} / ${order.length||0}`);
     $("discussionOrder").innerHTML=order.map((id,i)=>{
       const cls = i===idx ? "active" : (i<idx ? "done-turn" : "");
       return `<div class="turn-card ${cls}"><div class="t-num">${i<idx?"✓":"Passage "+(i+1)}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`;
@@ -1667,7 +1667,7 @@
 
   async function fetchMyPrivateWord(){if(state.mode!=="firebase"||!state.roomId) return;const room=getRoom();if(!["reveal","discussion","vote","result"].includes(room?.phase)){state.myPrivateWord=null;return;}const snap=await firebaseFns.getDoc(privateRef(state.roomId,state.mySecret));if(snap.exists()){const d=snap.data();if(d.roundNumber===currentRoundNumber())state.myPrivateWord=d;}updateRevealPanel();}
 
-  async function firebaseStartRound(){const room=getRoom();if(!state.isHost||!room||room.phase!=="lobby") return;const alive=getAlivePlayers();const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs.");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const roundNumber=(room.roundNumber||0)+1;const batch=firebaseFns.writeBatch(state.db);batch.update(roomRef(state.roomId),{phase:"reveal",roundNumber,updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",current:{...room.current,aliveIds:alive.map(p=>p.id),pairIndex,undercoverIds,civilianWord:pair.a,discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{...p,revealedRound:p.alive?-999999:p.revealedRound,votedRound:-1},{merge:true});for(const p of alive)batch.set(privateRef(state.roomId,p.secretId),{roundNumber,pairIndex,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false});await batch.commit();toast("Manche "+roundNumber+" lancée");}
+  async function firebaseStartRound(){const room=getRoom();if(!state.isHost||!room||room.phase!=="lobby") return;const alive=getAlivePlayers();const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs.");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const roundNumber=(room.roundNumber||0)+1;const batch=firebaseFns.writeBatch(state.db);batch.update(roomRef(state.roomId),{phase:"reveal",roundNumber,updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",chatMessages:[],current:{...room.current,aliveIds:alive.map(p=>p.id),pairIndex,undercoverIds,civilianWord:pair.a,discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{...p,revealedRound:p.alive?-999999:p.revealedRound,votedRound:-1},{merge:true});for(const p of alive)batch.set(privateRef(state.roomId,p.secretId),{roundNumber,pairIndex,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false});chatState.messages=[];renderChat();await batch.commit();toast("Manche "+roundNumber+" lancée");}
 
   async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=="reveal"||hasSeenCurrentWord()) return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});sfxSeen();hideRevealOverlay();toast("Mot vu","Tu es prêt !");}
 
