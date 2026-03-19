@@ -482,7 +482,6 @@
       opacity: 0; animation: revealSlide .5s ease .3s forwards;
     }
 
-    /* Glow ring behind word */
     .reveal-overlay .glow-ring {
       position: absolute; width: 320px; height: 320px; border-radius: 50%;
       background: radial-gradient(circle, rgba(108,92,231,.25), transparent 70%);
@@ -624,6 +623,7 @@
     .btn-green { background: linear-gradient(135deg, #009f6b, var(--green)); color: #001a0f; box-shadow: 0 8px 24px rgba(0,229,160,.25); }
     .btn-yellow { background: linear-gradient(135deg, #e6a800, var(--yellow)); color: #1a0e00; box-shadow: 0 8px 24px rgba(255,209,102,.2); }
     .btn-red { background: linear-gradient(135deg, #c4003d, var(--red)); color: #fff; box-shadow: 0 8px 24px rgba(255,77,109,.25); }
+    .btn-orange { background: linear-gradient(135deg, #e67e22, #f39c12); color: #1a0e00; box-shadow: 0 8px 24px rgba(243,156,18,.25); }
 
     .text-green { color: var(--green); }
     .text-yellow { color: var(--yellow); }
@@ -771,6 +771,20 @@
       opacity: 0; animation: revealSlide .5s ease 2s forwards;
     }
 
+    /* ── SKIP WORD BANNER ── */
+    .skip-word-banner {
+      padding: 14px 18px; border-radius: var(--r2);
+      border: 1px solid rgba(243,156,18,.3);
+      background: linear-gradient(135deg, rgba(243,156,18,.1), rgba(243,156,18,.04));
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+      animation: msgIn .3s ease;
+    }
+    .skip-word-banner .skip-info { display: flex; flex-direction: column; gap: 3px; }
+    .skip-word-banner .skip-title { font-weight: 800; font-size: .92rem; color: #ffe580; }
+    .skip-word-banner .skip-count { font-size: .82rem; color: var(--muted); }
+    .skip-word-banner .skip-actions { display: flex; gap: 8px; }
+
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
@@ -868,6 +882,7 @@
             <div class="rule-row"><span class="rule-num">1</span> La majorité reçoit le mot A — les undercovers reçoivent un mot proche B.</div>
             <div class="rule-row"><span class="rule-num">2</span> Chaque joueur décrit son mot à son tour sans le dire.</div>
             <div class="rule-row"><span class="rule-num">3</span> Débat libre puis vote pour éliminer un suspect.</div>
+            <div class="rule-row"><span class="rule-num">4</span> Si le mot ne plaît pas, votez pour en changer !</div>
             <div class="rule-row"><span class="rule-num">✓</span> Civils gagnent si tous les undercovers sont éliminés.</div>
           </div>
           <details class="more">
@@ -882,6 +897,9 @@
                 <span class="pill">🐾 Animaux</span><span class="pill">🧳 Voyages</span>
                 <span class="pill">🎲 Jeux</span><span class="pill">🌿 Nature</span>
                 <span class="pill">🎓 École</span><span class="pill">💫 Expressions</span>
+                <span class="pill">🏠 Objets</span><span class="pill">👗 Mode</span>
+                <span class="pill">💊 Santé</span><span class="pill">🎨 Art</span>
+                <span class="pill">📚 Littérature</span><span class="pill">🌍 Géographie</span>
               </div>
             </div>
           </details>
@@ -929,6 +947,16 @@
             <div class="stat"><div class="stat-k">Manches</div><div class="stat-v" id="settingsRounds">3</div></div>
             <div class="stat"><div class="stat-k">Tours</div><div class="stat-v" id="settingsTurns">3</div></div>
             <div class="stat"><div class="stat-k">Vivants</div><div class="stat-v" id="aliveCount">0</div></div>
+          </div>
+          <!-- Skip Word Banner (shown during reveal phase) -->
+          <div id="skipWordBanner" class="skip-word-banner hidden">
+            <div class="skip-info">
+              <div class="skip-title">🔄 Ce mot ne te plaît pas ?</div>
+              <div class="skip-count" id="skipVoteCount">0 / 0 votes pour changer</div>
+            </div>
+            <div class="skip-actions">
+              <button id="btnSkipWord" class="btn btn-orange btn-sm">👎 Changer le mot</button>
+            </div>
           </div>
           <div class="row" id="hostActions">
             <button id="btnStartRound" class="btn btn-primary hidden">▶ Démarrer la manche</button>
@@ -1105,7 +1133,9 @@
   };
 
   const WORD_PAIRS = [
-    // ── NOURRITURE SUBTILE ──
+    // ══════════════════════════════════════════
+    // ── NOURRITURE & BOISSONS (120 paires) ──
+    // ══════════════════════════════════════════
     {a:"Cappuccino",b:"Latte"},{a:"Expresso",b:"Ristretto"},{a:"Thé vert",b:"Thé blanc"},
     {a:"Mozzarella",b:"Burrata"},{a:"Brie",b:"Camembert"},{a:"Gruyère",b:"Emmental"},
     {a:"Croissant",b:"Pain au chocolat"},{a:"Macaron",b:"Meringue"},{a:"Tiramisu",b:"Panna cotta"},
@@ -1119,7 +1149,37 @@
     {a:"Champagne",b:"Prosecco"},{a:"Bière blonde",b:"Bière blanche"},
     {a:"Tartare",b:"Carpaccio"},{a:"Raclette",b:"Fondue"},{a:"Gratin",b:"Parmentier"},
     {a:"Confiture",b:"Marmelade"},{a:"Compote",b:"Purée de fruits"},
-    // ── CONCEPTS ABSTRAITS ──
+    {a:"Croûton",b:"Chapelure"},{a:"Baguette",b:"Ciabatta"},{a:"Brioche",b:"Pain de mie"},
+    {a:"Chantilly",b:"Mascarpone"},{a:"Sorbet",b:"Glace"},{a:"Yaourt",b:"Fromage blanc"},
+    {a:"Granola",b:"Muesli"},{a:"Porridge",b:"Overnight oats"},{a:"Crumble",b:"Cobbler"},
+    {a:"Tarte Tatin",b:"Tarte aux pommes"},{a:"Éclair",b:"Chou à la crème"},
+    {a:"Mille-feuille",b:"Opéra"},{a:"Cannelé",b:"Financier"},{a:"Clafoutis",b:"Far breton"},
+    {a:"Quiche",b:"Tourte"},{a:"Soufflé",b:"Mousse"},{a:"Velouté",b:"Crème"},
+    {a:"Minestrone",b:"Gaspacho"},{a:"Bouillon",b:"Consommé"},{a:"Pot-au-feu",b:"Blanquette"},
+    {a:"Bœuf bourguignon",b:"Coq au vin"},{a:"Cassoulet",b:"Choucroute"},
+    {a:"Magret",b:"Confit"},{a:"Brochette",b:"Plancha"},{a:"Wok",b:"Poêlée"},
+    {a:"Ceviche",b:"Tataki"},{a:"Gravlax",b:"Saumon fumé"},{a:"Huître",b:"Moule"},
+    {a:"Crevette",b:"Langoustine"},{a:"Homard",b:"Crabe"},{a:"Caviar",b:"Œufs de saumon"},
+    {a:"Olive noire",b:"Olive verte"},{a:"Câpre",b:"Cornichon"},{a:"Anchois",b:"Sardine"},
+    {a:"Jambon cru",b:"Jambon cuit"},{a:"Chorizo",b:"Merguez"},{a:"Saucisson",b:"Rillettes"},
+    {a:"Foie gras",b:"Terrine"},{a:"Samossa",b:"Beignet"},{a:"Churros",b:"Beignet"},
+    {a:"Pop-corn",b:"Chips"},{a:"Bretzel",b:"Gressin"},{a:"Mochi",b:"Daifuku"},
+    {a:"Baklava",b:"Loukoum"},{a:"Nougat",b:"Touron"},{a:"Caramel",b:"Toffee"},
+    {a:"Chocolat noir",b:"Chocolat au lait"},{a:"Praline",b:"Truffe"},
+    {a:"Pancetta",b:"Lardons"},{a:"Prosciutto",b:"Bresaola"},{a:"Tzatziki",b:"Raïta"},
+    {a:"Curry",b:"Massala"},{a:"Chutney",b:"Relish"},{a:"Tabasco",b:"Sriracha"},
+    {a:"Sauce soja",b:"Sauce tamari"},{a:"Tofu",b:"Tempeh"},{a:"Seitan",b:"Protéine de soja"},
+    {a:"Quinoa",b:"Boulgour"},{a:"Polenta",b:"Semoule"},{a:"Gnocchi",b:"Spätzle"},
+    {a:"Tagliatelles",b:"Fettuccine"},{a:"Penne",b:"Rigatoni"},{a:"Ravioli",b:"Tortellini"},
+    {a:"Lasagne",b:"Cannelloni"},{a:"Pizza",b:"Focaccia"},{a:"Calzone",b:"Panzerotto"},
+    {a:"Burrito",b:"Enchilada"},{a:"Taco",b:"Quesadilla"},{a:"Nachos",b:"Tortillas"},
+    {a:"Pad thaï",b:"Chow mein"},{a:"Bibimbap",b:"Donburi"},{a:"Onigiri",b:"Maki"},
+    {a:"Tempura",b:"Panko"},{a:"Teriyaki",b:"Yakitori"},{a:"Edamame",b:"Fèves"},
+    {a:"Dhal",b:"Soupe de lentilles"},{a:"Houmous",b:"Baba ganoush"},
+    {a:"Pita",b:"Naan"},{a:"Injera",b:"Chapati"},
+    // ══════════════════════════════════════
+    // ── CONCEPTS ABSTRAITS (100 paires) ──
+    // ══════════════════════════════════════
     {a:"Nostalgie",b:"Mélancolie"},{a:"Fierté",b:"Orgueil"},{a:"Jalousie",b:"Envie"},
     {a:"Empathie",b:"Compassion"},{a:"Courage",b:"Témérité"},{a:"Patience",b:"Résignation"},
     {a:"Intuition",b:"Instinct"},{a:"Sagesse",b:"Intelligence"},{a:"Charisme",b:"Confiance"},
@@ -1128,7 +1188,34 @@
     {a:"Habitude",b:"Tradition"},{a:"Progrès",b:"Évolution"},{a:"Révolution",b:"Réforme"},
     {a:"Rumeur",b:"Légende"},{a:"Secret",b:"Mystère"},{a:"Ironie",b:"Sarcasme"},
     {a:"Excuse",b:"Prétexte"},{a:"Promesse",b:"Serment"},{a:"Mensonge",b:"Bluff"},
-    // ── MÉTIERS PROCHES ──
+    {a:"Ambition",b:"Détermination"},{a:"Curiosité",b:"Fascination"},{a:"Gratitude",b:"Reconnaissance"},
+    {a:"Humilité",b:"Modestie"},{a:"Passion",b:"Obsession"},{a:"Bonheur",b:"Euphorie"},
+    {a:"Tristesse",b:"Chagrin"},{a:"Colère",b:"Frustration"},{a:"Peur",b:"Angoisse"},
+    {a:"Honte",b:"Culpabilité"},{a:"Tendresse",b:"Douceur"},{a:"Admiration",b:"Respect"},
+    {a:"Trahison",b:"Déception"},{a:"Vengeance",b:"Rancune"},{a:"Pardon",b:"Indulgence"},
+    {a:"Espoir",b:"Optimisme"},{a:"Doute",b:"Hésitation"},{a:"Certitude",b:"Conviction"},
+    {a:"Imagination",b:"Créativité"},{a:"Logique",b:"Raison"},{a:"Mémoire",b:"Souvenir"},
+    {a:"Conscience",b:"Lucidité"},{a:"Innocence",b:"Naïveté"},{a:"Maturité",b:"Expérience"},
+    {a:"Talent",b:"Don"},{a:"Effort",b:"Persévérance"},{a:"Chance",b:"Fortune"},
+    {a:"Justice",b:"Équité"},{a:"Vérité",b:"Sincérité"},{a:"Beauté",b:"Grâce"},
+    {a:"Charme",b:"Séduction"},{a:"Élégance",b:"Raffinement"},{a:"Simplicité",b:"Sobriété"},
+    {a:"Complexité",b:"Nuance"},{a:"Harmonie",b:"Sérénité"},{a:"Chaos",b:"Désordre"},
+    {a:"Urgence",b:"Précipitation"},{a:"Lenteur",b:"Patience"},{a:"Abondance",b:"Excès"},
+    {a:"Manque",b:"Carence"},{a:"Nostalgie",b:"Déjà-vu"},{a:"Adrénaline",b:"Vertige"},
+    {a:"Résilience",b:"Endurance"},{a:"Vulnérabilité",b:"Fragilité"},{a:"Audace",b:"Intrépidité"},
+    {a:"Prudence",b:"Précaution"},{a:"Spontanéité",b:"Impulsivité"},{a:"Discipline",b:"Rigueur"},
+    {a:"Tolérance",b:"Ouverture"},{a:"Fidélité",b:"Loyauté"},{a:"Complicité",b:"Connivence"},
+    {a:"Rivalité",b:"Compétition"},{a:"Solidarité",b:"Entraide"},{a:"Égoïsme",b:"Individualisme"},
+    {a:"Altruisme",b:"Générosité"},{a:"Hypocrisie",b:"Duplicité"},{a:"Authenticité",b:"Transparence"},
+    {a:"Conformisme",b:"Normalité"},{a:"Rébellion",b:"Contestation"},{a:"Utopie",b:"Idéal"},
+    {a:"Absurdité",b:"Non-sens"},{a:"Poésie",b:"Lyrisme"},{a:"Philosophie",b:"Métaphysique"},
+    {a:"Spiritualité",b:"Méditation"},{a:"Contemplation",b:"Introspection"},
+    {a:"Illumination",b:"Révélation"},{a:"Déjà-vu",b:"Pressentiment"},
+    {a:"Prémonition",b:"Sixième sens"},{a:"Instinct maternel",b:"Protection"},
+    {a:"Euphorie",b:"Extase"},{a:"Plénitude",b:"Contentement"},
+    // ══════════════════════════════════
+    // ── MÉTIERS PROCHES (70 paires) ──
+    // ══════════════════════════════════
     {a:"Architecte",b:"Designer d'intérieur"},{a:"Photographe",b:"Vidéaste"},
     {a:"Chirurgien",b:"Dentiste"},{a:"Psychologue",b:"Psychiatre"},
     {a:"Avocat",b:"Notaire"},{a:"Journaliste",b:"Documentariste"},
@@ -1136,7 +1223,37 @@
     {a:"Pilote",b:"Capitaine"},{a:"Détective",b:"Espion"},
     {a:"Influenceur",b:"Ambassadeur"},{a:"Coach",b:"Mentor"},
     {a:"DJ",b:"Producteur"},{a:"Acteur",b:"Doubleur"},
-    // ── LIEUX SUBTILS ──
+    {a:"Écrivain",b:"Scénariste"},{a:"Illustrateur",b:"Graphiste"},
+    {a:"Sculpteur",b:"Céramiste"},{a:"Danseur",b:"Chorégraphe"},
+    {a:"Chanteur",b:"Compositeur"},{a:"Réalisateur",b:"Metteur en scène"},
+    {a:"Traducteur",b:"Interprète"},{a:"Enseignant",b:"Professeur"},
+    {a:"Chercheur",b:"Scientifique"},{a:"Ingénieur",b:"Technicien"},
+    {a:"Pompier",b:"Secouriste"},{a:"Infirmier",b:"Aide-soignant"},
+    {a:"Vétérinaire",b:"Zoologiste"},{a:"Botaniste",b:"Horticulteur"},
+    {a:"Astronaute",b:"Cosmonaute"},{a:"Archéologue",b:"Paléontologue"},
+    {a:"Libraire",b:"Éditeur"},{a:"Critique",b:"Chroniqueur"},
+    {a:"Guide touristique",b:"Accompagnateur"},{a:"Concierge",b:"Majordome"},
+    {a:"Styliste",b:"Couturier"},{a:"Mannequin",b:"Figurant"},
+    {a:"Magicien",b:"Illusionniste"},{a:"Clown",b:"Humoriste"},
+    {a:"Arbitre",b:"Commissaire"},{a:"Entraîneur",b:"Préparateur physique"},
+    {a:"Agent immobilier",b:"Courtier"},{a:"Comptable",b:"Auditeur"},
+    {a:"Banquier",b:"Conseiller financier"},{a:"Diplomate",b:"Ambassadeur"},
+    {a:"Maire",b:"Préfet"},{a:"Juge",b:"Procureur"},
+    {a:"Médiateur",b:"Négociateur"},{a:"Ébéniste",b:"Menuisier"},
+    {a:"Plombier",b:"Chauffagiste"},{a:"Électricien",b:"Domoticien"},
+    {a:"Jardinier",b:"Paysagiste"},{a:"Fleuriste",b:"Botaniste"},
+    {a:"Boulanger",b:"Meunier"},{a:"Chocolatier",b:"Confiseur"},
+    {a:"Glacier",b:"Crêpier"},{a:"Fromager",b:"Affineur"},
+    {a:"Viticulteur",b:"Œnologue"},{a:"Brasseur",b:"Distillateur"},
+    {a:"Ostéopathe",b:"Chiropracteur"},{a:"Kinésithérapeute",b:"Ergothérapeute"},
+    {a:"Opticien",b:"Optométriste"},{a:"Pharmacien",b:"Herboriste"},
+    {a:"Sage-femme",b:"Obstétricien"},{a:"Dermatologue",b:"Esthéticien"},
+    {a:"Tatoueur",b:"Perceur"},{a:"Coiffeur",b:"Barbier"},
+    {a:"Cascadeur",b:"Doublure"},{a:"Artificier",b:"Pyrotechnicien"},
+    {a:"Facteur",b:"Livreur"},{a:"Chauffeur",b:"Conducteur"},
+    // ══════════════════════════════════
+    // ── LIEUX SUBTILS (100 paires) ──
+    // ══════════════════════════════════
     {a:"Balcon",b:"Terrasse"},{a:"Grenier",b:"Cave"},{a:"Couloir",b:"Hall d'entrée"},
     {a:"Jardin",b:"Parc"},{a:"Plage",b:"Bord de lac"},{a:"Sommet",b:"Falaise"},
     {a:"Grotte",b:"Tunnel"},{a:"Phare",b:"Tour de guet"},{a:"Pont",b:"Passerelle"},
@@ -1145,7 +1262,34 @@
     {a:"Cathédrale",b:"Basilique"},{a:"Cimetière",b:"Mémorial"},{a:"Fontaine",b:"Cascade"},
     {a:"Labyrinthe",b:"Dédale"},{a:"Oasis",b:"Clairière"},{a:"Volcan",b:"Geyser"},
     {a:"Fjord",b:"Canyon"},{a:"Récif",b:"Atoll"},{a:"Toundra",b:"Steppe"},
-    // ── OBJETS DU QUOTIDIEN ──
+    {a:"Véranda",b:"Pergola"},{a:"Kiosque",b:"Pavillon"},{a:"Cloître",b:"Monastère"},
+    {a:"Chapelle",b:"Oratoire"},{a:"Amphithéâtre",b:"Arène"},{a:"Stade",b:"Gymnase"},
+    {a:"Piscine",b:"Thermes"},{a:"Sauna",b:"Hammam"},{a:"Spa",b:"Centre de bien-être"},
+    {a:"Laboratoire",b:"Atelier"},{a:"Observatoire",b:"Planétarium"},{a:"Aquarium",b:"Zoo"},
+    {a:"Serre",b:"Jardin botanique"},{a:"Vignoble",b:"Verger"},{a:"Champ",b:"Prairie"},
+    {a:"Forêt",b:"Bois"},{a:"Jungle",b:"Forêt tropicale"},{a:"Mangrove",b:"Marécage"},
+    {a:"Désert",b:"Dune"},{a:"Glacier",b:"Banquise"},{a:"Île",b:"Presqu'île"},
+    {a:"Port",b:"Marina"},{a:"Quai",b:"Embarcadère"},{a:"Aéroport",b:"Gare"},
+    {a:"Autoroute",b:"Nationale"},{a:"Ruelle",b:"Impasse"},{a:"Place",b:"Esplanade"},
+    {a:"Boulevard",b:"Avenue"},{a:"Carrefour",b:"Rond-point"},{a:"Parking",b:"Garage"},
+    {a:"Entrepôt",b:"Hangar"},{a:"Usine",b:"Manufacture"},{a:"Mine",b:"Carrière"},
+    {a:"Chantier",b:"Ruines"},{a:"Bunker",b:"Abri"},{a:"Refuge",b:"Cabane"},
+    {a:"Chalet",b:"Lodge"},{a:"Igloo",b:"Yourte"},{a:"Tipi",b:"Hutte"},
+    {a:"Gratte-ciel",b:"Tour"},{a:"Loft",b:"Penthouse"},{a:"Studio",b:"Chambre de bonne"},
+    {a:"Cuisine",b:"Office"},{a:"Salon",b:"Séjour"},{a:"Bureau",b:"Open space"},
+    {a:"Salle d'attente",b:"Hall"},{a:"Vestiaire",b:"Loge"},{a:"Coulisse",b:"Backstage"},
+    {a:"Scène",b:"Estrade"},{a:"Gradins",b:"Tribune"},{a:"Belvédère",b:"Mirador"},
+    {a:"Donjon",b:"Citadelle"},{a:"Rempart",b:"Muraille"},{a:"Douves",b:"Fossé"},
+    {a:"Souterrain",b:"Crypte"},{a:"Catacombes",b:"Nécropole"},{a:"Temple",b:"Sanctuaire"},
+    {a:"Pagode",b:"Minaret"},{a:"Synagogue",b:"Mosquée"},{a:"Ashram",b:"Ermitage"},
+    {a:"Casino",b:"Salle de jeux"},{a:"Discothèque",b:"Club"},{a:"Bar",b:"Pub"},
+    {a:"Restaurant étoilé",b:"Bistro"},{a:"Cantine",b:"Réfectoire"},
+    {a:"Marché aux puces",b:"Brocante"},{a:"Galerie marchande",b:"Centre commercial"},
+    {a:"Pharmacie",b:"Herboristerie"},{a:"Dispensaire",b:"Clinique"},
+    {a:"Tribunal",b:"Palais de justice"},{a:"Prison",b:"Cellule"},
+    // ══════════════════════════════════════
+    // ── OBJETS DU QUOTIDIEN (80 paires) ──
+    // ══════════════════════════════════════
     {a:"Parapluie",b:"Parasol"},{a:"Bougie",b:"Encens"},{a:"Miroir",b:"Vitre"},
     {a:"Coussin",b:"Oreiller"},{a:"Couverture",b:"Plaid"},{a:"Rideau",b:"Store"},
     {a:"Horloge",b:"Sablier"},{a:"Clé",b:"Badge"},{a:"Portefeuille",b:"Porte-monnaie"},
@@ -1153,7 +1297,29 @@
     {a:"Basket",b:"Running"},{a:"Sandale",b:"Tong"},{a:"Cravate",b:"Nœud papillon"},
     {a:"Sac à dos",b:"Valise"},{a:"Carnet",b:"Agenda"},{a:"Enveloppe",b:"Colis"},
     {a:"Allumette",b:"Briquet"},{a:"Ciseaux",b:"Cutter"},{a:"Scotch",b:"Colle"},
-    // ── NATURE & SCIENCE ──
+    {a:"Crayon",b:"Stylo"},{a:"Gomme",b:"Correcteur"},{a:"Règle",b:"Équerre"},
+    {a:"Compas",b:"Rapporteur"},{a:"Agrafeuse",b:"Trombones"},{a:"Post-it",b:"Marque-page"},
+    {a:"Lampe de poche",b:"Lanterne"},{a:"Ampoule",b:"Néon"},{a:"Interrupteur",b:"Variateur"},
+    {a:"Prise",b:"Multiprise"},{a:"Câble",b:"Rallonge"},{a:"Batterie",b:"Chargeur"},
+    {a:"Casque audio",b:"Écouteurs"},{a:"Enceinte",b:"Barre de son"},{a:"Télécommande",b:"Manette"},
+    {a:"Thermostat",b:"Thermomètre"},{a:"Ventilateur",b:"Climatiseur"},{a:"Radiateur",b:"Poêle"},
+    {a:"Aspirateur",b:"Balai"},{a:"Éponge",b:"Serpillière"},{a:"Torchon",b:"Serviette"},
+    {a:"Drap",b:"Housse de couette"},{a:"Tapis",b:"Moquette"},{a:"Nappe",b:"Set de table"},
+    {a:"Assiette",b:"Bol"},{a:"Verre",b:"Tasse"},{a:"Carafe",b:"Pichet"},
+    {a:"Poêle",b:"Casserole"},{a:"Wok",b:"Sauteuse"},{a:"Fouet",b:"Mixeur"},
+    {a:"Passoire",b:"Tamis"},{a:"Râpe",b:"Mandoline"},{a:"Ouvre-boîte",b:"Tire-bouchon"},
+    {a:"Planche à découper",b:"Mortier"},{a:"Tablier",b:"Manique"},
+    {a:"Cadre photo",b:"Poster"},{a:"Vase",b:"Pot de fleurs"},{a:"Mobile",b:"Suspension"},
+    {a:"Panier",b:"Corbeille"},{a:"Tiroir",b:"Étagère"},{a:"Cintre",b:"Patère"},
+    {a:"Serrure",b:"Cadenas"},{a:"Boîte aux lettres",b:"Interphone"},
+    {a:"Paillasson",b:"Tapis d'entrée"},{a:"Poignée",b:"Bouton de porte"},
+    {a:"Volet",b:"Persienne"},{a:"Gouttière",b:"Tuyau"},{a:"Antenne",b:"Parabole"},
+    {a:"Réveil",b:"Minuteur"},{a:"Calendrier",b:"Planning"},{a:"Globe terrestre",b:"Mappemonde"},
+    {a:"Jumelles",b:"Longue-vue"},{a:"Loupe",b:"Microscope"},
+    {a:"Panier à linge",b:"Étendoir"},{a:"Fer à repasser",b:"Défroisseur"},
+    // ══════════════════════════════════════
+    // ── NATURE & SCIENCE (100 paires) ──
+    // ══════════════════════════════════════
     {a:"Aurore boréale",b:"Arc-en-ciel"},{a:"Éclipse",b:"Équinoxe"},
     {a:"Marée haute",b:"Tsunami"},{a:"Rosée",b:"Givre"},{a:"Brume",b:"Brouillard"},
     {a:"Stalactite",b:"Stalagmite"},{a:"Fossile",b:"Relique"},{a:"Cristal",b:"Diamant"},
@@ -1162,7 +1328,33 @@
     {a:"Trou noir",b:"Trou de ver"},{a:"Gravité",b:"Magnétisme"},
     {a:"Photosynthèse",b:"Fermentation"},{a:"ADN",b:"ARN"},
     {a:"Séisme",b:"Éruption"},{a:"Tornade",b:"Cyclone"},{a:"Avalanche",b:"Glissement de terrain"},
-    // ── MUSIQUE ──
+    {a:"Corail",b:"Éponge de mer"},{a:"Plancton",b:"Algue"},{a:"Lichen",b:"Mousse"},
+    {a:"Champignon",b:"Truffe"},{a:"Fougère",b:"Bambou"},{a:"Cactus",b:"Succulent"},
+    {a:"Orchidée",b:"Lys"},{a:"Rose",b:"Pivoine"},{a:"Tournesol",b:"Marguerite"},
+    {a:"Tulipe",b:"Jacinthe"},{a:"Lavande",b:"Romarin"},{a:"Menthe",b:"Basilic"},
+    {a:"Chêne",b:"Hêtre"},{a:"Pin",b:"Sapin"},{a:"Bouleau",b:"Peuplier"},
+    {a:"Saule pleureur",b:"Olivier"},{a:"Séquoia",b:"Baobab"},{a:"Érable",b:"Platane"},
+    {a:"Volcan actif",b:"Volcan éteint"},{a:"Source chaude",b:"Geyser"},
+    {a:"Stalactite",b:"Concrétion"},{a:"Grès",b:"Calcaire"},{a:"Granit",b:"Marbre"},
+    {a:"Quartz",b:"Améthyste"},{a:"Rubis",b:"Saphir"},{a:"Émeraude",b:"Jade"},
+    {a:"Or",b:"Platine"},{a:"Argent",b:"Cuivre"},{a:"Fer",b:"Acier"},
+    {a:"Magma",b:"Lave"},{a:"Sable",b:"Gravier"},{a:"Argile",b:"Terre"},
+    {a:"Nuage",b:"Brouillard"},{a:"Grêle",b:"Neige"},{a:"Verglas",b:"Gel"},
+    {a:"Orage",b:"Tempête"},{a:"Foudre",b:"Éclair"},{a:"Tonnerre",b:"Grondement"},
+    {a:"Marée",b:"Courant"},{a:"Vague",b:"Houle"},{a:"Mousson",b:"Alizé"},
+    {a:"Brise",b:"Rafale"},{a:"Averse",b:"Crachin"},{a:"Canicule",b:"Sécheresse"},
+    {a:"Inondation",b:"Crue"},{a:"Érosion",b:"Sédimentation"},{a:"Fossile",b:"Ambre"},
+    {a:"Cellule",b:"Organisme"},{a:"Virus",b:"Bactérie"},{a:"Enzyme",b:"Protéine"},
+    {a:"Chromosome",b:"Gène"},{a:"Neurone",b:"Synapse"},{a:"Cellule souche",b:"Embryon"},
+    {a:"Écosystème",b:"Biome"},{a:"Chaîne alimentaire",b:"Réseau trophique"},
+    {a:"Migration",b:"Hibernation"},{a:"Symbiose",b:"Parasitisme"},
+    {a:"Mutation",b:"Adaptation"},{a:"Sélection naturelle",b:"Évolution"},
+    {a:"Plasma",b:"Gaz"},{a:"Fusion",b:"Fission"},{a:"Onde",b:"Particule"},
+    {a:"Fréquence",b:"Longueur d'onde"},{a:"Spectre",b:"Rayon"},
+    {a:"Infrarouge",b:"Ultraviolet"},{a:"Rayon X",b:"Gamma"},
+    // ══════════════════════════════════
+    // ── MUSIQUE (70 paires) ──
+    // ══════════════════════════════════
     {a:"Guitare",b:"Ukulélé"},{a:"Piano",b:"Synthétiseur"},{a:"Violon",b:"Violoncelle"},
     {a:"Batterie",b:"Djembé"},{a:"Trompette",b:"Saxophone"},{a:"Flûte",b:"Harmonica"},
     {a:"Rap",b:"Slam"},{a:"Jazz",b:"Blues"},{a:"Reggae",b:"Dancehall"},
@@ -1170,7 +1362,29 @@
     {a:"Opéra",b:"Comédie musicale"},{a:"Chorale",b:"A cappella"},
     {a:"Remix",b:"Cover"},{a:"Vinyl",b:"CD"},{a:"Playlist",b:"Album"},
     {a:"Refrain",b:"Couplet"},{a:"Mélodie",b:"Harmonie"},{a:"Rythme",b:"Tempo"},
-    // ── TECH & DIGITAL ──
+    {a:"Basse",b:"Contrebasse"},{a:"Banjo",b:"Mandoline"},{a:"Harpe",b:"Cithare"},
+    {a:"Orgue",b:"Accordéon"},{a:"Xylophone",b:"Marimba"},{a:"Tam-tam",b:"Bongo"},
+    {a:"Sitar",b:"Oud"},{a:"Cornemuse",b:"Didgeridoo"},{a:"Castagnettes",b:"Maracas"},
+    {a:"Karaoké",b:"Lip sync"},{a:"Concert",b:"Festival"},{a:"Récital",b:"Audition"},
+    {a:"Soundcheck",b:"Répétition"},{a:"Backstage",b:"Coulisse"},
+    {a:"Solo",b:"Duo"},{a:"Trio",b:"Quatuor"},{a:"Orchestre",b:"Fanfare"},
+    {a:"Sonate",b:"Symphonie"},{a:"Concerto",b:"Ouverture"},{a:"Balade",b:"Hymne"},
+    {a:"Acoustique",b:"Unplugged"},{a:"Surround",b:"Stéréo"},
+    {a:"Crescendo",b:"Decrescendo"},{a:"Staccato",b:"Legato"},
+    {a:"Vibrato",b:"Tremolo"},{a:"Gamme majeure",b:"Gamme mineure"},
+    {a:"Dièse",b:"Bémol"},{a:"Clé de sol",b:"Clé de fa"},
+    {a:"Portée",b:"Partition"},{a:"Métronome",b:"Diapason"},
+    {a:"Ampli",b:"Baffle"},{a:"Pédale d'effets",b:"Table de mixage"},
+    {a:"Dubstep",b:"Drum and bass"},{a:"Afrobeat",b:"Highlife"},
+    {a:"Bossa nova",b:"Samba"},{a:"Flamenco",b:"Tango"},
+    {a:"Disco",b:"Funk"},{a:"Grunge",b:"Punk"},
+    {a:"Soul",b:"R&B"},{a:"Gospel",b:"Spiritual"},
+    {a:"Country",b:"Folk"},{a:"Indie",b:"Alternative"},
+    {a:"Lo-fi",b:"Chillhop"},{a:"Ambient",b:"New age"},
+    {a:"Trap",b:"Drill"},{a:"Grime",b:"UK garage"},
+    // ══════════════════════════════════
+    // ── TECH & DIGITAL (70 paires) ──
+    // ══════════════════════════════════
     {a:"Algorithme",b:"Intelligence artificielle"},{a:"Bug",b:"Glitch"},
     {a:"Mot de passe",b:"Code PIN"},{a:"Wi-Fi",b:"Bluetooth"},
     {a:"Screenshot",b:"Screen recording"},{a:"Emoji",b:"Sticker"},
@@ -1179,36 +1393,143 @@
     {a:"Cloud",b:"Serveur"},{a:"VPN",b:"Proxy"},{a:"Pixel",b:"Voxel"},
     {a:"Selfie",b:"Portrait"},{a:"Filtre",b:"Retouche"},{a:"Notification",b:"Alerte"},
     {a:"Spam",b:"Pub"},{a:"Dark mode",b:"Mode nuit"},
-    // ── CINÉMA & SÉRIES ──
+    {a:"Ctrl+Z",b:"Annuler"},{a:"Copier-coller",b:"Glisser-déposer"},
+    {a:"Onglet",b:"Fenêtre"},{a:"Bookmark",b:"Favori"},{a:"Historique",b:"Cache"},
+    {a:"Cookie",b:"Tracker"},{a:"Firewall",b:"Antivirus"},{a:"Backup",b:"Sauvegarde"},
+    {a:"SSD",b:"Disque dur"},{a:"RAM",b:"Processeur"},{a:"Carte graphique",b:"Écran"},
+    {a:"USB",b:"HDMI"},{a:"QR code",b:"Code-barres"},{a:"Touch ID",b:"Face ID"},
+    {a:"Intelligence artificielle",b:"Machine learning"},{a:"Chatbot",b:"Assistant vocal"},
+    {a:"Réalité virtuelle",b:"Réalité augmentée"},{a:"Hologramme",b:"Projection 3D"},
+    {a:"Drone",b:"Robot"},{a:"Impression 3D",b:"Scanner 3D"},
+    {a:"Blockchain",b:"Cryptomonnaie"},{a:"NFT",b:"Token"},
+    {a:"Open source",b:"Freeware"},{a:"App",b:"Logiciel"},
+    {a:"Startup",b:"Licorne"},{a:"Pitch",b:"Business plan"},
+    {a:"Hackathon",b:"Game jam"},{a:"Développeur",b:"Data scientist"},
+    {a:"Frontend",b:"Backend"},{a:"API",b:"SDK"},
+    {a:"Git",b:"GitHub"},{a:"Debug",b:"Test"},
+    {a:"Responsive",b:"Adaptive"},{a:"UX",b:"UI"},
+    {a:"Newsletter",b:"Blog"},{a:"Forum",b:"Discord"},
+    {a:"Mème",b:"Viral"},{a:"Hashtag",b:"Trending"},
+    {a:"Deepfake",b:"Photomontage"},{a:"Troll",b:"Hater"},
+    {a:"Geek",b:"Nerd"},{a:"Easter egg",b:"Cheat code"},
+    // ══════════════════════════════════════
+    // ── CINÉMA & SÉRIES (50 paires) ──
+    // ══════════════════════════════════════
     {a:"Trailer",b:"Teaser"},{a:"Sequel",b:"Prequel"},{a:"Remake",b:"Reboot"},
     {a:"Documentaire",b:"Reportage"},{a:"Thriller",b:"Polar"},
     {a:"Comédie",b:"Sitcom"},{a:"Drame",b:"Tragédie"},
     {a:"Figurant",b:"Doublure"},{a:"Cascadeur",b:"Acrobate"},
     {a:"Oscar",b:"Palme d'or"},{a:"Cliffhanger",b:"Plot twist"},
     {a:"Binge-watching",b:"Marathon"},{a:"Spoiler",b:"Easter egg"},
-    // ── SPORT & CORPS ──
+    {a:"Spin-off",b:"Crossover"},{a:"Flashback",b:"Flash-forward"},
+    {a:"Voice-over",b:"Sous-titre"},{a:"Doublage",b:"VOSTFR"},
+    {a:"Blockbuster",b:"Film indépendant"},{a:"Film d'auteur",b:"Film culte"},
+    {a:"Court-métrage",b:"Long-métrage"},{a:"Série limitée",b:"Mini-série"},
+    {a:"Saison",b:"Épisode"},{a:"Pilote",b:"Finale"},
+    {a:"Générique",b:"Crédits"},{a:"Bande originale",b:"Soundtrack"},
+    {a:"Travelling",b:"Panoramique"},{a:"Gros plan",b:"Plan large"},
+    {a:"Montage",b:"Cut"},{a:"Fondu",b:"Transition"},
+    {a:"Scénario",b:"Synopsis"},{a:"Storyboard",b:"Animatique"},
+    {a:"Casting",b:"Audition"},{a:"Maquillage FX",b:"Prothèses"},
+    {a:"Écran vert",b:"Fond bleu"},{a:"CGI",b:"Effets spéciaux"},
+    {a:"Drive-in",b:"Cinéma plein air"},{a:"Salle IMAX",b:"Salle 4DX"},
+    {a:"Film d'horreur",b:"Film fantastique"},{a:"Science-fiction",b:"Dystopie"},
+    {a:"Film d'animation",b:"Stop motion"},{a:"Anime",b:"Manga"},
+    {a:"Western",b:"Film de guerre"},{a:"Péplum",b:"Film historique"},
+    {a:"Comédie romantique",b:"Drame sentimental"},{a:"Road movie",b:"Film de voyage"},
+    {a:"Film noir",b:"Néo-noir"},{a:"Slasher",b:"Gore"},
+    {a:"Found footage",b:"Mockumentaire"},{a:"Biopic",b:"Autobiographie"},
+    {a:"Avant-première",b:"Projection privée"},{a:"Red carpet",b:"Tapis rouge"},
+    // ══════════════════════════════════
+    // ── SPORT & CORPS (70 paires) ──
+    // ══════════════════════════════════
     {a:"Yoga",b:"Pilates"},{a:"Boxe",b:"MMA"},{a:"Escalade",b:"Alpinisme"},
     {a:"Sprint",b:"Marathon"},{a:"Surf",b:"Bodyboard"},{a:"Ski",b:"Snowboard"},
     {a:"Plongeon",b:"Natation synchronisée"},{a:"Escrime",b:"Kendo"},
     {a:"Dribble",b:"Feinte"},{a:"Penalty",b:"Coup franc"},{a:"Smash",b:"Ace"},
     {a:"Podium",b:"Piédestal"},{a:"Médaille",b:"Trophée"},{a:"Arbitre",b:"Juge de ligne"},
     {a:"Tatouage",b:"Piercing"},{a:"Massage",b:"Acupuncture"},{a:"Cicatrice",b:"Grain de beauté"},
-    // ── CULTURE & SOCIÉTÉ ──
+    {a:"CrossFit",b:"HIIT"},{a:"Musculation",b:"Haltérophilie"},
+    {a:"Stretching",b:"Échauffement"},{a:"Récupération",b:"Repos"},
+    {a:"Handball",b:"Basket"},{a:"Volley",b:"Beach-volley"},
+    {a:"Tennis",b:"Badminton"},{a:"Ping-pong",b:"Squash"},
+    {a:"Golf",b:"Minigolf"},{a:"Croquet",b:"Polo"},
+    {a:"Rugby",b:"Football américain"},{a:"Cricket",b:"Baseball"},
+    {a:"Hockey sur glace",b:"Hockey sur gazon"},{a:"Patinage artistique",b:"Danse sur glace"},
+    {a:"Bobsled",b:"Luge"},{a:"Saut à ski",b:"Biathlon"},
+    {a:"Triathlon",b:"Décathlon"},{a:"Relais",b:"Course de haies"},
+    {a:"Saut en hauteur",b:"Saut en longueur"},{a:"Lancer de poids",b:"Lancer de javelot"},
+    {a:"Gymnastique",b:"Acrobatie"},{a:"Trampoline",b:"Parkour"},
+    {a:"Skateboard",b:"Roller"},{a:"BMX",b:"VTT"},
+    {a:"Équitation",b:"Dressage"},{a:"Tir à l'arc",b:"Tir sportif"},
+    {a:"Aviron",b:"Canoë"},{a:"Voile",b:"Planche à voile"},
+    {a:"Kitesurf",b:"Windsurf"},{a:"Plongée",b:"Apnée"},
+    {a:"Parachutisme",b:"Base jump"},{a:"Saut à l'élastique",b:"Tyrolienne"},
+    {a:"Randonnée",b:"Trekking"},{a:"Trail",b:"Ultra-marathon"},
+    {a:"Footing",b:"Jogging"},{a:"Marche rapide",b:"Nordic walking"},
+    {a:"Danse classique",b:"Danse contemporaine"},{a:"Salsa",b:"Bachata"},
+    {a:"Hip-hop",b:"Breakdance"},{a:"Valse",b:"Tango"},
+    // ══════════════════════════════════════
+    // ── CULTURE & SOCIÉTÉ (50 paires) ──
+    // ══════════════════════════════════════
     {a:"Vernissage",b:"Inauguration"},{a:"Festival",b:"Carnaval"},
     {a:"Manifestation",b:"Grève"},{a:"Débat",b:"Polémique"},
     {a:"Cliché",b:"Stéréotype"},{a:"Tabou",b:"Interdit"},
     {a:"Mode",b:"Tendance"},{a:"Vintage",b:"Rétro"},{a:"Minimalisme",b:"Zen"},
     {a:"Karma",b:"Destin"},{a:"Superstition",b:"Rituel"},{a:"Horoscope",b:"Tarot"},
     {a:"Utopie",b:"Dystopie"},{a:"Mythe",b:"Légende urbaine"},
-    {a:"Nostalgie",b:"Déjà-vu"},{a:"Adrénaline",b:"Vertige"},
-    // ── ANIMAUX SUBTILS ──
+    {a:"Graffiti",b:"Street art"},{a:"Fresque",b:"Murale"},
+    {a:"Performance",b:"Happening"},{a:"Installation",b:"Exposition"},
+    {a:"Slam",b:"Spoken word"},{a:"Stand-up",b:"One-man show"},
+    {a:"Sketch",b:"Improvisation"},{a:"Pantomime",b:"Mime"},
+    {a:"Marionnette",b:"Ventriloque"},{a:"Cirque",b:"Cabaret"},
+    {a:"Bal masqué",b:"Soirée costumée"},{a:"Feu d'artifice",b:"Spectacle pyrotechnique"},
+    {a:"Procession",b:"Défilé"},{a:"Cérémonie",b:"Protocole"},
+    {a:"Tradition orale",b:"Conte"},{a:"Fable",b:"Parabole"},
+    {a:"Proverbe",b:"Adage"},{a:"Maxime",b:"Citation"},
+    {a:"Satire",b:"Parodie"},{a:"Caricature",b:"Pastiche"},
+    {a:"Manifeste",b:"Proclamation"},{a:"Pétition",b:"Lettre ouverte"},
+    {a:"Boycott",b:"Embargo"},{a:"Censure",b:"Autocensure"},
+    {a:"Diplomatie",b:"Négociation"},{a:"Alliance",b:"Coalition"},
+    {a:"Démocratie",b:"République"},{a:"Monarchie",b:"Empire"},
+    {a:"Constitution",b:"Loi fondamentale"},{a:"Amendement",b:"Réforme"},
+    {a:"Référendum",b:"Plébiscite"},{a:"Suffrage",b:"Élection"},
+    {a:"Sondage",b:"Enquête d'opinion"},{a:"Propagande",b:"Désinformation"},
+    {a:"Féminisme",b:"Égalitarisme"},{a:"Activisme",b:"Militantisme"},
+    // ══════════════════════════════════════
+    // ── ANIMAUX SUBTILS (70 paires) ──
+    // ══════════════════════════════════════
     {a:"Renard",b:"Coyote"},{a:"Panthère",b:"Léopard"},{a:"Crocodile",b:"Alligator"},
     {a:"Hibou",b:"Chouette"},{a:"Corbeau",b:"Corneille"},{a:"Mouette",b:"Albatros"},
     {a:"Pieuvre",b:"Calmar"},{a:"Méduse",b:"Anémone"},{a:"Raie",b:"Requin"},
     {a:"Salamandre",b:"Lézard"},{a:"Coccinelle",b:"Scarabée"},{a:"Moustique",b:"Mouche"},
     {a:"Hamster",b:"Cobaye"},{a:"Perruche",b:"Perroquet"},{a:"Tortue de terre",b:"Tortue de mer"},
     {a:"Phoque",b:"Otarie"},{a:"Cerf",b:"Élan"},{a:"Bison",b:"Buffle"},
-    // ── VOYAGES & TRANSPORT ──
+    {a:"Loup",b:"Chien sauvage"},{a:"Guépard",b:"Jaguar"},{a:"Tigre",b:"Lion"},
+    {a:"Gorille",b:"Chimpanzé"},{a:"Orang-outan",b:"Bonobo"},{a:"Lémur",b:"Tarsier"},
+    {a:"Koala",b:"Paresseux"},{a:"Kangourou",b:"Wallaby"},{a:"Wombat",b:"Ornithorynque"},
+    {a:"Castor",b:"Loutre"},{a:"Hérisson",b:"Porc-épic"},{a:"Tatou",b:"Pangolin"},
+    {a:"Flamant rose",b:"Pélican"},{a:"Cigogne",b:"Héron"},{a:"Martin-pêcheur",b:"Colibri"},
+    {a:"Aigle",b:"Faucon"},{a:"Vautour",b:"Condor"},{a:"Toucan",b:"Ara"},
+    {a:"Pingouin",b:"Manchot"},{a:"Morse",b:"Éléphant de mer"},
+    {a:"Narval",b:"Béluga"},{a:"Dauphin",b:"Marsouin"},{a:"Orque",b:"Baleine"},
+    {a:"Hippocampe",b:"Poisson-clown"},{a:"Piranha",b:"Barracuda"},
+    {a:"Esturgeon",b:"Saumon"},{a:"Truite",b:"Brochet"},
+    {a:"Anguille",b:"Murène"},{a:"Étoile de mer",b:"Oursin"},
+    {a:"Crabe",b:"Homard"},{a:"Crevette",b:"Langouste"},
+    {a:"Escargot",b:"Limace"},{a:"Papillon",b:"Libellule"},
+    {a:"Abeille",b:"Bourdon"},{a:"Guêpe",b:"Frelon"},
+    {a:"Fourmi",b:"Termite"},{a:"Araignée",b:"Scorpion"},
+    {a:"Mante religieuse",b:"Phasme"},{a:"Sauterelle",b:"Criquet"},
+    {a:"Ver de terre",b:"Sangsue"},{a:"Chenille",b:"Larve"},
+    {a:"Caméléon",b:"Gecko"},{a:"Iguane",b:"Varan"},
+    {a:"Cobra",b:"Vipère"},{a:"Python",b:"Anaconda"},
+    {a:"Grenouille",b:"Crapaud"},{a:"Triton",b:"Axolotl"},
+    {a:"Panda",b:"Panda roux"},{a:"Raton laveur",b:"Blaireau"},
+    {a:"Furet",b:"Belette"},{a:"Hermine",b:"Martre"},
+    // ══════════════════════════════════════════
+    // ── VOYAGES & TRANSPORT (50 paires) ──
+    // ══════════════════════════════════════════
     {a:"Croisière",b:"Road trip"},{a:"Backpack",b:"Globe-trotter"},
     {a:"Escale",b:"Correspondance"},{a:"Décalage horaire",b:"Jet lag"},
     {a:"Passeport",b:"Visa"},{a:"Douane",b:"Frontière"},
@@ -1216,7 +1537,26 @@
     {a:"GPS",b:"Carte routière"},{a:"Péage",b:"Radar"},
     {a:"Métro",b:"RER"},{a:"Tramway",b:"Funiculaire"},{a:"Kayak",b:"Canoë"},
     {a:"Montgolfière",b:"Parapente"},{a:"Hoverboard",b:"Skateboard"},
-    // ── EXPRESSIONS & SITUATIONS ──
+    {a:"TGV",b:"Eurostar"},{a:"Ferry",b:"Catamaran"},{a:"Yacht",b:"Voilier"},
+    {a:"Hydravion",b:"Hélicoptère"},{a:"Planeur",b:"ULM"},
+    {a:"Tuk-tuk",b:"Rickshaw"},{a:"Calèche",b:"Fiacre"},
+    {a:"Caravane",b:"Camping-car"},{a:"Van aménagé",b:"Fourgon"},
+    {a:"Scooter",b:"Vespa"},{a:"Moto",b:"Side-car"},
+    {a:"Segway",b:"Trottinette électrique"},{a:"Vélo électrique",b:"Vélo classique"},
+    {a:"Tandem",b:"Tricycle"},{a:"Quad",b:"Buggy"},
+    {a:"Jet ski",b:"Motomarine"},{a:"Péniche",b:"Barge"},
+    {a:"Sous-marin",b:"Bathyscaphe"},{a:"Dirigeable",b:"Zeppelin"},
+    {a:"Fusée",b:"Navette spatiale"},{a:"Satellite",b:"Station spatiale"},
+    {a:"Téléphérique",b:"Télécabine"},{a:"Remontée mécanique",b:"Tire-fesses"},
+    {a:"Pont suspendu",b:"Pont à haubans"},{a:"Tunnel sous-marin",b:"Tunnel routier"},
+    {a:"Aérogare",b:"Terminal"},{a:"Piste d'atterrissage",b:"Héliport"},
+    {a:"Gare routière",b:"Gare ferroviaire"},{a:"Station-service",b:"Aire de repos"},
+    {a:"Duty-free",b:"Boutique d'aéroport"},{a:"Soute",b:"Cabine"},
+    {a:"Hublot",b:"Sabord"},{a:"Barre",b:"Gouvernail"},
+    {a:"Ancre",b:"Bouée"},{a:"Gilet de sauvetage",b:"Canot de sauvetage"},
+    // ══════════════════════════════════════════════
+    // ── EXPRESSIONS & SITUATIONS (60 paires) ──
+    // ══════════════════════════════════════════════
     {a:"Rendez-vous",b:"Entretien"},{a:"Fête surprise",b:"Anniversaire"},
     {a:"Emménagement",b:"Déménagement"},{a:"Premier jour",b:"Dernier jour"},
     {a:"Réconciliation",b:"Pardon"},{a:"Rupture",b:"Divorce"},
@@ -1225,22 +1565,188 @@
     {a:"Malchance",b:"Poisse"},{a:"Flemme",b:"Procrastination"},
     {a:"Frisson",b:"Chair de poule"},{a:"Papillons dans le ventre",b:"Trac"},
     {a:"Coup de foudre",b:"Béguin"},{a:"Fou rire",b:"Sourire en coin"},
-    // ── ÉCOLE & SAVOIR ──
+    {a:"Baptême",b:"Communion"},{a:"Crémaillère",b:"Inauguration"},
+    {a:"Pot de départ",b:"Pot d'arrivée"},{a:"Enterrement de vie",b:"Bachelor party"},
+    {a:"Lune de miel",b:"Voyage de noces"},{a:"Baby shower",b:"Gender reveal"},
+    {a:"Remise de diplôme",b:"Cérémonie"},{a:"Discours",b:"Toast"},
+    {a:"Standing ovation",b:"Rappel"},{a:"Bis",b:"Encore"},
+    {a:"Surprise",b:"Coup de théâtre"},{a:"Quiproquo",b:"Malentendu"},
+    {a:"Coïncidence",b:"Synchronicité"},{a:"Chance du débutant",b:"Coup de bol"},
+    {a:"Plan B",b:"Roue de secours"},{a:"Imprévu",b:"Contretemps"},
+    {a:"Embouteillage",b:"Bouchon"},{a:"File d'attente",b:"Queue"},
+    {a:"Grasse matinée",b:"Réveil tardif"},{a:"Nuit blanche",b:"Veillée"},
+    {a:"Apéro",b:"Happy hour"},{a:"Brunch",b:"Goûter"},
+    {a:"Pique-nique",b:"Barbecue"},{a:"Soirée pyjama",b:"Nuit chez un ami"},
+    {a:"Coup de soleil",b:"Insolation"},{a:"Crampe",b:"Courbature"},
+    {a:"Éternuement",b:"Bâillement"},{a:"Hoquet",b:"Rot"},
+    {a:"Nostalgie du dimanche",b:"Blues du lundi"},{a:"Veille de vacances",b:"Retour de vacances"},
+    {a:"Premier baiser",b:"Premier rencard"},{a:"Demande en mariage",b:"Déclaration"},
+    {a:"Poignée de main",b:"Accolade"},{a:"Câlin",b:"Bisou"},
+    {a:"Claquement de porte",b:"Silence radio"},{a:"Mot doux",b:"Lettre d'amour"},
+    {a:"Selfie de groupe",b:"Photo souvenir"},{a:"Album photo",b:"Diaporama"},
+    {a:"Carte postale",b:"Message vocal"},{a:"Cadeau",b:"Surprise"},
+    // ══════════════════════════════════════════
+    // ── ÉCOLE & SAVOIR (50 paires) ──
+    // ══════════════════════════════════════════
     {a:"Examen",b:"Contrôle"},{a:"Dissertation",b:"Rédaction"},{a:"Exposé",b:"Soutenance"},
     {a:"Récréation",b:"Pause"},{a:"Cantine",b:"Self"},{a:"Internat",b:"Résidence"},
     {a:"Dictionnaire",b:"Encyclopédie"},{a:"Formule",b:"Équation"},
     {a:"Théorie",b:"Hypothèse"},{a:"Expérience",b:"Observation"},
-    // ── JEUX & LOISIRS ──
+    {a:"Thèse",b:"Mémoire"},{a:"Bibliographie",b:"Webographie"},
+    {a:"Cours magistral",b:"TD"},{a:"Conférence",b:"Séminaire"},
+    {a:"Bourse",b:"Subvention"},{a:"Diplôme",b:"Certificat"},
+    {a:"Licence",b:"Bachelor"},{a:"Master",b:"MBA"},
+    {a:"Doctorat",b:"Post-doc"},{a:"Professeur titulaire",b:"Maître de conférences"},
+    {a:"Élève",b:"Étudiant"},{a:"Apprenti",b:"Stagiaire"},
+    {a:"Tuteur",b:"Parrain"},{a:"Directeur de thèse",b:"Rapporteur"},
+    {a:"Note",b:"Moyenne"},{a:"Bulletin",b:"Relevé de notes"},
+    {a:"Mention",b:"Distinction"},{a:"Redoublement",b:"Rattrapage"},
+    {a:"Copier-coller",b:"Plagiat"},{a:"Source",b:"Référence"},
+    {a:"Algèbre",b:"Géométrie"},{a:"Trigonométrie",b:"Calcul intégral"},
+    {a:"Physique",b:"Chimie"},{a:"Biologie",b:"SVT"},
+    {a:"Géographie",b:"Géopolitique"},{a:"Histoire",b:"Archéologie"},
+    {a:"Philosophie",b:"Sociologie"},{a:"Psychologie",b:"Neuroscience"},
+    {a:"Littérature",b:"Linguistique"},{a:"Grammaire",b:"Syntaxe"},
+    {a:"Vocabulaire",b:"Lexique"},{a:"Orthographe",b:"Conjugaison"},
+    {a:"Latin",b:"Grec ancien"},{a:"Mandarin",b:"Cantonais"},
+    {a:"Espagnol",b:"Portugais"},{a:"Allemand",b:"Néerlandais"},
+    {a:"Arabe",b:"Hébreu"},{a:"Hindi",b:"Ourdou"},
+    {a:"Japonais",b:"Coréen"},{a:"Suédois",b:"Norvégien"},
+    // ══════════════════════════════════════
+    // ── JEUX & LOISIRS (50 paires) ──
+    // ══════════════════════════════════════
     {a:"Échecs",b:"Dames"},{a:"Poker",b:"Black-jack"},{a:"Puzzle",b:"Casse-tête"},
     {a:"Monopoly",b:"Bonne Paye"},{a:"Loup-Garou",b:"Mafia"},
     {a:"Escape game",b:"Chasse au trésor"},{a:"Karaoké",b:"Blind test"},
     {a:"Bowling",b:"Pétanque"},{a:"Billard",b:"Baby-foot"},
     {a:"Fléchettes",b:"Tir à l'arc"},{a:"Cerf-volant",b:"Drone"},
-    // ── SAISONS & MOMENTS ──
+    {a:"Sudoku",b:"Mots croisés"},{a:"Mots fléchés",b:"Mots mêlés"},
+    {a:"Scrabble",b:"Boggle"},{a:"Trivial Pursuit",b:"Quiz"},
+    {a:"Risk",b:"Stratego"},{a:"Catan",b:"Carcassonne"},
+    {a:"Uno",b:"Phase 10"},{a:"Bataille",b:"Belote"},
+    {a:"Tarot",b:"Bridge"},{a:"Rami",b:"Canasta"},
+    {a:"Dominos",b:"Mikado"},{a:"Jenga",b:"Kapla"},
+    {a:"Lego",b:"Playmobil"},{a:"Poupée",b:"Figurine"},
+    {a:"Console portable",b:"Game Boy"},{a:"Arcade",b:"Flipper"},
+    {a:"Simulation",b:"Stratégie en temps réel"},{a:"RPG",b:"MMORPG"},
+    {a:"FPS",b:"Battle royale"},{a:"Platformer",b:"Metroidvania"},
+    {a:"Speedrun",b:"Highscore"},{a:"Mod",b:"DLC"},
+    {a:"Manette",b:"Joystick"},{a:"Multijoueur",b:"Coopératif"},
+    {a:"Coloriage",b:"Dessin"},{a:"Origami",b:"Kirigami"},
+    {a:"Tricot",b:"Crochet"},{a:"Couture",b:"Broderie"},
+    {a:"Poterie",b:"Modelage"},{a:"Aquarelle",b:"Gouache"},
+    {a:"Peinture à l'huile",b:"Acrylique"},{a:"Fusain",b:"Pastel"},
+    {a:"Photographie",b:"Illustration"},{a:"Calligraphie",b:"Lettering"},
+    {a:"Jardinage",b:"Bonsaï"},{a:"Apiculture",b:"Aviculture"},
+    {a:"Pêche",b:"Chasse"},{a:"Randonnée",b:"Géocaching"},
+    {a:"Camping",b:"Bivouac"},{a:"Glamping",b:"Caravaning"},
+    // ══════════════════════════════════════════
+    // ── SAISONS & MOMENTS (40 paires) ──
+    // ══════════════════════════════════════════
     {a:"Aube",b:"Crépuscule"},{a:"Minuit",b:"Midi"},{a:"Lundi",b:"Vendredi"},
     {a:"Printemps",b:"Automne"},{a:"Solstice",b:"Équinoxe"},
     {a:"Nouvel An",b:"Réveillon"},{a:"Halloween",b:"Carnaval"},
-    {a:"Vacances",b:"Week-end"},{a:"Veille",b:"Lendemain"}
+    {a:"Vacances",b:"Week-end"},{a:"Veille",b:"Lendemain"},
+    {a:"Matin",b:"Après-midi"},{a:"Nuit",b:"Soirée"},{a:"Semaine",b:"Quinzaine"},
+    {a:"Mois",b:"Trimestre"},{a:"Semestre",b:"Année"},
+    {a:"Décennie",b:"Siècle"},{a:"Millénaire",b:"Ère"},
+    {a:"Instant",b:"Moment"},{a:"Seconde",b:"Minute"},
+    {a:"Éphémère",b:"Fugace"},{a:"Éternel",b:"Immortel"},
+    {a:"Avant-hier",b:"Après-demain"},{a:"Jadis",b:"Autrefois"},
+    {a:"Bientôt",b:"Prochainement"},{a:"Maintenant",b:"Tout de suite"},
+    {a:"Toussaint",b:"Jour des morts"},{a:"Pâques",b:"Pentecôte"},
+    {a:"Ramadan",b:"Carême"},{a:"Hanoukka",b:"Diwali"},
+    {a:"Saint-Valentin",b:"Fête des amoureux"},{a:"Fête des mères",b:"Fête des pères"},
+    {a:"Noël",b:"Épiphanie"},{a:"Mardi Gras",b:"Chandeleur"},
+    {a:"Fête nationale",b:"Jour férié"},{a:"Rentrée",b:"Fin d'année"},
+    {a:"Anniversaire",b:"Jubilé"},{a:"Centenaire",b:"Bicentenaire"},
+    {a:"Lever de soleil",b:"Coucher de soleil"},{a:"Pleine lune",b:"Nouvelle lune"},
+    {a:"Étoile filante",b:"Pluie de météores"},{a:"Saison des pluies",b:"Saison sèche"},
+    // ══════════════════════════════════════
+    // ── MODE & STYLE (40 paires) ──
+    // ══════════════════════════════════════
+    {a:"Jean",b:"Chino"},{a:"T-shirt",b:"Polo"},{a:"Chemise",b:"Chemisier"},
+    {a:"Pull",b:"Sweat"},{a:"Veste",b:"Blazer"},{a:"Manteau",b:"Parka"},
+    {a:"Imperméable",b:"Coupe-vent"},{a:"Doudoune",b:"Polaire"},
+    {a:"Robe",b:"Tunique"},{a:"Jupe",b:"Short"},{a:"Combinaison",b:"Salopette"},
+    {a:"Costume",b:"Tuxedo"},{a:"Smoking",b:"Queue-de-pie"},
+    {a:"Mocassin",b:"Derby"},{a:"Escarpin",b:"Ballerine"},
+    {a:"Botte",b:"Bottine"},{a:"Espadrille",b:"Mocassin"},
+    {a:"Montre",b:"Bracelet"},{a:"Bague",b:"Alliance"},
+    {a:"Collier",b:"Sautoir"},{a:"Boucles d'oreilles",b:"Créoles"},
+    {a:"Broche",b:"Pin's"},{a:"Ceinture",b:"Bretelles"},
+    {a:"Béret",b:"Chapeau"},{a:"Bob",b:"Panama"},
+    {a:"Sac à main",b:"Pochette"},{a:"Clutch",b:"Minaudière"},
+    {a:"Soie",b:"Satin"},{a:"Velours",b:"Suède"},
+    {a:"Cachemire",b:"Mohair"},{a:"Lin",b:"Coton"},
+    {a:"Denim",b:"Toile"},{a:"Tweed",b:"Tartan"},
+    {a:"Motif floral",b:"Motif géométrique"},{a:"Rayures",b:"Pois"},
+    {a:"Uni",b:"Imprimé"},{a:"Haute couture",b:"Prêt-à-porter"},
+    {a:"Fast fashion",b:"Slow fashion"},{a:"Upcycling",b:"Recyclage"},
+    {a:"Défilé",b:"Lookbook"},{a:"Stylisme",b:"Merchandising"},
+    // ══════════════════════════════════════
+    // ── ART & LITTÉRATURE (50 paires) ──
+    // ══════════════════════════════════════
+    {a:"Aquarelle",b:"Encre de Chine"},{a:"Fresque",b:"Mosaïque"},
+    {a:"Sculpture",b:"Installation"},{a:"Gravure",b:"Lithographie"},
+    {a:"Sérigraphie",b:"Linogravure"},{a:"Collage",b:"Assemblage"},
+    {a:"Art abstrait",b:"Art figuratif"},{a:"Impressionnisme",b:"Pointillisme"},
+    {a:"Cubisme",b:"Surréalisme"},{a:"Art déco",b:"Art nouveau"},
+    {a:"Baroque",b:"Rococo"},{a:"Romantisme",b:"Réalisme"},
+    {a:"Pop art",b:"Op art"},{a:"Land art",b:"Body art"},
+    {a:"Art brut",b:"Art naïf"},{a:"Conceptuel",b:"Minimaliste"},
+    {a:"Roman",b:"Nouvelle"},{a:"Poème",b:"Sonnet"},{a:"Haïku",b:"Tanka"},
+    {a:"Fable",b:"Conte"},{a:"Épopée",b:"Saga"},{a:"Autobiographie",b:"Journal intime"},
+    {a:"Essai",b:"Chronique"},{a:"Manifeste",b:"Pamphlet"},
+    {a:"Bande dessinée",b:"Roman graphique"},{a:"Manga",b:"Manhwa"},
+    {a:"Light novel",b:"Web novel"},{a:"Fan fiction",b:"Réécriture"},
+    {a:"Best-seller",b:"Classique"},{a:"Polar",b:"Thriller"},
+    {a:"Fantasy",b:"Heroic fantasy"},{a:"Space opera",b:"Cyberpunk"},
+    {a:"Steampunk",b:"Dieselpunk"},{a:"Post-apocalyptique",b:"Uchronie"},
+    {a:"Chapitre",b:"Acte"},{a:"Prologue",b:"Épilogue"},
+    {a:"Narrateur",b:"Protagoniste"},{a:"Antagoniste",b:"Anti-héros"},
+    {a:"Métaphore",b:"Allégorie"},{a:"Hyperbole",b:"Litote"},
+    {a:"Oxymore",b:"Paradoxe"},{a:"Anaphore",b:"Chiasme"},
+    {a:"Tragédie grecque",b:"Comédie latine"},{a:"Théâtre classique",b:"Théâtre contemporain"},
+    {a:"Monologue",b:"Dialogue"},{a:"Soliloque",b:"Aparté"},
+    {a:"Premier plan",b:"Arrière-plan"},{a:"Perspective",b:"Profondeur de champ"},
+    {a:"Palette",b:"Chevalet"},{a:"Toile",b:"Papier vélin"},
+    // ══════════════════════════════════════
+    // ── SANTÉ & BIEN-ÊTRE (30 paires) ──
+    // ══════════════════════════════════════
+    {a:"Migraine",b:"Mal de tête"},{a:"Rhume",b:"Grippe"},
+    {a:"Allergie",b:"Intolérance"},{a:"Entorse",b:"Foulure"},
+    {a:"Fracture",b:"Fissure"},{a:"Vertige",b:"Malaise"},
+    {a:"Ordonnance",b:"Prescription"},{a:"Vaccin",b:"Rappel"},
+    {a:"Antibiotique",b:"Anti-inflammatoire"},{a:"Pastille",b:"Gélule"},
+    {a:"Compresse",b:"Pansement"},{a:"Béquille",b:"Attelle"},
+    {a:"Stéthoscope",b:"Tensiomètre"},{a:"Radio",b:"IRM"},
+    {a:"Scanner",b:"Échographie"},{a:"Prise de sang",b:"Analyse d'urine"},
+    {a:"Thérapie",b:"Rééducation"},{a:"Régime",b:"Détox"},
+    {a:"Jeûne",b:"Diète"},{a:"Complément alimentaire",b:"Vitamine"},
+    {a:"Huile essentielle",b:"Homéopathie"},{a:"Aromathérapie",b:"Phytothérapie"},
+    {a:"Sophrologie",b:"Hypnothérapie"},{a:"Méditation",b:"Pleine conscience"},
+    {a:"Respiration",b:"Cohérence cardiaque"},{a:"Sommeil profond",b:"Sommeil paradoxal"},
+    {a:"Rêve lucide",b:"Somnambulisme"},{a:"Jet lag",b:"Insomnie"},
+    {a:"Burnout",b:"Surmenage"},{a:"Anxiété",b:"Stress"},
+    // ══════════════════════════════════════
+    // ── GÉOGRAPHIE & MONDE (30 paires) ──
+    // ══════════════════════════════════════
+    {a:"Continent",b:"Sous-continent"},{a:"Hémisphère nord",b:"Hémisphère sud"},
+    {a:"Tropique du Cancer",b:"Tropique du Capricorne"},{a:"Pôle Nord",b:"Pôle Sud"},
+    {a:"Méditerranée",b:"Mer Rouge"},{a:"Atlantique",b:"Pacifique"},
+    {a:"Amazonie",b:"Congo"},{a:"Himalaya",b:"Andes"},
+    {a:"Sahara",b:"Gobi"},{a:"Nil",b:"Amazone"},
+    {a:"Alpes",b:"Pyrénées"},{a:"Scandinavie",b:"Balkans"},
+    {a:"Caraïbes",b:"Polynésie"},{a:"Patagonie",b:"Terre de Feu"},
+    {a:"Silicon Valley",b:"Wall Street"},{a:"Broadway",b:"West End"},
+    {a:"Champs-Élysées",b:"Via Veneto"},{a:"La Mecque",b:"Jérusalem"},
+    {a:"Machu Picchu",b:"Angkor Vat"},{a:"Taj Mahal",b:"Alhambra"},
+    {a:"Grande Muraille",b:"Colisée"},{a:"Pyramides",b:"Sphinx"},
+    {a:"Statue de la Liberté",b:"Christ Rédempteur"},{a:"Big Ben",b:"Tour de Pise"},
+    {a:"Moulin Rouge",b:"Opéra Garnier"},{a:"Kremlin",b:"Palais de Buckingham"},
+    {a:"Amazonie",b:"Taïga"},{a:"Savane",b:"Pampa"},
+    {a:"Archipel",b:"Péninsule"},{a:"Delta",b:"Estuaire"},
   ];
 
   const $ = id => document.getElementById(id);
@@ -1311,13 +1817,13 @@
   const sfxChat=()=>{tone(600,.05,"sine",.02,0);};
   const sfxConfirm=()=>{tone(523,.1,"triangle",.04,0);tone(659,.15,"sine",.03,.06);};
   const sfxWin=civil=>{if(civil){tone(523,.14,"triangle",.04,0);tone(659,.18,"triangle",.04,.09);tone(784,.25,"sine",.03,.18);}else{tone(220,.14,"sawtooth",.03,0);tone(196,.2,"triangle",.03,.09);tone(165,.28,"sine",.025,.18);}};
+  const sfxSkip=()=>{tone(440,.08,"triangle",.03,0);tone(330,.12,"sine",.025,.06);tone(550,.15,"triangle",.03,.1);};
   function startAmbience() { if(audio.ambStarted||!audio.ctx) return; const ctx=audio.ctx; const lo=ctx.createOscillator(),lg=ctx.createGain(); lo.type="sine"; lo.frequency.value=52; lg.gain.value=.008; lo.connect(lg); lg.connect(audio.ambGain); lo.start(); const mo=ctx.createOscillator(),mg=ctx.createGain(); mo.type="triangle"; mo.frequency.value=96; mg.gain.value=.004; mo.connect(mg); mg.connect(audio.ambGain); mo.start(); const buf=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate); const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*.3; const ns=ctx.createBufferSource(); ns.buffer=buf; ns.loop=true; const bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=620; bp.Q.value=.6; const ng=ctx.createGain(); ng.gain.value=.005; ns.connect(bp); bp.connect(ng); ng.connect(audio.ambGain); ns.start(); audio.ambStarted=true; const t=ctx.currentTime; audio.ambGain.gain.cancelScheduledValues(t); audio.ambGain.gain.linearRampToValueAtTime(.026,t+1.5); }
   async function enableAudio() { const ctx=await ensureAudio(); if(!ctx) return; if(ctx.state==="suspended") await ctx.resume(); updateAudioSettings(); startAmbience(); sfxPhase(); }
 
   /* ─── CHAT — STORED IN ROOM DOC FOR SYNC ─── */
   const chatState={messages:[], localSystemIds:new Set()};
 
-  /* Add a message locally (renders immediately) */
   function addChatMessageLocal(msg) {
     if(chatState.messages.find(m=>m.id===msg.id)) return;
     chatState.messages.push(msg);
@@ -1326,52 +1832,31 @@
     if(msg.type!=="system") sfxChat();
   }
 
-  /* Send a chat message — writes to room doc field via arrayUnion */
   async function sendChatMessage(author, text, type="other") {
     const msg={id:uid("m"),author,text,type,ts:Date.now(),playerId:state.myId};
-
     if(state.mode==="firebase" && state.db && firebaseFns && state.roomId) {
-      // Show locally immediately for responsiveness
       addChatMessageLocal(msg);
-      // Write to room document chatMessages array — uses same permissions as room
-      try {
-        await firebaseFns.updateDoc(roomRef(state.roomId), {
-          chatMessages: firebaseFns.arrayUnion(msg)
-        });
-      } catch(e) {
-        console.error("Chat send error:", e);
-      }
+      try { await firebaseFns.updateDoc(roomRef(state.roomId), { chatMessages: firebaseFns.arrayUnion(msg) }); } catch(e) { console.error("Chat send error:", e); }
     } else {
-      // Offline mode
       addChatMessageLocal(msg);
-      if(state.offline) {
-        if(!state.offline.chatMessages) state.offline.chatMessages=[];
-        state.offline.chatMessages.push(msg);
-        persistOffline();
-      }
+      if(state.offline) { if(!state.offline.chatMessages) state.offline.chatMessages=[]; state.offline.chatMessages.push(msg); persistOffline(); }
     }
   }
 
-  /* Add a system message (local-only, not synced) */
   function addSystemMessage(text) {
     const msg={id:uid("m"),author:"",text,type:"system",ts:Date.now(),playerId:""};
     chatState.localSystemIds.add(msg.id);
     addChatMessageLocal(msg);
   }
 
-  /* Sync chat from room snapshot — called every time room data updates */
   function syncChatFromRoom(roomData) {
     if(!roomData || !roomData.chatMessages || !Array.isArray(roomData.chatMessages)) return;
-    const remoteMsgs = roomData.chatMessages;
-    for(const msg of remoteMsgs) {
-      addChatMessageLocal(msg);
-    }
+    for(const msg of roomData.chatMessages) addChatMessageLocal(msg);
   }
 
   function renderChat() {
     const container=$("chatMessages");
-    const msgs = chatState.messages;
-    container.innerHTML=msgs.map(m=>{
+    container.innerHTML=chatState.messages.map(m=>{
       const cls=m.type==="system"?"system":(m.playerId===state.myId || m.author===state.myName?"mine":"other");
       const author=m.type!=="system"?`<div class="msg-author">${escHtml(m.author)}</div>`:"";
       return `<div class="chat-msg ${cls}">${author}${escHtml(m.text)}</div>`;
@@ -1379,25 +1864,15 @@
     container.scrollTop=container.scrollHeight;
   }
 
-  /* Determine if the current player can type in chat */
   function canChat() {
     const room = getRoom();
     if(!room) return false;
     const phase = room.phase;
-
-    // During vote phase: free chat for all alive players
     if(phase === "vote") return true;
-
-    // During discussion: only the current speaker can type
     if(phase === "discussion") {
-      const speakerId = currentSpeakerId();
-      if(state.mode === "offline") {
-        // In offline, the host controls, so always allow (host passes phone)
-        return true;
-      }
-      return speakerId === state.myId;
+      if(state.mode === "offline") return true;
+      return currentSpeakerId() === state.myId;
     }
-
     return false;
   }
 
@@ -1407,32 +1882,13 @@
     const input = $("chatInput");
     const lockNotice = $("chatLockNotice");
     const sendBtn = $("btnSendChat");
-
-    if(phase === "vote") {
-      // Free chat during vote
-      input.disabled = false;
-      input.placeholder = "Débattez librement...";
-      lockNotice.classList.remove("active");
-      sendBtn.disabled = false;
-    } else if(phase === "discussion") {
+    if(phase === "vote") { input.disabled=false; input.placeholder="Débattez librement..."; lockNotice.classList.remove("active"); sendBtn.disabled=false; }
+    else if(phase === "discussion") {
       const allowed = canChat();
-      input.disabled = !allowed;
-      sendBtn.disabled = !allowed;
-      if(allowed) {
-        input.placeholder = "Décris ton mot...";
-        lockNotice.classList.remove("active");
-      } else {
-        input.placeholder = "";
-        lockNotice.classList.add("active");
-        lockNotice.textContent = `🔒 C'est au tour de ${getPlayerName(currentSpeakerId())} — attends ton tour`;
-      }
-    } else {
-      // Lobby, reveal, result: chat disabled
-      input.disabled = true;
-      input.placeholder = "Chat désactivé pour l'instant";
-      lockNotice.classList.remove("active");
-      sendBtn.disabled = true;
-    }
+      input.disabled=!allowed; sendBtn.disabled=!allowed;
+      if(allowed) { input.placeholder="Décris ton mot..."; lockNotice.classList.remove("active"); }
+      else { input.placeholder=""; lockNotice.classList.add("active"); lockNotice.textContent=`🔒 C'est au tour de ${getPlayerName(currentSpeakerId())} — attends ton tour`; }
+    } else { input.disabled=true; input.placeholder="Chat désactivé pour l'instant"; lockNotice.classList.remove("active"); sendBtn.disabled=true; }
   }
 
   function handleChatSend() {
@@ -1443,39 +1899,27 @@
     input.value="";
     sendChatMessage(state.myName||"Joueur", text, "other");
     sfxConfirm();
-    // Auto-advance to next speaker after sending during discussion
     autoAdvanceSpeaker();
   }
 
-  /* Auto-advance to next speaker after a player sends their message */
   function autoAdvanceSpeaker() {
     const room=getRoom();
     if(!room || room.phase!=="discussion") return;
     const order=room.current?.turnOrder||[];
     const idx=room.current?.speakerIndex||0;
     const totalTurns=room.settings?.turnsPerRound||order.length;
-    if(idx>=totalTurns-1) return; // last turn, don't advance
-    // Small delay so the message appears first
+    if(idx>=totalTurns-1) return;
     setTimeout(()=>{
       if(state.mode==="firebase") {
-        if(state.isHost) {
-          firebaseNextSpeaker();
-        } else {
-          // Non-host: request advance via updating room
-          firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),"current.speakerIndex":idx+1}).catch(()=>{});
-        }
-      } else {
-        offlineNextSpeaker();
-      }
+        if(state.isHost) firebaseNextSpeaker();
+        else firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),"current.speakerIndex":idx+1}).catch(()=>{});
+      } else offlineNextSpeaker();
     }, 400);
   }
 
   function initChat() {
     chatState.messages=[];
-    if(state.mode==="offline" && state.offline) {
-      state.offline.chatMessages = [];
-      persistOffline();
-    }
+    if(state.mode==="offline" && state.offline) { state.offline.chatMessages = []; persistOffline(); }
     addSystemMessage("Partie lancée — bonne chance !");
     $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter") handleChatSend();});
     $("btnSendChat").addEventListener("click",handleChatSend);
@@ -1503,12 +1947,147 @@
   }
 
   function pickPairIndex() { const max=WORD_PAIRS.length; let idx=randInt(max),tries=0; while(state.recentPairIndexes.includes(idx)&&tries<20){idx=randInt(max);tries++;} state.recentPairIndexes.push(idx); if(state.recentPairIndexes.length>12) state.recentPairIndexes.shift(); return idx; }
-  function buildTurnOrder(alive) {
-    // Just shuffle the players once — the game will cycle through them
-    return shuffle(alive.map(p => p.id));
-  }
+  function buildTurnOrder(alive) { return shuffle(alive.map(p => p.id)); }
   const getPlayerName=id=>getPlayers().find(p=>p.id===id)?.nickname||"—";
   const hasSeenCurrentWord=()=>getPlayers().find(p=>p.id===state.myId)?.revealedRound===currentRoundNumber();
+
+  /* ─── SKIP WORD VOTING SYSTEM ─── */
+  function getSkipVotes() {
+    const room = getRoom();
+    return room?.current?.skipVotes || {};
+  }
+  function getSkipVoteCount() {
+    return Object.keys(getSkipVotes()).length;
+  }
+  function getMajorityThreshold() {
+    return Math.ceil(getAlivePlayers().length / 2);
+  }
+  function hasVotedToSkip() {
+    return !!getSkipVotes()[state.myId];
+  }
+  function isMajoritySkip() {
+    return getSkipVoteCount() >= getMajorityThreshold();
+  }
+
+  async function castSkipVote() {
+    if(hasVotedToSkip()) return;
+    const room = getRoom();
+    if(!room || room.phase !== "reveal") return;
+
+    if(state.mode === "firebase") {
+      try {
+        await firebaseFns.updateDoc(roomRef(state.roomId), {
+          [`current.skipVotes.${state.myId}`]: true
+        });
+        sfxSkip();
+        toast("Vote enregistré", "Tu veux changer le mot");
+        // Check majority after voting
+        setTimeout(async () => {
+          const snap = await firebaseFns.getDoc(roomRef(state.roomId));
+          if(snap.exists()) {
+            const rd = snap.data();
+            const skipVotes = rd.current?.skipVotes || {};
+            const alive = (state.players || []).filter(p => p.alive);
+            const threshold = Math.ceil(alive.length / 2);
+            if(Object.keys(skipVotes).length >= threshold && state.isHost) {
+              await executeSkipWord();
+            }
+          }
+        }, 500);
+      } catch(e) { console.error("Skip vote error:", e); }
+    } else {
+      if(!room.current.skipVotes) room.current.skipVotes = {};
+      room.current.skipVotes[state.myId] = true;
+      persistOffline();
+      sfxSkip();
+      toast("Vote enregistré", "Tu veux changer le mot");
+      if(isMajoritySkip()) {
+        executeSkipWordOffline();
+      }
+      updateSkipBanner();
+    }
+  }
+
+  async function executeSkipWord() {
+    // Firebase: pick a new pair and reassign words
+    const room = getRoom();
+    if(!room || !state.isHost) return;
+    const alive = getAlivePlayers();
+    const ucIds = room.current?.undercoverIds || [];
+    const pairIndex = pickPairIndex();
+    const pair = WORD_PAIRS[pairIndex];
+
+    const batch = firebaseFns.writeBatch(state.db);
+    batch.update(roomRef(state.roomId), {
+      "current.pairIndex": pairIndex,
+      "current.civilianWord": pair.a,
+      "current.skipVotes": {},
+      updatedAt: firebaseFns.serverTimestamp()
+    });
+    // Reset reveal state
+    for(const p of alive) {
+      batch.set(playerRef(state.roomId, p.id), { revealedRound: -999999 }, { merge: true });
+      batch.set(privateRef(state.roomId, p.secretId), {
+        roundNumber: room.roundNumber,
+        pairIndex,
+        word: ucIds.includes(p.id) ? pair.b : pair.a,
+        playerId: p.id,
+        seen: false
+      });
+    }
+    await batch.commit();
+    addSystemMessage("🔄 Mot changé ! Revoyez vos nouveaux mots.");
+    toast("Mot changé !", "Nouveau mot attribué à tous");
+    sfxSkip();
+  }
+
+  function executeSkipWordOffline() {
+    const room = state.offline;
+    if(!room) return;
+    const alive = room.players.filter(p => p.alive);
+    const ucIds = room.current.undercoverIds || [];
+    const pairIndex = pickPairIndex();
+    const pair = WORD_PAIRS[pairIndex];
+
+    room.current.pairIndex = pairIndex;
+    room.current.skipVotes = {};
+    room.privateWords = {};
+    for(const p of alive) {
+      p.revealedRound = -999999;
+      room.privateWords[p.id] = {
+        roundNumber: room.roundNumber,
+        word: ucIds.includes(p.id) ? pair.b : pair.a,
+        playerId: p.id,
+        seen: false
+      };
+    }
+    room.offlineRevealQueue = alive.map(p => p.id);
+    room.offlineRevealIndex = 0;
+    state.myPrivateWord = room.privateWords[room.offlineRevealQueue[0]] || null;
+    persistOffline();
+    addSystemMessage("🔄 Mot changé ! Revoyez vos nouveaux mots.");
+    toast("Mot changé !", "Nouveau mot attribué à tous");
+    sfxSkip();
+    renderPlayers();
+    updateRoomHeader();
+  }
+
+  function updateSkipBanner() {
+    const room = getRoom();
+    const banner = $("skipWordBanner");
+    const btn = $("btnSkipWord");
+    if(!room || room.phase !== "reveal") { show(banner, false); return; }
+
+    const alive = getAlivePlayers();
+    const skipCount = getSkipVoteCount();
+    const threshold = getMajorityThreshold();
+    const voted = hasVotedToSkip();
+
+    show(banner, true);
+    setText("skipVoteCount", `${skipCount} / ${threshold} votes pour changer`);
+    btn.disabled = voted;
+    btn.textContent = voted ? "✓ Vote enregistré" : "👎 Changer le mot";
+  }
 
   /* ─── FULLSCREEN REVEAL ─── */
   function showRevealOverlay(playerName, word, isUndercover, seenCount, totalCount) {
@@ -1516,39 +2095,27 @@
     $("revealPlayerName").textContent=`${playerName} — regarde ton mot`;
     $("revealWordBig").textContent=word||"—";
     $("revealCounter").textContent=`${seenCount+1} / ${totalCount}`;
-
     const tag=$("revealRoleTag");
-    // Don't reveal role — just show "Ton mot secret"
     tag.textContent="Ton mot secret";
     tag.className="reveal-role-tag civil";
-
-    // Re-trigger animations by cloning
-    overlay.querySelectorAll('[class*="reveal-"]').forEach(el=>{
-      el.style.animation='none';
-      el.offsetHeight; // reflow
-      el.style.animation='';
-    });
-
+    overlay.querySelectorAll('[class*="reveal-"]').forEach(el=>{ el.style.animation='none'; el.offsetHeight; el.style.animation=''; });
     overlay.classList.add("active");
     sfxReveal();
   }
 
-  function hideRevealOverlay() {
-    $("revealOverlay").classList.remove("active");
-  }
+  function hideRevealOverlay() { $("revealOverlay").classList.remove("active"); }
 
   function maybePlayPhaseAudio() {
     const room=getRoom(); if(!room) return;
     if(state.lastPhase!==room.phase){
-      if(room.phase==="reveal") {} // handled by overlay
-      else if(["discussion","vote","result"].includes(room.phase)) sfxPhase();
+      if(["discussion","vote","result"].includes(room.phase)) sfxPhase();
       state.lastPhase=room.phase;
       if(room.phase==="discussion") addSystemMessage("Phase de discussion — décrivez vos mots à tour de rôle !");
       if(room.phase==="vote") addSystemMessage("Phase de vote — débattez librement puis votez !");
       if(room.phase==="result") addSystemMessage("Le résultat est tombé…");
     }
-    if(room.winner&&state.lastWinner!==room.winner){state.lastWinner=room.winner;}
-    if(!room.winner)state.lastWinner="";
+    if(room.winner&&state.lastWinner!==room.winner) state.lastWinner=room.winner;
+    if(!room.winner) state.lastWinner="";
   }
 
   function renderRoundDots() { const room=getRoom(); const total=room?.settings?.roundsTotal||1; const cur=currentRoundNumber(); const dots=$("roundsDots"); dots.innerHTML=""; for(let i=1;i<=total;i++){const d=document.createElement("div");d.className="round-dot"+(i<cur?" done":i===cur?" current":"");dots.appendChild(d);} setText("roundsLabel",`${cur} / ${total}`); }
@@ -1577,15 +2144,8 @@
   const PHASE_ORDER=["lobby","reveal","discussion","vote","result"];
   function updateStepUI(phase) {
     const idx=PHASE_ORDER.indexOf(phase);
-    PHASE_ORDER.forEach((p,i)=>{
-      const el=$("step-"+p);
-      if(!el) return;
-      el.classList.remove("active","done");
-      if(i<idx) el.classList.add("done");
-      else if(i===idx) el.classList.add("active");
-    });
+    PHASE_ORDER.forEach((p,i)=>{ const el=$("step-"+p); if(!el) return; el.classList.remove("active","done"); if(i<idx) el.classList.add("done"); else if(i===idx) el.classList.add("active"); });
     setText("phaseBadge",phaseLabel(phase));
-    // Show/hide panels
     show($("panel-discussion"),phase==="discussion");
     show($("panel-vote"),phase==="vote");
     show($("panel-result"),phase==="result");
@@ -1610,6 +2170,7 @@
     show($("voteTimerAdjust"),state.isHost&&phase==="vote");
     if($("btnSeenWord")){$("btnSeenWord").disabled=state.mode==="firebase"?hasSeenCurrentWord():!offlineCurrentRevealPlayer();}
     show($("panel-offline-admin"),state.mode==="offline"&&state.isHost&&phase==="lobby");
+    updateSkipBanner();
   }
 
   function updateRoomHeader() {
@@ -1639,53 +2200,36 @@
   function updateRevealPanel() {
     const room=getRoom();
     if(room?.phase!=="reveal") { hideRevealOverlay(); return; }
-
     if(state.mode==="firebase") {
       const alive=getAlivePlayers();
       const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;
       if(state.myPrivateWord && !hasSeenCurrentWord()) {
         showRevealOverlay(state.myName, state.myPrivateWord.word, false, seen, alive.length);
-      } else {
-        hideRevealOverlay();
-        // Show waiting status
-        setStatus("Révélation",`${seen}/${alive.length} joueurs ont vu leur mot`);
-      }
+      } else { hideRevealOverlay(); setStatus("Révélation",`${seen}/${alive.length} joueurs ont vu leur mot`); }
     } else {
       const cur=offlineCurrentRevealPlayer();
       const alive=getAlivePlayers();
       const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;
-      if(cur) {
-        const pw=state.offline.privateWords[cur.id];
-        showRevealOverlay(cur.nickname, pw?.word||"—", false, seen, alive.length);
-      } else {
-        hideRevealOverlay();
-        setStatus("Tous ont vu","L'hôte peut lancer la discussion.");
-      }
+      if(cur) { const pw=state.offline.privateWords[cur.id]; showRevealOverlay(cur.nickname, pw?.word||"—", false, seen, alive.length); }
+      else { hideRevealOverlay(); setStatus("Tous ont vu","L'hôte peut lancer la discussion."); }
     }
     updateButtons();
   }
 
   function updateDiscussionPanel() {
     const room=getRoom(); if(room?.phase!=="discussion") return;
-    const order=room.current?.turnOrder||[]; 
+    const order=room.current?.turnOrder||[];
     const idx=room.current?.speakerIndex||0;
     const totalTurns=room.settings?.turnsPerRound||order.length;
     const curId=order.length ? order[idx % order.length] : "";
-    
     setText("currentSpeakerText",curId?getPlayerName(curId):"—");
     setText("speakerProgressBadge",`Tour ${Math.min(idx+1,totalTurns)} / ${totalTurns}`);
-    
-    // Show each player once with their current status in the cycle
     const currentPlayerIdx = order.length ? (idx % order.length) : -1;
     $("discussionOrder").innerHTML=order.map((id,i)=>{
       const isCurrent = i === currentPlayerIdx;
       const isDone = !isCurrent && (i < currentPlayerIdx || idx >= totalTurns);
       const cls = isCurrent ? "active" : (isDone ? "done-turn" : "");
-      const cycleNum = Math.floor(idx / Math.max(1, order.length)) + 1;
-      return `<div class="turn-card ${cls}">
-        <div class="t-num">${isCurrent ? "🎙 En cours" : (isDone ? "✓" : "En attente")}</div>
-        <div class="t-name">${escHtml(getPlayerName(id))}</div>
-      </div>`;
+      return `<div class="turn-card ${cls}"><div class="t-num">${isCurrent ? "🎙 En cours" : (isDone ? "✓" : "En attente")}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`;
     }).join("");
   }
 
@@ -1725,15 +2269,10 @@
       const isCivil=room.winner==="civils";
       wb.className=`winner-banner ${isCivil?"civils":"undercover"}`;
       wb.innerHTML=`<div class="winner-icon">${isCivil?"🏆":"🕵️"}</div><div><div class="winner-label">${isCivil?"Victoire des civils !":"Victoire des undercovers !"}</div><div class="winner-desc">${isCivil?"Tous les undercovers ont été démasqués.":"Les undercovers ont atteint la parité."}</div></div>`;
-      const total=room.settings?.roundsTotal||1;
-      const cur=currentRoundNumber();
+      const total=room.settings?.roundsTotal||1; const cur=currentRoundNumber();
       setText("resultSub",cur<total?`Manche ${cur}/${total} — l'hôte peut lancer la suivante.`:`Dernière manche terminée !`);
-      // Trigger role reveal animation
       setTimeout(() => showRolesReveal(), 600);
-    } else {
-      show(wb,false);
-      setText("resultSub",room.resultText?"L'hôte peut lancer la manche suivante.":"");
-    }
+    } else { show(wb,false); setText("resultSub",room.resultText?"L'hôte peut lancer la manche suivante.":""); }
   }
 
   function updateTimerVisual(timerId,progressId,endAt,totalSecs) {
@@ -1749,11 +2288,8 @@
     $(progressId).style.width=`${Math.max(0,Math.min(100,ratio))}%`;
     const secLeft=Math.ceil(ms/1000);
     const room=getRoom();
-    if(ms>0&&secLeft<=5&&secLeft>=1){
-      const key=`${room?.phase}_${secLeft}`;
-      if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();}
-    }
-    if(ms<=0)audio.lastCountKey=null;
+    if(ms>0&&secLeft<=5&&secLeft>=1){ const key=`${room?.phase}_${secLeft}`; if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();} }
+    if(ms<=0) audio.lastCountKey=null;
   }
 
   function adjustTimer(type,delta) {
@@ -1780,7 +2316,6 @@
       if(room.phase==="discussion") updateTimerVisual("discussionTimer","discussionProgress",room.current?.discussionEndsAt||0,room.settings?.discussionSeconds||90);
       if(room.phase==="vote") updateTimerVisual("voteTimer","voteProgress",room.current?.voteEndsAt||0,room.settings?.voteSeconds||45);
       if(state.mode==="firebase") autoPhaseProgress(); else offlineAutoProgress();
-      // Keep chat lock in sync
       updateChatLock();
     },250);
   }
@@ -1795,7 +2330,7 @@
   const votesCol=r=>firebaseFns.collection(state.db,"rooms",r,"votes");
   const voteRef=(r,p)=>firebaseFns.doc(state.db,"rooms",r,"votes",p);
 
-  async function createFirebaseRoom(nickname,settings){const roomId=roomCode();const room={roomId,mode:"firebase",hostId:state.myId,phase:"lobby",roundNumber:0,createdAt:firebaseFns.serverTimestamp(),updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",chatMessages:[],settings,current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}};await firebaseFns.setDoc(roomRef(roomId),room);await firebaseFns.setDoc(playerRef(roomId,state.myId),{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:Date.now(),revealedRound:-1,votedRound:-1});state.mode="firebase";state.roomId=roomId;state.myName=nickname;state.isHost=true;history.replaceState(null,"",(location.pathname+"?room="+encodeURIComponent(roomId)));await subscribeFirebaseRoom(roomId);toast("Salle créée","Code : "+roomId);}
+  async function createFirebaseRoom(nickname,settings){const roomId=roomCode();const room={roomId,mode:"firebase",hostId:state.myId,phase:"lobby",roundNumber:0,createdAt:firebaseFns.serverTimestamp(),updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",chatMessages:[],settings,current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{}}};await firebaseFns.setDoc(roomRef(roomId),room);await firebaseFns.setDoc(playerRef(roomId,state.myId),{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:Date.now(),revealedRound:-1,votedRound:-1});state.mode="firebase";state.roomId=roomId;state.myName=nickname;state.isHost=true;history.replaceState(null,"",(location.pathname+"?room="+encodeURIComponent(roomId)));await subscribeFirebaseRoom(roomId);toast("Salle créée","Code : "+roomId);}
 
   async function joinFirebaseRoom(roomId,nickname){const snap=await firebaseFns.getDoc(roomRef(roomId));if(!snap.exists()) throw new Error("Salle introuvable.");state.mode="firebase";state.roomId=roomId;state.myName=nickname;state.isHost=snap.data().hostId===state.myId;await firebaseFns.setDoc(playerRef(roomId,state.myId),{id:state.myId,secretId:state.mySecret,nickname,host:state.isHost,alive:true,joinedAt:Date.now(),revealedRound:-1,votedRound:-1},{merge:true});history.replaceState(null,"",(location.pathname+"?room="+encodeURIComponent(roomId)));await subscribeFirebaseRoom(roomId);toast("Salle rejointe","Bienvenue "+nickname);}
 
@@ -1803,11 +2338,11 @@
 
   async function fetchMyPrivateWord(){if(state.mode!=="firebase"||!state.roomId) return;const room=getRoom();if(!["reveal","discussion","vote","result"].includes(room?.phase)){state.myPrivateWord=null;return;}const snap=await firebaseFns.getDoc(privateRef(state.roomId,state.mySecret));if(snap.exists()){const d=snap.data();if(d.roundNumber===currentRoundNumber())state.myPrivateWord=d;}updateRevealPanel();}
 
-  async function firebaseStartRound(){const room=getRoom();if(!state.isHost||!room||room.phase!=="lobby") return;const alive=getAlivePlayers();const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs.");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const roundNumber=(room.roundNumber||0)+1;const batch=firebaseFns.writeBatch(state.db);batch.update(roomRef(state.roomId),{phase:"reveal",roundNumber,updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",chatMessages:[],current:{...room.current,aliveIds:alive.map(p=>p.id),pairIndex,undercoverIds,civilianWord:pair.a,discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{...p,revealedRound:p.alive?-999999:p.revealedRound,votedRound:-1},{merge:true});for(const p of alive)batch.set(privateRef(state.roomId,p.secretId),{roundNumber,pairIndex,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false});chatState.messages=[];renderChat();await batch.commit();toast("Manche "+roundNumber+" lancée");}
+  async function firebaseStartRound(){const room=getRoom();if(!state.isHost||!room||room.phase!=="lobby") return;const alive=getAlivePlayers();const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs.");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const roundNumber=(room.roundNumber||0)+1;const batch=firebaseFns.writeBatch(state.db);batch.update(roomRef(state.roomId),{phase:"reveal",roundNumber,updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",chatMessages:[],current:{...room.current,aliveIds:alive.map(p=>p.id),pairIndex,undercoverIds,civilianWord:pair.a,discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{}}});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{...p,revealedRound:p.alive?-999999:p.revealedRound,votedRound:-1},{merge:true});for(const p of alive)batch.set(privateRef(state.roomId,p.secretId),{roundNumber,pairIndex,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false});chatState.messages=[];renderChat();await batch.commit();toast("Manche "+roundNumber+" lancée");}
 
   async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=="reveal"||hasSeenCurrentWord()) return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});sfxSeen();hideRevealOverlay();toast("Mot vu","Tu es prêt !");}
 
-  async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=="reveal") return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber())) return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:"discussion",updatedAt:firebaseFns.serverTimestamp(),"current.discussionEndsAt":end,"current.turnOrder":turnOrder,"current.speakerIndex":0});toast("Discussion lancée","Premier : "+getPlayerName(turnOrder[0]));}
+  async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=="reveal") return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber())) return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:"discussion",updatedAt:firebaseFns.serverTimestamp(),"current.discussionEndsAt":end,"current.turnOrder":turnOrder,"current.speakerIndex":0,"current.skipVotes":{}});toast("Discussion lancée","Premier : "+getPlayerName(turnOrder[0]));}
 
   async function firebaseNextSpeaker(){const room=getRoom();if(!state.isHost||room.phase!=="discussion") return;const order=room.current?.turnOrder||[],idx=room.current?.speakerIndex||0;const totalTurns=room.settings?.turnsPerRound||order.length;if(idx>=totalTurns-1) return;await firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),"current.speakerIndex":idx+1});const nextId=order[(idx+1)%order.length]||"";toast("Tour suivant",getPlayerName(nextId));sfxPhase();}
 
@@ -1817,9 +2352,9 @@
 
   async function firebaseResolveVotes(){const room=getRoom();if(!state.isHost||room.phase!=="vote") return;const votesSnap=await firebaseFns.getDocs(votesCol(state.roomId));const votes=votesSnap.docs.map(d=>d.data()).filter(v=>v.roundNumber===currentRoundNumber());const alive=getAlivePlayers();const tally={};for(const p of alive)tally[p.id]=0;for(const v of votes){if(v.targetId in tally)tally[v.targetId]++;}const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=getPlayers().find(p=>p.id===elimId);const ucIds=room.current?.undercoverIds||[];const batch=firebaseFns.writeBatch(state.db);if(elimId)batch.set(playerRef(state.roomId,elimId),{alive:false},{merge:true});const survivors=getPlayers().map(p=>p.id===elimId?{...p,alive:false}:p).filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;let winner="";if(aliveUC===0)winner="civils";else if(aliveUC>=aliveCivil)winner="undercover";const resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";batch.update(roomRef(state.roomId),{phase:"result",updatedAt:firebaseFns.serverTimestamp(),resultText,winner,"current.aliveIds":survivors.map(p=>p.id),"current.turnOrder":[],"current.speakerIndex":0,...(elimId?{"current.eliminatedIds":firebaseFns.arrayUnion(elimId)}:{})});await batch.commit();toast("Résultat prêt");}
 
-  async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=="result") return;rolesShownForRound=-1;closeRolesReveal();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches","Toutes les manches ont été jouées !");return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:"lobby",winner:"",updatedAt:firebaseFns.serverTimestamp(),resultText:"","current.discussionEndsAt":0,"current.voteEndsAt":0,"current.turnOrder":[],"current.speakerIndex":0});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1},{merge:true});await batch.commit();toast("Retour au lobby","Manche suivante prête !");}
+  async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=="result") return;rolesShownForRound=-1;closeRolesReveal();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:"lobby",winner:"",updatedAt:firebaseFns.serverTimestamp(),resultText:"","current.discussionEndsAt":0,"current.voteEndsAt":0,"current.turnOrder":[],"current.speakerIndex":0,"current.skipVotes":{}});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1},{merge:true});await batch.commit();toast("Retour au lobby");}
 
-  async function firebaseResetGame(){if(!state.isHost) return;rolesShownForRound=-1;closeRolesReveal();chatState.messages=[];renderChat();const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:"lobby",roundNumber:0,winner:"",resultText:"",chatMessages:[],updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});await batch.commit();toast("Partie réinitialisée");}
+  async function firebaseResetGame(){if(!state.isHost) return;rolesShownForRound=-1;closeRolesReveal();chatState.messages=[];renderChat();const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:"lobby",roundNumber:0,winner:"",resultText:"",chatMessages:[],updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{}}});await batch.commit();toast("Partie réinitialisée");}
 
   function autoPhaseProgress(){if(state.mode!=="firebase"||!state.isHost) return;const room=getRoom();if(!room) return;if(room.phase==="discussion"&&room.current?.discussionEndsAt&&Date.now()>=room.current.discussionEndsAt)firebaseStartVote();if(room.phase==="vote"&&room.current?.voteEndsAt&&Date.now()>=room.current.voteEndsAt)firebaseResolveVotes();}
 
@@ -1827,7 +2362,7 @@
   function createOfflineRoom(nickname,settings){
     state.offline={mode:"offline",roomId:"LOCAL",hostId:state.myId,phase:"lobby",roundNumber:0,winner:"",resultText:"",settings,
       players:[{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1}],
-      current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0},
+      current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{}},
       privateWords:{},votes:{},offlineRevealQueue:[],offlineRevealIndex:0,offlineVoteQueue:[],offlineVoteIndex:0,chatMessages:[]};
     state.mode="offline";state.roomId="LOCAL";state.myName=nickname;state.isHost=true;state.myPrivateWord=null;
     persistOffline();mountOfflineRoom();toast("Partie locale créée");
@@ -1837,27 +2372,23 @@
   function loadOfflineRoom(){state.offline=loadLocal(STORAGE.offline);if(state.offline){state.mode="offline";state.roomId=state.offline.roomId||"LOCAL";state.isHost=state.offline.hostId===state.myId;state.myName=state.offline.players?.find(p=>p.id===state.myId)?.nickname||"";}}
 
   function mountOfflineRoom(){show($("screen-setup"),false);show($("screen-room"),true);updateBadges();renderPlayers();updateRoomHeader();initChat();
-    // Restore chat from saved state
-    if(state.offline?.chatMessages?.length) {
-      chatState.messages = [...state.offline.chatMessages];
-      renderChat();
-    }
+    if(state.offline?.chatMessages?.length) { chatState.messages = [...state.offline.chatMessages]; renderChat(); }
     startTick();
   }
 
   function offlineAddPlayer(name){if(!state.isHost||!state.offline) return;const clean=String(name||"").trim();if(!clean) return;state.offline.players.push({id:uid("p"),secretId:uid("s"),nickname:clean,host:false,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1});state.offline.current.aliveIds=state.offline.players.filter(p=>p.alive).map(p=>p.id);persistOffline();renderPlayers();updateRoomHeader();toast("Joueur ajouté",clean);}
 
-  function offlineStartRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="lobby") return;const alive=room.players.filter(p=>p.alive);const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs (min 3).");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);room.roundNumber+=1;room.phase="reveal";room.winner="";room.resultText="";room.current.pairIndex=pairIndex;room.current.undercoverIds=undercoverIds;room.current.aliveIds=alive.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;room.privateWords={};room.votes={};room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.votedRound=-1;p.revealedRound=p.alive?-999999:p.revealedRound;}for(const p of alive)room.privateWords[p.id]={roundNumber:room.roundNumber,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false};state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();renderPlayers();updateRoomHeader();toast(`Manche ${room.roundNumber} lancée`);}
+  function offlineStartRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="lobby") return;const alive=room.players.filter(p=>p.alive);const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs (min 3).");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);room.roundNumber+=1;room.phase="reveal";room.winner="";room.resultText="";room.current.pairIndex=pairIndex;room.current.undercoverIds=undercoverIds;room.current.aliveIds=alive.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.privateWords={};room.votes={};room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.votedRound=-1;p.revealedRound=p.alive?-999999:p.revealedRound;}for(const p of alive)room.privateWords[p.id]={roundNumber:room.roundNumber,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false};state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();renderPlayers();updateRoomHeader();toast(`Manche ${room.roundNumber} lancée`);}
 
   const offlineCurrentRevealPlayer=()=>{const room=state.offline;if(!room||room.phase!=="reveal") return null;const id=room.offlineRevealQueue[room.offlineRevealIndex];return room.players.find(p=>p.id===id)||null;};
 
   function offlineMarkSeen(){const room=state.offline;if(!room||room.phase!=="reveal") return;const player=offlineCurrentRevealPlayer();if(!player) return;player.revealedRound=room.roundNumber;room.privateWords[player.id].seen=true;room.offlineRevealIndex+=1;state.myPrivateWord=room.offlineRevealIndex<room.offlineRevealQueue.length?room.privateWords[room.offlineRevealQueue[room.offlineRevealIndex]]:null;persistOffline();renderPlayers();updateRoomHeader();sfxSeen();const next=offlineCurrentRevealPlayer();toast("Mot vu",next?`Passe à ${next.nickname}`:"Tous ont vu !");}
 
-  function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=="reveal") return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber)) return;room.phase="discussion";room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive);room.current.speakerIndex=0;persistOffline();updateRoomHeader();toast("Discussion lancée",`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
+  function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=="reveal") return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber)) return;room.phase="discussion";room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive);room.current.speakerIndex=0;room.current.skipVotes={};persistOffline();updateRoomHeader();toast("Discussion lancée",`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
 
   function offlineNextSpeaker(){const room=state.offline;if(!room||!state.isHost||room.phase!=="discussion") return;const order=room.current.turnOrder||[],idx=room.current.speakerIndex||0;const totalTurns=room.settings?.turnsPerRound||order.length;if(idx>=totalTurns-1) return;room.current.speakerIndex+=1;persistOffline();updateRoomHeader();const nextId=order[room.current.speakerIndex%order.length]||"";toast("Tour suivant",getPlayerName(nextId));sfxPhase();}
 
-  function offlineStartVote(){const room=state.offline;if(!room||!state.isHost||room.phase!=="discussion") return;room.phase="vote";room.current.voteEndsAt=now()+Number(room.settings.voteSeconds||45)*1000;room.votes={};room.offlineVoteQueue=room.players.filter(p=>p.alive).map(p=>p.id);room.offlineVoteIndex=0;room.current.turnOrder=[];room.current.speakerIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast("Vote lancé","Passe le téléphone à chaque joueur");}
+  function offlineStartVote(){const room=state.offline;if(!room||!state.isHost||room.phase!=="discussion") return;room.phase="vote";room.current.voteEndsAt=now()+Number(room.settings.voteSeconds||45)*1000;room.votes={};room.offlineVoteQueue=room.players.filter(p=>p.alive).map(p=>p.id);room.offlineVoteIndex=0;room.current.turnOrder=[];room.current.speakerIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast("Vote lancé");}
 
   const offlineCurrentVoter=()=>{const room=state.offline;if(!room||room.phase!=="vote") return null;const id=room.offlineVoteQueue[room.offlineVoteIndex];return room.players.find(p=>p.id===id)||null;};
 
@@ -1865,116 +2396,65 @@
 
   function offlineResolveVotes(){const room=state.offline;if(!room||!state.isHost||room.phase!=="vote") return;const alive=room.players.filter(p=>p.alive);const tally={};for(const p of alive)tally[p.id]=0;Object.values(room.votes).forEach(v=>{if(v.targetId in tally)tally[v.targetId]++;});const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=room.players.find(p=>p.id===elimId);const ucIds=room.current.undercoverIds||[];if(elimPlayer)elimPlayer.alive=false;const survivors=room.players.filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;room.phase="result";room.resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";if(aliveUC===0)room.winner="civils";else if(aliveUC>=aliveCivil)room.winner="undercover";else room.winner="";room.current.aliveIds=survivors.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;if(elimId)room.current.eliminatedIds.push(elimId);persistOffline();renderPlayers();updateRoomHeader();toast("Résultat prêt");}
 
-  function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result") return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches","Toutes les manches ont été jouées !");return;}room.phase="lobby";room.winner="";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;}room.current.aliveIds=room.players.map(p=>p.id);room.current.eliminatedIds=[];rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Retour au lobby","Manche suivante prête !");}
+  function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result") return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}room.phase="lobby";room.winner="";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;}room.current.aliveIds=room.players.map(p=>p.id);room.current.eliminatedIds=[];rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Retour au lobby");}
 
-  function offlineResetGame(){const room=state.offline;if(!room||!state.isHost) return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
+  function offlineResetGame(){const room=state.offline;if(!room||!state.isHost) return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{}};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
 
   function offlineAutoProgress(){const room=state.offline;if(!room||!state.isHost) return;if(room.phase==="discussion"&&room.current.discussionEndsAt&&now()>=room.current.discussionEndsAt)offlineStartVote();if(room.phase==="vote"&&room.current.voteEndsAt&&now()>=room.current.voteEndsAt)offlineResolveVotes();}
 
-  /* ─── PEEK WORD (flip card to re-see your word) ─── */
+  /* ─── PEEK WORD ─── */
   let peekFlipped = false;
-
   function updatePeekButton() {
-    const room = getRoom();
-    const phase = room?.phase;
-    const btn = $("peekWordBtn");
-    // Show peek button during discussion, vote, or result if we have a word
-    const hasWord = state.mode === "firebase" ? !!state.myPrivateWord?.word
-      : (state.offline?.privateWords?.[state.myId]?.word);
-    const showPeek = hasWord && ["discussion","vote","result"].includes(phase);
-    btn.classList.toggle("visible", showPeek);
+    const room = getRoom(); const phase = room?.phase; const btn = $("peekWordBtn");
+    const hasWord = state.mode === "firebase" ? !!state.myPrivateWord?.word : (state.offline?.privateWords?.[state.myId]?.word);
+    btn.classList.toggle("visible", hasWord && ["discussion","vote","result"].includes(phase));
   }
+  function getMyCurrentWord() { if(state.mode === "firebase") return state.myPrivateWord?.word || "—"; return state.offline?.privateWords?.[state.myId]?.word || "—"; }
+  function openPeek() { $("peekWordText").textContent = getMyCurrentWord(); peekFlipped = false; $("flipCard").classList.remove("flipped"); $("peekOverlay").classList.add("active"); }
+  function closePeek() { $("peekOverlay").classList.remove("active"); peekFlipped = false; $("flipCard").classList.remove("flipped"); }
+  function toggleFlip() { peekFlipped = !peekFlipped; $("flipCard").classList.toggle("flipped", peekFlipped); if(peekFlipped) sfxReveal(); }
 
-  function getMyCurrentWord() {
-    if(state.mode === "firebase") return state.myPrivateWord?.word || "—";
-    return state.offline?.privateWords?.[state.myId]?.word || "—";
-  }
-
-  function openPeek() {
-    $("peekWordText").textContent = getMyCurrentWord();
-    peekFlipped = false;
-    $("flipCard").classList.remove("flipped");
-    $("peekOverlay").classList.add("active");
-  }
-
-  function closePeek() {
-    $("peekOverlay").classList.remove("active");
-    peekFlipped = false;
-    $("flipCard").classList.remove("flipped");
-  }
-
-  function toggleFlip() {
-    peekFlipped = !peekFlipped;
-    $("flipCard").classList.toggle("flipped", peekFlipped);
-    if(peekFlipped) sfxReveal();
-  }
-
-  /* ─── ROLE REVEAL ANIMATION (end of game) ─── */
+  /* ─── ROLE REVEAL ANIMATION ─── */
   let rolesShownForRound = -1;
-
   function showRolesReveal() {
-    const room = getRoom();
-    if(!room || !room.winner) return;
+    const room = getRoom(); if(!room || !room.winner) return;
     const roundNum = currentRoundNumber();
-    if(rolesShownForRound === roundNum) return; // already shown
+    if(rolesShownForRound === roundNum) return;
     rolesShownForRound = roundNum;
-
     const ucIds = room.current?.undercoverIds || [];
     const allPlayers = getPlayers();
     const pairIndex = room.current?.pairIndex ?? -1;
     const pair = pairIndex >= 0 ? WORD_PAIRS[pairIndex] : null;
-
-    // Sort: civils first, undercovers last for dramatic effect
-    const sorted = [...allPlayers].sort((a,b) => {
-      const aUC = ucIds.includes(a.id) ? 1 : 0;
-      const bUC = ucIds.includes(b.id) ? 1 : 0;
-      return aUC - bUC;
-    });
-
+    const sorted = [...allPlayers].sort((a,b) => { const aUC = ucIds.includes(a.id) ? 1 : 0; const bUC = ucIds.includes(b.id) ? 1 : 0; return aUC - bUC; });
     const grid = $("rolesGrid");
     grid.innerHTML = sorted.map((p, i) => {
       const isUC = ucIds.includes(p.id);
       const word = isUC ? (pair?.b || "?") : (pair?.a || "?");
-      const delay = 0.3 + i * 0.35; // staggered animation
-      return `<div class="role-card-reveal ${isUC?"undercover":"civil"}" style="animation-delay:${delay}s">
-        <div class="role-card-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div>
-        <div class="role-card-name">${escHtml(p.nickname)}</div>
-        <div class="role-card-role ${isUC?"uc-text":"civil-text"}">${isUC?"🕵️ Undercover":"✅ Civil"}</div>
-        <div class="role-card-word">${escHtml(word)}</div>
-      </div>`;
+      const delay = 0.3 + i * 0.35;
+      return `<div class="role-card-reveal ${isUC?"undercover":"civil"}" style="animation-delay:${delay}s"><div class="role-card-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div class="role-card-name">${escHtml(p.nickname)}</div><div class="role-card-role ${isUC?"uc-text":"civil-text"}">${isUC?"🕵️ Undercover":"✅ Civil"}</div><div class="role-card-word">${escHtml(word)}</div></div>`;
     }).join("");
-
     const isCivil = room.winner === "civils";
     $("rolesTitle").textContent = isCivil ? "🏆 Victoire des Civils !" : "🕵️ Victoire des Undercovers !";
     $("rolesTitle").style.color = isCivil ? "#80ffd4" : "#ff8fa3";
-
-    // Set close button delay based on total players
     const closeDelay = 0.3 + sorted.length * 0.35 + 0.5;
     $("btnCloseRoles").parentElement.style.animationDelay = `${closeDelay}s`;
-
     $("rolesOverlay").classList.add("active");
-
-    // Play win sound after a small delay
     setTimeout(() => sfxWin(isCivil), 500);
   }
-
-  function closeRolesReveal() {
-    $("rolesOverlay").classList.remove("active");
-  }
+  function closeRolesReveal() { $("rolesOverlay").classList.remove("active"); }
 
   /* ─── EVENT LISTENERS ─── */
   $("peekWordBtn").addEventListener("click", openPeek);
-  $("peekOverlay").addEventListener("click", e => {
-    if(e.target === $("peekOverlay")) closePeek();
-  });
+  $("peekOverlay").addEventListener("click", e => { if(e.target === $("peekOverlay")) closePeek(); });
   $("flipContainer").addEventListener("click", toggleFlip);
   $("btnCloseRoles").addEventListener("click", closeRolesReveal);
   $("btnStartAudio").addEventListener("click",async()=>{await enableAudio();toast("Ambiance activée");});
   $("soundEnabled").addEventListener("change",updateAudioSettings);
   $("soundVolume").addEventListener("input",updateAudioSettings);
   $("btnCopyLink").addEventListener("click",()=>{navigator.clipboard.writeText($("shareLinkInput").value).catch(()=>{});sfxPhase();toast("Lien copié !");});
+  $("btnSkipWord").addEventListener("click", castSkipVote);
 
-  $("btnCreateOnline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20),turnsPerRound:clamp(parseInt($("createTurns").value,10)||3,1,20)};console.log("Creating room with settings:",JSON.stringify(settings));try{await createFirebaseRoom(nickname,settings);}catch(e){alert(e.message||"Erreur.");}});
+  $("btnCreateOnline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20),turnsPerRound:clamp(parseInt($("createTurns").value,10)||3,1,20)};try{await createFirebaseRoom(nickname,settings);}catch(e){alert(e.message||"Erreur.");}});
 
   $("btnCreateOffline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20),turnsPerRound:clamp(parseInt($("createTurns").value,10)||3,1,20)};createOfflineRoom(nickname,settings);});
 
