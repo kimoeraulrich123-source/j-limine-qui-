@@ -36,8 +36,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
 /* ── NAV ── */
 nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0 14px;position:sticky;top:0;z-index:60;backdrop-filter:blur(22px);background:linear-gradient(180deg,rgba(7,9,16,.97) 65%,transparent)}
 .logo{display:flex;align-items:center;gap:11px}
-.logo-mark{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--vi),var(--cy));display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:900;font-size:1rem;color:#fff;box-shadow:0 0 24px rgba(124,58,237,.6);flex-shrink:0;position:relative;overflow:hidden;animation:lp 3s ease-in-out infinite}
-.logo-mark::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.22),transparent)}
+.logo-mark{width:44px;height:44px;flex-shrink:0;filter:drop-shadow(0 0 14px rgba(124,58,237,.7));animation:lp 3s ease-in-out infinite}
+@keyframes lp2{0%,100%{filter:drop-shadow(0 0 12px rgba(124,58,237,.6))}50%{filter:drop-shadow(0 0 26px rgba(124,58,237,.95)) drop-shadow(0 0 44px rgba(0,201,255,.4))}}
 @keyframes lp{0%,100%{box-shadow:0 0 20px rgba(124,58,237,.5)}50%{box-shadow:0 0 38px rgba(124,58,237,.85),0 0 60px rgba(0,201,255,.3)}}
 .logo-name{font-family:'Syne',sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:-.02em}
 .logo-sub{font-size:.7rem;color:var(--mu);letter-spacing:.04em;text-transform:uppercase;margin-top:1px}
@@ -248,7 +248,30 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b2);display:f
   <!-- NAV -->
   <nav>
     <div class="logo">
-      <div class="logo-mark">GV</div>
+      <svg class="logo-mark" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#a78bfa"/><stop offset="55%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#00c9ff"/></linearGradient>
+          <linearGradient id="lg2" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#67e8f9"/></linearGradient>
+          <filter id="gw"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect width="44" height="44" rx="13" fill="url(#lg1)" opacity=".2"/>
+        <rect width="44" height="44" rx="13" fill="none" stroke="url(#lg2)" stroke-width="1.1" opacity=".55"/>
+        <!-- Left grip -->
+        <path d="M7 24C7 18.5 9.5 14.5 13.5 14.5L13.5 29.5C9.5 29.5 7 27 7 24Z" fill="url(#lg2)" opacity=".85" filter="url(#gw)"/>
+        <!-- Right grip -->
+        <path d="M37 24C37 18.5 34.5 14.5 30.5 14.5L30.5 29.5C34.5 29.5 37 27 37 24Z" fill="url(#lg2)" opacity=".85" filter="url(#gw)"/>
+        <!-- Center body -->
+        <rect x="13.5" y="17" width="17" height="13" rx="3.5" fill="url(#lg1)" opacity=".9"/>
+        <rect x="13.5" y="17" width="17" height="13" rx="3.5" fill="none" stroke="url(#lg2)" stroke-width=".8" opacity=".6"/>
+        <!-- Top notch -->
+        <rect x="19.5" y="15.5" width="5" height="1.8" rx=".9" fill="url(#lg2)" opacity=".65"/>
+        <!-- D-pad -->
+        <rect x="16.5" y="22" width="4.5" height="1.5" rx=".75" fill="white" opacity=".9"/>
+        <rect x="18" y="20.5" width="1.5" height="4.5" rx=".75" fill="white" opacity=".9"/>
+        <!-- Buttons -->
+        <circle cx="28.5" cy="21" r="1.2" fill="#00e09a" opacity=".95"/>
+        <circle cx="26.2" cy="23.5" r="1.2" fill="#a78bfa" opacity=".95"/>
+      </svg>
       <div>
         <div class="logo-name">Game Verse</div>
         <div class="logo-sub">Mini-jeux multijoueurs</div>
@@ -636,6 +659,258 @@ document.getElementById('modalConfirm').addEventListener('click',()=>{
 // ── WELCOME TOAST ──
 setTimeout(()=>toast('👋 Bienvenue sur Game Verse !','#a78bfa'),700);
 setTimeout(()=>toast(`🎮 ${Math.floor(40+Math.random()*30)} joueurs en ligne`,'#6ee7b7'),2200);
+
+// ═══════════════════════════════════════════════
+// SOUND DESIGN — Apple-style Web Audio Engine
+// Ultra-clean, minimal, spatial. Inspired by
+// iOS / macOS system sounds: soft attack,
+// smooth decay, never harsh, always intentional.
+// ═══════════════════════════════════════════════
+const SFX = (() => {
+  let ctx = null;
+  let masterGain = null;
+  let unlocked = false;
+
+  function init() {
+    if (ctx) return ctx;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    ctx = new AC();
+    masterGain = ctx.createGain();
+    masterGain.gain.value = 0.55;
+    masterGain.connect(ctx.destination);
+    return ctx;
+  }
+
+  function unlock() {
+    if (unlocked) return;
+    init();
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+    unlocked = true;
+  }
+
+  // Core tone engine
+  function osc(freq, type, gainVal, attack, decay, when = 0) {
+    if (!ctx) return;
+    const t = ctx.currentTime + when;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(gainVal, t + attack);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay);
+    o.connect(g);
+    g.connect(masterGain);
+    o.start(t);
+    o.stop(t + attack + decay + 0.05);
+  }
+
+  // Filtered noise burst — Apple uses this for subtle texture
+  function noise(dur, cutoff, gainVal, when = 0) {
+    if (!ctx) return;
+    const t = ctx.currentTime + when;
+    const bufSize = ctx.sampleRate * Math.min(dur + 0.1, 0.5);
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const f = ctx.createBiquadFilter();
+    f.type = 'bandpass';
+    f.frequency.value = cutoff;
+    f.Q.value = 0.8;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(gainVal, t + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f); f.connect(g); g.connect(masterGain);
+    src.start(t); src.stop(t + dur + 0.05);
+  }
+
+  // Reverb-like tail using delayed oscillator
+  function tail(freq, gainVal, delay) {
+    osc(freq, 'sine', gainVal * 0.3, 0.001, 0.18, delay);
+  }
+
+  return {
+    // ── TAP / CLICK — like iPhone keyboard tap
+    // Crisp, immediate, soft. Two-layer: click body + high shimmer
+    tap() {
+      unlock(); if (!ctx) return;
+      noise(0.04, 2800, 0.06);          // body click texture
+      osc(1080, 'sine',  0.022, 0.001, 0.06);  // presence
+      osc(3200, 'sine',  0.008, 0.001, 0.03);  // air shimmer
+    },
+
+    // ── HOVER — extremely subtle, just a breath
+    hover() {
+      unlock(); if (!ctx) return;
+      osc(920, 'sine', 0.008, 0.002, 0.08);
+      osc(1840, 'sine', 0.003, 0.002, 0.04);
+    },
+
+    // ── OPEN / EXPAND — modal or panel opening
+    // Ascending two-note chime, very Apple
+    open() {
+      unlock(); if (!ctx) return;
+      osc(523, 'sine', 0.028, 0.003, 0.18);       // C5
+      osc(659, 'sine', 0.022, 0.003, 0.22, 0.07);  // E5
+      osc(784, 'sine', 0.012, 0.003, 0.28, 0.14);  // G5
+      noise(0.06, 1800, 0.018, 0.01);
+      tail(1046, 0.018, 0.2);                       // C6 tail
+    },
+
+    // ── CLOSE / DISMISS — descending soft fall
+    close() {
+      unlock(); if (!ctx) return;
+      osc(659, 'sine', 0.024, 0.002, 0.12);
+      osc(523, 'sine', 0.018, 0.002, 0.16, 0.06);
+      osc(440, 'sine', 0.010, 0.002, 0.20, 0.12);
+      noise(0.04, 1200, 0.012, 0.02);
+    },
+
+    // ── SUCCESS / CONFIRM — the Apple "sent" chime
+    // Warm, positive, resolved. Three ascending notes.
+    success() {
+      unlock(); if (!ctx) return;
+      osc(587, 'triangle', 0.030, 0.004, 0.22);       // D5
+      osc(740, 'triangle', 0.025, 0.004, 0.26, 0.09); // F#5
+      osc(880, 'sine',     0.020, 0.004, 0.32, 0.18); // A5
+      osc(1174,'sine',     0.010, 0.003, 0.28, 0.26); // D6 shimmer
+      noise(0.05, 2400, 0.015, 0.02);
+      tail(880, 0.012, 0.32);
+    },
+
+    // ── ERROR / DENY — two soft low thuds, not harsh
+    error() {
+      unlock(); if (!ctx) return;
+      noise(0.06, 180, 0.055);
+      noise(0.05, 200, 0.040, 0.09);
+      osc(220, 'triangle', 0.018, 0.003, 0.14);
+      osc(196, 'triangle', 0.014, 0.003, 0.16, 0.09);
+    },
+
+    // ── NOTIFICATION / TOAST — soft ping, like AirDrop received
+    notify() {
+      unlock(); if (!ctx) return;
+      osc(880,  'sine', 0.025, 0.003, 0.14);
+      osc(1108, 'sine', 0.018, 0.003, 0.18, 0.08);
+      noise(0.04, 3200, 0.012, 0.01);
+      tail(1108, 0.010, 0.18);
+    },
+
+    // ── JOIN / CONNECT — a warm "welcome" sound
+    // Like Face ID unlocking, soft + resolved
+    join() {
+      unlock(); if (!ctx) return;
+      osc(440, 'sine', 0.020, 0.004, 0.18);
+      osc(554, 'sine', 0.022, 0.004, 0.22, 0.08);
+      osc(659, 'triangle', 0.028, 0.004, 0.30, 0.16);
+      osc(880, 'sine', 0.014, 0.003, 0.26, 0.24);
+      noise(0.05, 2000, 0.014, 0.05);
+      tail(659, 0.010, 0.30);
+    },
+
+    // ── SCROLL / SWIPE — micro tick for card scroll
+    tick() {
+      unlock(); if (!ctx) return;
+      noise(0.025, 3600, 0.022);
+      osc(1600, 'sine', 0.006, 0.001, 0.022);
+    },
+
+    // ── PAGE LOAD — subtle ambient wake-up chime
+    wake() {
+      unlock(); if (!ctx) return;
+      // Soft sustained chord
+      osc(220, 'sine', 0.012, 0.05, 0.6);
+      osc(330, 'sine', 0.010, 0.06, 0.7, 0.1);
+      osc(440, 'sine', 0.008, 0.08, 0.8, 0.2);
+      osc(660, 'sine', 0.006, 0.1,  0.9, 0.4);
+      noise(0.12, 1400, 0.010, 0.3);
+    }
+  };
+})();
+
+// ── WIRE SFX TO UI ──
+
+// Page load wake sound
+setTimeout(() => SFX.wake(), 400);
+
+// Action buttons
+document.querySelectorAll('.ab-btn').forEach(btn => {
+  btn.addEventListener('mouseenter', () => SFX.hover());
+  btn.addEventListener('click', () => SFX.tap());
+});
+
+// Game cards
+document.querySelectorAll('.gc').forEach(card => {
+  card.addEventListener('mouseenter', () => SFX.hover());
+  card.addEventListener('click', () => SFX.tap());
+});
+
+// btn-go inside cards
+document.querySelectorAll('.btn-go:not(.disabled)').forEach(btn => {
+  btn.addEventListener('click', e => { e.stopPropagation(); SFX.tap(); });
+});
+
+// Modal open/close
+document.getElementById('btnJoin').addEventListener('click', () => SFX.open());
+document.getElementById('btnCreate').addEventListener('click', () => SFX.open());
+document.getElementById('modalClose').addEventListener('click', () => SFX.close());
+document.getElementById('modalCancel').addEventListener('click', () => SFX.close());
+
+// Modal confirm → success or error based on validation
+const origConfirm = document.getElementById('modalConfirm').onclick;
+document.getElementById('modalConfirm').addEventListener('click', () => {
+  const nick = document.getElementById('modalNick').value.trim();
+  const code = document.getElementById('modalCode').value.trim();
+  const mode = document.getElementById('codeField').style.display !== 'none' ? 'join' : 'create';
+  if (!nick || (mode === 'join' && !code)) {
+    SFX.error();
+  } else {
+    SFX.join();
+  }
+});
+
+// Toast notifications → notify sound
+const origToast = window.toast || function(){};
+function toastWithSound(msg, color) {
+  const w = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.style.borderColor = (color || '#a78bfa') + '44';
+  el.innerHTML = `<span style="color:${color||'#a78bfa'}">●</span> ${msg}`;
+  w.appendChild(el);
+  SFX.notify();
+  setTimeout(() => { el.style.transition = '.3s'; el.style.opacity = '0'; }, 2600);
+  setTimeout(() => el.remove(), 3000);
+}
+// Override global toast
+window.toast = toastWithSound;
+
+// Game feed join buttons (re-wire after each rebuild)
+function wireGameFeedSounds() {
+  document.querySelectorAll('.gf-join').forEach(btn => {
+    btn.addEventListener('mouseenter', () => SFX.hover());
+    btn.addEventListener('click', () => SFX.tap());
+  });
+}
+wireGameFeedSounds();
+const origBuildGameFeed = buildGameFeed;
+
+// Scroll on games → tick
+let lastScrollX = 0;
+const scrollEl = document.getElementById('gamesScroll');
+if (scrollEl) {
+  scrollEl.addEventListener('scroll', () => {
+    const dx = Math.abs(scrollEl.scrollLeft - lastScrollX);
+    if (dx > 60) { SFX.tick(); lastScrollX = scrollEl.scrollLeft; }
+  });
+}
+
+// Nav logo tap
+document.querySelector('.logo')?.addEventListener('click', () => SFX.tap());
 </script>
 </body>
 </html>
