@@ -1098,7 +1098,7 @@ async function submitClue(playerId,playerName,word){
       if(state.isHost){
         const isLastTurn=idx>=totalTurns-1;
         setTimeout(async()=>{
-          clueSubmittedBySpeaker=false; // reset pour le prochain tour
+          clueSubmittedBySpeaker=false;
           if(isLastTurn){
             await firebaseFns.updateDoc(roomRef(state.roomId),{phase:'vote','current.speakerIndex':idx+1,updatedAt:firebaseFns.serverTimestamp(),'current.voteEndsAt':Date.now()+Number(room.settings.voteSeconds||60)*1000});
             toast('✅ Tous les indices donnés !','Passage au vote...');
@@ -1109,20 +1109,39 @@ async function submitClue(playerId,playerName,word){
           renderClueInput();
         },3200);
       }else{
-        // Non-hôte : reset le flag après un délai aussi (au cas où l'hôte tarde)
-        setTimeout(()=>{clueSubmittedBySpeaker=false;},4000);
+        setTimeout(()=>{clueSubmittedBySpeaker=false;renderClueInput();},4000);
       }
     }catch(e){console.error(e);toast('Erreur',e.message);clueSubmittedBySpeaker=false;}
   }else{
+    // MODE OFFLINE
     if(!room.current.clues)room.current.clues=[];
-    room.current.clues.push(clueObj);persistOffline();showWordAnnounce(playerName,word);
+    room.current.clues.push(clueObj);
+    persistOffline();
+    showWordAnnounce(playerName,word);
+    // Après l'animation (3.2s), passer au joueur suivant
     setTimeout(()=>{
       clueSubmittedBySpeaker=false;
-      offlineNextSpeakerAuto();
-      // Force re-render complet pour afficher l'input du joueur suivant
-      renderClueInput();
-      updateDiscussionPanel();
-      renderPlayers();
+      const r=state.offline;
+      if(!r||r.phase!=='discussion')return;
+      const order=r.current.turnOrder||[];
+      const idx=r.current.speakerIndex||0;
+      const totalTurns=order.length;
+      if(idx>=totalTurns-1){
+        // Dernier tour → lancer le vote
+        toast('✅ Tous les indices donnés !','Passage au vote...');
+        setTimeout(()=>{
+          if(state.offline&&state.offline.phase==='discussion')offlineStartVote();
+        },1500);
+      }else{
+        // Passer au joueur suivant
+        r.current.speakerIndex=idx+1;
+        persistOffline();
+        const nextId=order[idx+1]||'';
+        toast('📱 Tour suivant',`Passe le téléphone à ${getPlayerName(nextId)}`);
+        sfxPhase();
+      }
+      // Force re-render complet
+      updateRoomHeader();
     },3200);
   }
 }
@@ -1136,13 +1155,20 @@ if(state.mode==='offline'){
   const playersCount=alivePlayers.length;
   const passNum=playersCount>0?Math.floor(idx/playersCount)+1:1;
   const totalPasses=playersCount>0?Math.ceil(totalTurns/playersCount):1;
-  section.innerHTML=`<div class="clue-bar-wrap"><div class="clue-bar-label">🎙 ${escHtml(curName)}, donne ton indice :</div><div style="font-size:.78rem;color:var(--mu);margin:-4px 0 6px">Tour ${passNum}/${totalPasses} — Passe le téléphone à ${escHtml(curName)} !</div><div class="clue-bar-row"><input id="clueBarInput" class="clue-bar-input" type="text" placeholder="Un seul mot..." maxlength="40" autocomplete="off"/><button id="clueBarSend" class="clue-bar-send">Valider ✓</button></div></div>`;const inp=$('clueBarInput');const btn=$('clueBarSend');if(inp&&btn){inp.focus();const ds=()=>{const w=(inp.value||'').trim();if(!w)return;inp.disabled=true;btn.disabled=true;submitClue(curId,curName,w);};btn.addEventListener('click',ds);inp.addEventListener('keydown',e=>{if(e.key==='Enter')ds();});}}else{if(curId===state.myId){section.innerHTML=`<div class="clue-bar-wrap"><div class="clue-bar-label">🎙 C'est ton tour ! Donne un indice :</div><div class="clue-bar-row"><input id="clueBarInput" class="clue-bar-input" type="text" placeholder="Un seul mot..." maxlength="40" autocomplete="off"/><button id="clueBarSend" class="clue-bar-send">Valider ✓</button></div></div>`;const inp=$('clueBarInput');const btn=$('clueBarSend');if(inp&&btn){inp.focus();const ds=()=>{const w=(inp.value||'').trim();if(!w)return;inp.disabled=true;btn.disabled=true;submitClue(curId,state.myName,w);};btn.addEventListener('click',ds);inp.addEventListener('keydown',e=>{if(e.key==='Enter')ds();});}}else{section.innerHTML=`<div class="clue-waiting"><div class="clue-waiting-name">🎙 ${escHtml(curName)} réfléchit…</div><div class="clue-waiting-sub">En attente de son indice</div></div>`;}}}
-function offlineNextSpeakerAuto(){const room=state.offline;if(!room||room.phase!=='discussion')return;const order=room.current.turnOrder||[];const idx=room.current.speakerIndex||0;const totalTurns=order.length;if(idx>=totalTurns-1){
-    // Tous les joueurs ont donné leurs indices → lancer le vote automatiquement
+  section.innerHTML=`<div class="clue-bar-wrap"><div class="clue-bar-label">🎙 ${escHtml(curName)}, c'est ton tour !</div><div style="font-size:.78rem;color:var(--mu);margin:-4px 0 6px">Tour ${passNum}/${totalPasses} — Écris un mot en rapport avec ton mot secret</div><div class="clue-bar-row"><input id="clueBarInput" class="clue-bar-input" type="text" placeholder="Un seul mot..." maxlength="40" autocomplete="off"/><button id="clueBarSend" class="clue-bar-send">Envoyer ✓</button></div></div>`;const inp=$('clueBarInput');const btn=$('clueBarSend');if(inp&&btn){setTimeout(()=>{inp.focus();section.scrollIntoView({behavior:'smooth',block:'center'});},100);const ds=()=>{const w=(inp.value||'').trim();if(!w)return;inp.disabled=true;btn.disabled=true;submitClue(curId,curName,w);};btn.addEventListener('click',ds);inp.addEventListener('keydown',e=>{if(e.key==='Enter')ds();});}}else{if(curId===state.myId){section.innerHTML=`<div class="clue-bar-wrap"><div class="clue-bar-label">🎙 C'est ton tour ! Donne un indice :</div><div class="clue-bar-row"><input id="clueBarInput" class="clue-bar-input" type="text" placeholder="Un seul mot..." maxlength="40" autocomplete="off"/><button id="clueBarSend" class="clue-bar-send">Valider ✓</button></div></div>`;const inp=$('clueBarInput');const btn=$('clueBarSend');if(inp&&btn){inp.focus();const ds=()=>{const w=(inp.value||'').trim();if(!w)return;inp.disabled=true;btn.disabled=true;submitClue(curId,state.myName,w);};btn.addEventListener('click',ds);inp.addEventListener('keydown',e=>{if(e.key==='Enter')ds();});}}else{section.innerHTML=`<div class="clue-waiting"><div class="clue-waiting-name">🎙 ${escHtml(curName)} réfléchit…</div><div class="clue-waiting-sub">En attente de son indice</div></div>`;}}}
+function offlineNextSpeakerAuto(){
+  // Fallback — la logique principale est dans submitClue
+  const room=state.offline;if(!room||room.phase!=='discussion')return;
+  const order=room.current.turnOrder||[];const idx=room.current.speakerIndex||0;const totalTurns=order.length;
+  if(idx>=totalTurns-1){
     toast('✅ Tous les indices donnés !','Passage au vote...');
-    setTimeout(()=>offlineStartVote(),1500);
+    setTimeout(()=>{if(state.offline&&state.offline.phase==='discussion')offlineStartVote();},1500);
     return;
-  }room.current.speakerIndex+=1;persistOffline();updateRoomHeader();renderClueInput();updateDiscussionPanel();renderPlayers();const nextId=order[room.current.speakerIndex]||'';toast('Tour suivant',getPlayerName(nextId));sfxPhase();}
+  }
+  room.current.speakerIndex+=1;persistOffline();updateRoomHeader();
+  const nextId=order[room.current.speakerIndex]||'';
+  toast('📱 Tour suivant',`Passe le téléphone à ${getPlayerName(nextId)}`);sfxPhase();
+}
 function initGameSession(){lastSeenClueCount=0;clueSubmittedBySpeaker=false;renderClueFeed();}
 
 const state={mode:'offline',db:null,firebaseReady:false,roomId:null,myId:PROFILE.playerId,mySecret:PROFILE.secretId,isHost:false,myName:'',roomData:null,players:[],myPrivateWord:null,unsubRoom:null,unsubPlayers:null,tickInterval:null,offline:null,lastPhase:'',lastWinner:'',recentPairIndexes:[]};
