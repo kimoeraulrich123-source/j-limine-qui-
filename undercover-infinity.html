@@ -784,7 +784,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
   <div id="revealPlayerName" class="reveal-player-name">—</div>
   <div id="revealWordBig" class="reveal-word-big">—</div>
   <div id="revealRoleTag" class="reveal-role-tag civil">🤫 Souviens-toi de ce mot !</div>
-  <div class="reveal-warning">⚠️ Ne montre pas cet écran aux autres</div>
+  <div class="reveal-warning" id="revealWarning">⚠️ Ne montre pas cet écran aux autres</div>
   <div class="reveal-btn"><button id="btnSeenWord" class="btn btn-primary" style="min-width:196px;min-height:48px;font-size:.98rem;font-weight:900">👁 J'ai bien vu mon mot</button></div>
 </div>
 <div id="peekWordBtn" class="peek-word-btn" title="Revoir mon mot">🔍</div>
@@ -1567,6 +1567,8 @@ function showRevealOverlay(playerName,word,role,seenCount,totalCount){
   const overlay=$('revealOverlay');
   $('revealCounter').textContent=`${seenCount+1} / ${totalCount}`;
   const tag=$('revealRoleTag');
+  const warn=$('revealWarning');
+  const isLocal=state.mode==='offline';
   const isMWIdentity=word==='MR. WHITE';
   // Stop previous snow if any
   MWSnow.stop();
@@ -1580,9 +1582,10 @@ function showRevealOverlay(playerName,word,role,seenCount,totalCount){
   }else{
     $('revealPlayerName').textContent=`${playerName} — voici ton mot secret`;
     $('revealWordBig').textContent=word||'—';
-    tag.textContent='🤫 Mémorise bien ce mot, puis passe le téléphone au joueur suivant !';
+    tag.textContent=isLocal?'🤫 Mémorise bien ce mot, puis passe le téléphone au joueur suivant !':'🤫 Mémorise bien ce mot avant que la manche commence !';
     tag.className='reveal-role-tag civil';
   }
+  if(warn){warn.textContent='⚠️ Ne montre pas cet écran aux autres joueurs !';warn.style.display=isLocal?'':'none';}
   overlay.querySelectorAll('[class*="reveal-"]').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation='';});
   overlay.classList.add('active');
   if(!isMWIdentity)SFX.reveal();
