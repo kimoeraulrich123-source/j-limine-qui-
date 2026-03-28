@@ -47,8 +47,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0
 .profile-avatar-sm{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-weight:900;font-size:.7rem;color:#fff;flex-shrink:0}
 .profile-name-sm{font-size:.78rem;font-weight:700;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .profile-grade-sm{font-family:'Space Mono',monospace;font-size:.58rem}
-
-/* ONBOARDING */
 .onboard-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(7,9,16,.95);backdrop-filter:blur(24px)}
 .onboard-box{background:var(--bg2);border:1px solid var(--b1);border-radius:24px;padding:36px;max-width:400px;width:90%;text-align:center;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
 @keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
@@ -62,8 +60,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0
 .onboard-btn{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,#5b21b6,var(--vi),#0891b2);color:#fff;font-family:'Syne',sans-serif;font-weight:900;font-size:1rem;border:none;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .onboard-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,58,237,.5)}
 .onboard-note{font-size:.72rem;color:var(--di);margin-top:10px}
-
-/* ACTION BAR */
 .action-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:18px 0 14px;animation:fadeUp .5s ease forwards;opacity:0}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .ab-btn{display:flex;align-items:center;justify-content:center;gap:9px;padding:15px 18px;border-radius:16px;font-family:'Syne',sans-serif;font-weight:900;font-size:.9rem;cursor:pointer;border:none;transition:all .18s;position:relative;overflow:hidden;text-decoration:none;color:inherit}
@@ -73,22 +69,16 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0
 .ab-primary{background:linear-gradient(135deg,#5b21b6,var(--vi),#0891b2);color:#fff;box-shadow:0 10px 32px rgba(124,58,237,.4)}
 .ab-cyan{background:linear-gradient(135deg,#0e7490,var(--cy));color:#fff;box-shadow:0 10px 28px rgba(0,201,255,.3)}
 .ab-ghost{background:var(--s1);border:1.5px solid var(--b1);color:var(--tx)}
-
-/* STATS BAR */
 .stats-bar{display:flex;align-items:center;border-radius:14px;border:1px solid var(--b2);background:var(--s2);backdrop-filter:blur(10px);overflow:hidden;margin-bottom:28px;animation:fadeUp .5s ease .05s forwards;opacity:0}
 .stat-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 8px;border-right:1px solid var(--b3)}
 .stat-item:last-child{border-right:none}
 .stat-n{font-family:'Syne',sans-serif;font-weight:900;font-size:1.2rem}
 .stat-n.green{color:var(--em2)}.stat-n.cyan{color:var(--cy2)}.stat-n.purple{color:var(--vi2)}
 .stat-l{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--di);text-transform:uppercase;letter-spacing:.07em}
-
-/* SECTION HEADER */
 .sh{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .sh-label{font-family:'Space Mono',monospace;font-size:.64rem;text-transform:uppercase;letter-spacing:.12em;color:var(--di);white-space:nowrap}
 .sh-line{flex:1;height:1px;background:linear-gradient(90deg,var(--b2),transparent)}
 .sh-tag{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--di);padding:2px 7px;border:1px solid var(--b3);border-radius:5px;white-space:nowrap}
-
-/* GAMES SCROLL */
 .games-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:10px;margin-bottom:32px;scroll-snap-type:x mandatory;animation:fadeUp .5s ease .1s forwards;opacity:0}
 .games-scroll::-webkit-scrollbar{height:3px}
 .games-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
@@ -119,6 +109,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0
 .chip-ok{background:rgba(0,224,154,.12);border:1px solid rgba(0,224,154,.3);color:var(--em2)}
 .chip-soon{background:rgba(255,184,0,.1);border:1px solid rgba(255,184,0,.25);color:var(--am2)}
 .chip-hot{background:rgba(255,61,107,.12);border:1px solid rgba(255,61,107,.3);color:#ff8fa3}
+.chip-new{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);color:#fb923c}
 .chip-meta{background:var(--s2);border:1px solid var(--b2);color:var(--mu)}
 .gc-name{font-family:'Syne',sans-serif;font-weight:900;font-size:1.1rem;letter-spacing:-.02em;margin-bottom:5px}
 .gc-desc{font-size:.82rem;color:var(--mu);line-height:1.55;margin-bottom:14px;min-height:50px}
@@ -126,10 +117,9 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0
 .gc-players{font-family:'Space Mono',monospace;font-size:.64rem;color:var(--di)}
 .btn-go{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.82rem;border:none;cursor:pointer;transition:all .18s;text-decoration:none}
 .btn-go.vi{background:linear-gradient(135deg,#6d28d9,var(--vi));color:#fff;box-shadow:0 6px 20px rgba(124,58,237,.35)}
+.btn-go.am{background:linear-gradient(135deg,#c2410c,#f97316);color:#fff;box-shadow:0 6px 20px rgba(249,115,22,.35)}
 .btn-go.disabled{background:var(--s1);border:1px solid var(--b2);color:var(--di);cursor:not-allowed}
 .btn-go:not(.disabled):hover{transform:translateY(-2px);filter:brightness(1.1)}
-
-/* LIVE */
 .live-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px;animation:fadeUp .5s ease .2s forwards;opacity:0}
 @media(max-width:640px){.live-grid{grid-template-columns:1fr}}
 .live-panel{border-radius:16px;border:1px solid var(--b2);background:var(--s2);padding:16px;backdrop-filter:blur(10px)}
@@ -153,8 +143,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0
 .gf-meta{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--di)}
 .gf-join{font-family:'Space Mono',monospace;font-size:.6rem;padding:4px 9px;border-radius:7px;border:1px solid var(--b2);background:var(--s3);color:var(--mu);cursor:pointer;transition:all .15s}
 .gf-join:hover{background:var(--vi);border-color:rgba(124,58,237,.5);color:#fff}
-
-/* SOON */
 .soon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;animation:fadeUp .5s ease .3s forwards;opacity:0}
 .sc{border:1px dashed var(--b2);border-radius:16px;padding:18px;background:var(--s3)}
 .sc-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
@@ -166,12 +154,9 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0
 @keyframes pfill{to{width:var(--w,20%)}}
 .sc-info{display:flex;justify-content:space-between;margin-top:6px}
 .sc-info span{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--di)}
-
-/* MODAL */
 #modal{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;background:rgba(7,9,16,.85);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity .25s}
 #modal.open{opacity:1;pointer-events:auto}
 .modal-box{background:var(--bg2);border:1px solid var(--b1);border-radius:24px;padding:28px;max-width:420px;width:90%;position:relative;animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
-@keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 .modal-title{font-family:'Syne',sans-serif;font-weight:900;font-size:1.2rem;margin-bottom:6px}
 .modal-sub{font-size:.86rem;color:var(--mu);margin-bottom:18px;line-height:1.5}
 .modal-field{margin-bottom:14px}
@@ -186,16 +171,11 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0
 .modal-btn.cancel{background:var(--s1);border:1px solid var(--b1);color:var(--mu)}
 .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--di);font-size:1.2rem;cursor:pointer;transition:color .2s}
 .modal-close:hover{color:var(--tx)}
-
-/* TOASTS */
 #toasts{position:fixed;bottom:18px;right:18px;z-index:200;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast{padding:11px 15px;border-radius:12px;background:rgba(10,13,28,.96);border:1px solid var(--b1);backdrop-filter:blur(16px);font-size:.85rem;font-weight:600;min-width:180px;box-shadow:0 10px 36px rgba(0,0,0,.4);animation:tin .2s ease}
 @keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* PARTICLES */
 .pt{position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:ptdrift linear infinite;opacity:0}
 @keyframes ptdrift{0%{opacity:0;transform:translateY(100vh) scale(0)}8%{opacity:.6}92%{opacity:.25}100%{opacity:0;transform:translateY(-15vh) scale(1)}}
-
 footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .ft-left{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--di)}
 .ft-right{display:flex;gap:16px}
@@ -212,20 +192,10 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b2);display:f
   <div class="b b1"></div><div class="b b2"></div><div class="b b3"></div><div class="b b4"></div>
 </div>
 
-<!-- ONBOARDING -->
 <div id="onboardOverlay" class="onboard-overlay" style="display:none">
   <div class="onboard-box">
     <div class="onboard-logo">
-      <svg viewBox="0 0 36 36" fill="none">
-        <defs><linearGradient id="olg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop stop-color="#c4b5fd"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs>
-        <path d="M5 19C5 13 8 9 12 9V27C8 27 5 23.5 5 19Z" fill="url(#olg)" opacity=".9"/>
-        <path d="M31 19C31 13 28 9 24 9V27C28 27 31 23.5 31 19Z" fill="url(#olg)" opacity=".9"/>
-        <rect x="12" y="13" width="14" height="11" rx="3.5" fill="url(#olg)" opacity=".85"/>
-        <rect x="15" y="16" width="4" height="1.5" rx=".75" fill="white" opacity=".9"/>
-        <rect x="16.5" y="14.5" width="1.5" height="4.5" rx=".75" fill="white" opacity=".9"/>
-        <circle cx="23.5" cy="17" r="1.2" fill="#00e09a" opacity=".95"/>
-        <circle cx="21.2" cy="19.5" r="1.2" fill="#a78bfa" opacity=".95"/>
-      </svg>
+      <svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="olg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop stop-color="#c4b5fd"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs><path d="M5 19C5 13 8 9 12 9V27C8 27 5 23.5 5 19Z" fill="url(#olg)" opacity=".9"/><path d="M31 19C31 13 28 9 24 9V27C28 27 31 23.5 31 19Z" fill="url(#olg)" opacity=".9"/><rect x="12" y="13" width="14" height="11" rx="3.5" fill="url(#olg)" opacity=".85"/><rect x="15" y="16" width="4" height="1.5" rx=".75" fill="white" opacity=".9"/><rect x="16.5" y="14.5" width="1.5" height="4.5" rx=".75" fill="white" opacity=".9"/><circle cx="23.5" cy="17" r="1.2" fill="#00e09a" opacity=".95"/><circle cx="21.2" cy="19.5" r="1.2" fill="#a78bfa" opacity=".95"/></svg>
     </div>
     <div class="onboard-title">Bienvenue sur Game Verse</div>
     <div class="onboard-sub">Choisis ton pseudo pour commencer. Il sera sauvegardé sur cet appareil.</div>
@@ -239,35 +209,16 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b2);display:f
   <nav>
     <div class="logo" onclick="window.location.reload()">
       <div class="logo-mark">
-        <svg viewBox="0 0 26 26" fill="none">
-          <defs><linearGradient id="nlg" x1="0" y1="0" x2="26" y2="26" gradientUnits="userSpaceOnUse"><stop stop-color="#c4b5fd"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs>
-          <path d="M4 14C4 10.5 5.8 8 8 8V18C5.8 18 4 16.4 4 14Z" fill="url(#nlg)" opacity=".9"/>
-          <path d="M22 14C22 10.5 20.2 8 18 8V18C20.2 18 22 16.4 22 14Z" fill="url(#nlg)" opacity=".9"/>
-          <rect x="8" y="10" width="10" height="8" rx="2.5" fill="url(#nlg)" opacity=".85"/>
-          <rect x="11.5" y="9" width="3" height="1.2" rx=".6" fill="url(#nlg)" opacity=".6"/>
-          <rect x="9.5" y="13" width="3" height="1.2" rx=".6" fill="white" opacity=".9"/>
-          <rect x="10.6" y="11.8" width="1.2" height="3" rx=".6" fill="white" opacity=".9"/>
-          <circle cx="17" cy="12.8" r=".9" fill="#00e09a" opacity=".95"/>
-          <circle cx="15.4" cy="14.6" r=".9" fill="#a78bfa" opacity=".95"/>
-        </svg>
+        <svg viewBox="0 0 26 26" fill="none"><defs><linearGradient id="nlg" x1="0" y1="0" x2="26" y2="26" gradientUnits="userSpaceOnUse"><stop stop-color="#c4b5fd"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs><path d="M4 14C4 10.5 5.8 8 8 8V18C5.8 18 4 16.4 4 14Z" fill="url(#nlg)" opacity=".9"/><path d="M22 14C22 10.5 20.2 8 18 8V18C20.2 18 22 16.4 22 14Z" fill="url(#nlg)" opacity=".9"/><rect x="8" y="10" width="10" height="8" rx="2.5" fill="url(#nlg)" opacity=".85"/><rect x="11.5" y="9" width="3" height="1.2" rx=".6" fill="url(#nlg)" opacity=".6"/><rect x="9.5" y="13" width="3" height="1.2" rx=".6" fill="white" opacity=".9"/><rect x="10.6" y="11.8" width="1.2" height="3" rx=".6" fill="white" opacity=".9"/><circle cx="17" cy="12.8" r=".9" fill="#00e09a" opacity=".95"/><circle cx="15.4" cy="14.6" r=".9" fill="#a78bfa" opacity=".95"/></svg>
       </div>
-      <div>
-        <div class="logo-name">Game Verse</div>
-        <div class="logo-sub">Mini-jeux multijoueurs</div>
-      </div>
+      <div><div class="logo-name">Game Verse</div><div class="logo-sub">Mini-jeux multijoueurs</div></div>
     </div>
     <div class="nav-right">
-      <div class="live-wrap">
-        <div class="live-dot"></div>
-        <span class="live-txt">EN LIGNE</span>
-      </div>
+      <div class="live-wrap"><div class="live-dot"></div><span class="live-txt">EN LIGNE</span></div>
       <span class="count-pill" id="onlineCount">— joueurs</span>
       <div class="profile-pill" id="profilePill" style="display:none">
         <div class="profile-avatar-sm" id="navAvatar"></div>
-        <div>
-          <div class="profile-name-sm" id="navName">—</div>
-          <div class="profile-grade-sm" id="navGrade">—</div>
-        </div>
+        <div><div class="profile-name-sm" id="navName">—</div><div class="profile-grade-sm" id="navGrade">—</div></div>
       </div>
     </div>
   </nav>
@@ -281,11 +232,11 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b2);display:f
   <div class="stats-bar">
     <div class="stat-item"><div class="stat-n green" id="sOnline">—</div><div class="stat-l">En ligne</div></div>
     <div class="stat-item"><div class="stat-n cyan" id="sGames">—</div><div class="stat-l">Parties actives</div></div>
-    <div class="stat-item"><div class="stat-n purple">3</div><div class="stat-l">Jeux</div></div>
+    <div class="stat-item"><div class="stat-n purple">4</div><div class="stat-l">Jeux</div></div>
     <div class="stat-item"><div class="stat-n" id="sToday">—</div><div class="stat-l">Parties aujourd'hui</div></div>
   </div>
 
-  <div class="sh"><span class="sh-label">Jeux disponibles</span><div class="sh-line"></div><span class="sh-tag">1 jeu</span></div>
+  <div class="sh"><span class="sh-label">Jeux disponibles</span><div class="sh-line"></div><span class="sh-tag">2 jeux</span></div>
   <div class="games-scroll" id="gamesScroll">
     <a href="undercover-infinity.html" class="gc vi" id="featuredCard">
       <div class="gc-accent"></div>
@@ -302,6 +253,23 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b2);display:f
       <div class="gc-footer">
         <span class="gc-players" id="ucPlayers">⬤ — en jeu</span>
         <span class="btn-go vi">Jouer →</span>
+      </div>
+    </a>
+    <a href="estim-immo.html" class="gc am">
+      <div class="gc-accent"></div>
+      <div class="gc-head">
+        <div class="gc-icon am">🏠</div>
+        <div class="gc-badges">
+          <span class="chip chip-new">✨ Nouveau</span>
+          <span class="chip chip-ok">✓ Disponible</span>
+          <span class="chip chip-meta">2–8</span>
+        </div>
+      </div>
+      <div class="gc-name">Estim'Immo</div>
+      <div class="gc-desc">Devine le loyer d'annonces réelles en France & à La Réunion. Le plus proche gagne !</div>
+      <div class="gc-footer">
+        <span class="gc-players" id="eiPlayers">⬤ — en jeu</span>
+        <span class="btn-go am">Jouer →</span>
       </div>
     </a>
     <div class="gc cy" style="cursor:default">
@@ -365,25 +333,19 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b2);display:f
     <div class="ft-left">© 2025 Game Verse — kimoerAulrich123</div>
     <div class="ft-right">
       <a href="undercover-infinity.html" class="ft-link">Undercover ∞</a>
+      <a href="estim-immo.html" class="ft-link">Estim'Immo</a>
       <a href="https://github.com/kimoeraulrich123-source/j-limine-qui-" class="ft-link" target="_blank">GitHub</a>
     </div>
   </footer>
 </div>
 
-<!-- MODAL -->
 <div id="modal">
   <div class="modal-box">
     <button class="modal-close" id="modalClose">✕</button>
     <div class="modal-title" id="modalTitle">Rejoindre</div>
     <div class="modal-sub" id="modalSub">Entre le code et ton pseudo.</div>
-    <div class="modal-field" id="codeField">
-      <label class="modal-label">Code de la salle</label>
-      <input class="modal-input" id="modalCode" type="text" placeholder="ABCD" maxlength="8"/>
-    </div>
-    <div class="modal-field">
-      <label class="modal-label">Pseudo</label>
-      <input class="modal-input" id="modalNick" type="text" placeholder="Ex : Ulrich" maxlength="20"/>
-    </div>
+    <div class="modal-field" id="codeField"><label class="modal-label">Code de la salle</label><input class="modal-input" id="modalCode" type="text" placeholder="ABCD" maxlength="8"/></div>
+    <div class="modal-field"><label class="modal-label">Pseudo</label><input class="modal-input" id="modalNick" type="text" placeholder="Ex : Ulrich" maxlength="20"/></div>
     <div class="modal-actions">
       <button class="modal-btn cancel" id="modalCancel">Annuler</button>
       <button class="modal-btn confirm" id="modalConfirm">C'est parti →</button>
@@ -394,10 +356,8 @@ footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--b2);display:f
 
 <script>
 "use strict";
-// ── SFX ──
 const SFX=(()=>{let ctx=null,master=null,u=false;function init(){if(ctx)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;ctx=new AC();master=ctx.createGain();master.gain.value=.45;master.connect(ctx.destination);}function unlock(){if(u)return;init();if(ctx&&ctx.state==='suspended')ctx.resume();u=true;}function o(f,t,g,a,d,w=0){if(!ctx)return;const T=ctx.currentTime+w;const osc=ctx.createOscillator();const gn=ctx.createGain();osc.type=t;osc.frequency.setValueAtTime(f,T);gn.gain.setValueAtTime(.0001,T);gn.gain.linearRampToValueAtTime(g,T+a);gn.gain.exponentialRampToValueAtTime(.0001,T+a+d);osc.connect(gn);gn.connect(master);osc.start(T);osc.stop(T+a+d+.05);}return{tap(){unlock();o(1080,'sine',.02,.001,.06);o(3200,'sine',.006,.001,.03);},hover(){unlock();o(920,'sine',.006,.002,.07);},open(){unlock();o(523,'sine',.024,.003,.18);o(659,'sine',.018,.003,.22,.07);o(784,'sine',.012,.003,.28,.14);},close(){unlock();o(659,'sine',.02,.002,.12);o(523,'sine',.015,.002,.16,.06);},notify(){unlock();o(880,'sine',.022,.002,.14);o(1108,'sine',.016,.002,.18,.08);},wake(){unlock();o(220,'sine',.009,.06,.7);o(330,'sine',.007,.08,.8,.12);o(440,'sine',.005,.1,.9,.24);}};})();
 
-// ── PROFILE SYSTEM ──
 const GRADES=['Bronze I','Bronze II','Bronze III','Argent I','Argent II','Argent III','Or I','Or II','Or III','Diamant I','Diamant II','Diamant III'];
 const GRADE_COLORS=['#cd7f32','#cd7f32','#cd7f32','#aaaaaa','#aaaaaa','#aaaaaa','#ffd700','#ffd700','#ffd700','#00c9ff','#00c9ff','#00c9ff'];
 const GRADE_ICONS=['🥉','🥉','🥉','🥈','🥈','🥈','🥇','🥇','🥇','💎','💎','💎'];
@@ -408,45 +368,28 @@ function saveProfile(p){localStorage.setItem('gv_profile',JSON.stringify(p));}
 function gradeIdx(lp){return Math.min(11,Math.floor((lp||0)/300));}
 
 function renderProfile(){
-  const p=getProfile();
-  if(!p)return;
+  const p=getProfile();if(!p)return;
   const gi=gradeIdx(p.lp||0);
-  const pill=document.getElementById('profilePill');
-  const av=document.getElementById('navAvatar');
-  const nm=document.getElementById('navName');
-  const gr=document.getElementById('navGrade');
+  const pill=document.getElementById('profilePill');const av=document.getElementById('navAvatar');const nm=document.getElementById('navName');const gr=document.getElementById('navGrade');
   if(!pill)return;
-  av.style.background=avBg(p.name);
-  av.textContent=(p.name||'?')[0].toUpperCase();
-  nm.textContent=p.name;
-  gr.textContent=GRADE_ICONS[gi]+' '+GRADES[gi];
-  gr.style.color=GRADE_COLORS[gi];
-  pill.style.display='flex';
+  av.style.background=avBg(p.name);av.textContent=(p.name||'?')[0].toUpperCase();
+  nm.textContent=p.name;gr.textContent=GRADE_ICONS[gi]+' '+GRADES[gi];gr.style.color=GRADE_COLORS[gi];pill.style.display='flex';
 }
-
-function initProfile(){
-  const p=getProfile();
-  if(!p){document.getElementById('onboardOverlay').style.display='flex';return;}
-  renderProfile();
-}
+function initProfile(){const p=getProfile();if(!p){document.getElementById('onboardOverlay').style.display='flex';return;}renderProfile();}
 
 document.getElementById('onboardBtn').addEventListener('click',()=>{
   const name=(document.getElementById('onboardInput').value||'').trim();
   if(!name||name.length<2){document.getElementById('onboardInput').style.borderColor='rgba(255,61,107,.6)';return;}
   saveProfile({name,lp:0,createdAt:Date.now(),history:[]});
-  document.getElementById('onboardOverlay').style.display='none';
-  renderProfile();SFX.open();
-  toast('👋 Bienvenue '+name+' !','#a78bfa');
+  document.getElementById('onboardOverlay').style.display='none';renderProfile();SFX.open();toast('👋 Bienvenue '+name+' !','#a78bfa');
 });
 document.getElementById('onboardInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('onboardBtn').click();});
 
-// ── TOAST ──
 function toast(msg,color='#a78bfa'){const w=document.getElementById('toasts');const el=document.createElement('div');el.className='toast';el.style.borderColor=(color||'#a78bfa')+'44';el.innerHTML=`<span style="color:${color}">●</span> ${msg}`;w.appendChild(el);SFX.notify();setTimeout(()=>{el.style.transition='.3s';el.style.opacity='0';},2600);setTimeout(()=>el.remove(),3000);}
 
-// ── FAKE LIVE DATA ──
 const PC=['#7c3aed','#00c9ff','#00e09a','#ffb800','#ff3d6b','#a78bfa'];
 const NAMES=['Ulrich','Maya','Léa','Théo','Sacha','Camille','Noah','Jade','Lucas','Emma','Rayan','Chloé','Tom','Alex','Lucie'];
-const ACTS=['rejoint le lobby','a créé une salle','cherche des joueurs','a terminé une partie','rejoint Undercover'];
+const ACTS=['rejoint le lobby','a créé une salle','cherche des joueurs','a terminé une partie','rejoint Undercover','joue à Estim\'Immo'];
 let onlineBase=Math.floor(40+Math.random()*30),gamesBase=Math.floor(4+Math.random()*6),todayBase=Math.floor(80+Math.random()*60);
 function randEl(a){return a[Math.floor(Math.random()*a.length)];}
 
@@ -459,12 +402,12 @@ function updateStats(){
   document.getElementById('sToday').textContent=todayBase;
   document.getElementById('onlineCount').textContent=onlineBase+' joueurs';
   document.getElementById('ucPlayers').textContent='⬤ '+Math.floor(onlineBase*.6)+' en jeu';
+  const eiP=document.getElementById('eiPlayers');if(eiP)eiP.textContent='⬤ '+Math.floor(onlineBase*.3)+' en jeu';
 }
 
 const pFeed=document.getElementById('playerFeed');
 function addPlayer(){
-  if(!pFeed)return;
-  const name=randEl(NAMES);const d=new Date();
+  if(!pFeed)return;const name=randEl(NAMES);const d=new Date();
   const t=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
   const el=document.createElement('div');el.className='pf-item';
   el.innerHTML=`<div class="pf-avatar" style="background:${avBg(name)}">${name[0]}</div><span class="pf-name">${name}</span><span class="pf-action">${randEl(ACTS)}</span><span class="pf-action">${t}</span>`;
@@ -479,13 +422,12 @@ function buildGameFeed(){
   if(!gFeed)return;gFeed.innerHTML='';
   for(let i=0;i<Math.min(gamesBase,5);i++){
     const code=CODES[i%CODES.length];const players=2+Math.floor(Math.random()*8);const live=Math.random()>.4;
+    const gameName=Math.random()>.3?'Undercover':'Estim\'Immo';
     const el=document.createElement('div');el.className='gf-item';el.style.animationDelay=i*.06+'s';
-    el.innerHTML=`<div class="gf-dot ${live?'live':'wait'}"></div><span class="gf-name">Undercover #${code}</span><span class="gf-meta">${players} joueurs</span><button class="gf-join" data-code="${code}">${live?'Observer':'Rejoindre'}</button>`;
+    el.innerHTML=`<div class="gf-dot ${live?'live':'wait'}"></div><span class="gf-name">${gameName} #${code}</span><span class="gf-meta">${players} joueurs</span><button class="gf-join" data-code="${code}">${live?'Observer':'Rejoindre'}</button>`;
     gFeed.appendChild(el);
   }
-  gFeed.querySelectorAll('.gf-join').forEach(btn=>{
-    btn.addEventListener('click',()=>{SFX.tap();openModal('join',btn.getAttribute('data-code'));});
-  });
+  gFeed.querySelectorAll('.gf-join').forEach(btn=>{btn.addEventListener('click',()=>{SFX.tap();openModal('join',btn.getAttribute('data-code'));});});
 }
 buildGameFeed();
 setInterval(()=>{
@@ -495,17 +437,14 @@ setInterval(()=>{
 },4000);
 updateStats();
 
-// ── MODAL ──
 let modalMode='join';
 function openModal(mode,code=''){
-  modalMode=mode;
-  const m=document.getElementById('modal');
+  modalMode=mode;const m=document.getElementById('modal');
   document.getElementById('codeField').style.display=mode==='join'?'block':'none';
   document.getElementById('modalTitle').textContent=mode==='join'?'Rejoindre une salle':'Créer une salle';
   document.getElementById('modalSub').textContent=mode==='join'?'Entre le code reçu et ton pseudo.':'Entre ton pseudo pour créer.';
   document.getElementById('modalCode').value=code;
-  const p=getProfile();
-  if(p)document.getElementById('modalNick').value=p.name;
+  const p=getProfile();if(p)document.getElementById('modalNick').value=p.name;
   m.classList.add('open');SFX.open();
   setTimeout(()=>document.getElementById(mode==='join'&&!code?'modalCode':'modalNick').focus(),100);
 }
@@ -527,21 +466,17 @@ document.getElementById('modalConfirm').addEventListener('click',()=>{
 });
 ['modalCode','modalNick'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('modalConfirm').click();});});
 
-// ── 3D TILT ──
 const feat=document.getElementById('featuredCard');
 if(feat){
   feat.addEventListener('mousemove',e=>{const r=feat.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;feat.style.transform=`translateY(-6px) scale(1.02) rotateY(${x*4}deg) rotateX(${-y*2}deg)`;});
   feat.addEventListener('mouseleave',()=>{feat.style.transform='';});
 }
 
-// ── PARTICLES ──
 for(let i=0;i<18;i++){const p=document.createElement('div');p.className='pt';const s=1.5+Math.random()*4;p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}vw;background:${PC[Math.floor(Math.random()*PC.length)]};animation-duration:${9+Math.random()*16}s;animation-delay:${-Math.random()*16}s`;document.body.appendChild(p);}
 
-// ── HOVER SOUNDS ──
 document.querySelectorAll('.ab-btn,.btn-go:not(.disabled)').forEach(el=>{el.addEventListener('mouseenter',()=>SFX.hover());el.addEventListener('click',()=>SFX.tap());});
 document.querySelectorAll('.gc').forEach(el=>{el.addEventListener('mouseenter',()=>SFX.hover());});
 
-// ── BOOT ──
 setTimeout(()=>SFX.wake(),400);
 setTimeout(()=>toast('👋 Bienvenue sur Game Verse !','#a78bfa'),700);
 setTimeout(()=>toast(`🎮 ${Math.floor(40+Math.random()*30)} joueurs en ligne`,'#6ee7b7'),2200);
