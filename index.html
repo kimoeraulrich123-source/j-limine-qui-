@@ -423,8 +423,9 @@ footer {
     <p class="hero-sub">Crée une partie ou rejoins une salle avec un code. Pas d'inscription, pas de téléchargement.</p>
   </div>
 
-  <!-- Game Card -->
-  <div class="section-label">Jeu disponible</div>
+  <!-- Games -->
+  <div class="section-label">Jeux disponibles — 2 jeux</div>
+
   <a href="undercover-infinity.html" class="game-card" id="gameCard">
     <div class="gc-top">
       <div class="gc-icon">🕵️</div>
@@ -437,20 +438,32 @@ footer {
     <div class="gc-desc">Bluff & déduction. Chaque joueur reçoit un mot secret — mais les Undercover ont un mot légèrement différent. Trouve qui est infiltré avant qu'il ne soit trop tard.</div>
     <div class="gc-actions">
       <span class="btn btn-primary">▶ Jouer</span>
-      <span class="btn btn-outline" id="btnJoinCard" onclick="event.preventDefault(); openModal('join');">🔗 Rejoindre une salle</span>
+      <span class="btn btn-outline" onclick="event.preventDefault(); openModal('join','undercover');">🔗 Rejoindre</span>
     </div>
   </a>
 
-  <!-- Quick Actions -->
-  <div class="quick-actions">
-    <button class="btn btn-outline" id="btnCreate" style="flex:1">✦ Créer une salle</button>
-    <button class="btn btn-outline" id="btnJoin" style="flex:1">🔗 Rejoindre avec un code</button>
-  </div>
+  <a href="anime-auction.html" class="game-card" id="gameCard2" style="margin-bottom:48px">
+    <div class="gc-top">
+      <div class="gc-icon" style="background:rgba(249,115,22,.15);border-color:rgba(249,115,22,.3)">🍥</div>
+      <div class="gc-badges">
+        <span class="badge" style="background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);color:#fb923c">✨ Nouveau</span>
+        <span class="badge badge-live">✓ Disponible</span>
+        <span class="badge badge-players">2 joueurs</span>
+      </div>
+    </div>
+    <div class="gc-name">Anime Auction Battle</div>
+    <div class="gc-desc">Enchères 1v1 sur des personnages d'anime. 350M€ de budget, 10 personnages aux enchères, puis un combat d'équipe simulé. Univers Naruto disponible.</div>
+    <div class="gc-actions">
+      <span class="btn" style="background:linear-gradient(135deg,#c2410c,#f97316);color:#fff;box-shadow:0 8px 28px rgba(249,115,22,.3)">▶ Jouer</span>
+      <span class="btn btn-outline" onclick="event.preventDefault(); openModal('join','auction');">🔗 Rejoindre</span>
+    </div>
+  </a>
 
   <footer>
     <span class="ft-text">© 2025 Game Verse — kimoerAulrich123</span>
     <div class="ft-links">
       <a href="undercover-infinity.html" class="ft-link">Undercover ∞</a>
+      <a href="anime-auction.html" class="ft-link">Anime Auction</a>
       <a href="https://github.com/kimoeraulrich123-source/j-limine-qui-" class="ft-link" target="_blank">GitHub</a>
     </div>
   </footer>
@@ -536,24 +549,24 @@ function toast(msg) {
 
 // ── Modal ──
 let modalMode = 'join';
+let modalGame = 'undercover';
 
-function openModal(mode, code) {
+function openModal(mode, game) {
   modalMode = mode;
+  modalGame = game || 'undercover';
   const m = document.getElementById('modal');
   document.getElementById('codeField').style.display = mode === 'join' ? 'block' : 'none';
   document.getElementById('modalTitle').textContent = mode === 'join' ? 'Rejoindre une salle' : 'Créer une salle';
   document.getElementById('modalSub').textContent = mode === 'join' ? 'Entre le code reçu et ton pseudo.' : 'Choisis ton pseudo pour créer une salle.';
-  document.getElementById('modalCode').value = code || '';
+  document.getElementById('modalCode').value = '';
   const p = getProfile();
   if (p) document.getElementById('modalNick').value = p.name;
   m.classList.add('open');
-  setTimeout(() => document.getElementById(mode === 'join' && !code ? 'modalCode' : 'modalNick').focus(), 100);
+  setTimeout(() => document.getElementById(mode === 'join' ? 'modalCode' : 'modalNick').focus(), 100);
 }
 
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
-document.getElementById('btnJoin').addEventListener('click', () => openModal('join'));
-document.getElementById('btnCreate').addEventListener('click', () => openModal('create'));
 document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('modalCancel').addEventListener('click', closeModal);
 document.getElementById('modal').addEventListener('click', e => {
@@ -566,9 +579,11 @@ document.getElementById('modalConfirm').addEventListener('click', () => {
   if (!nick) { toast('Entre un pseudo'); return; }
   if (modalMode === 'join' && !code) { toast('Entre un code de salle'); return; }
   if (!getProfile()) saveProfile({ name: nick, createdAt: Date.now() });
+
+  const page = modalGame === 'auction' ? 'anime-auction.html' : 'undercover-infinity.html';
   const url = modalMode === 'join'
-    ? `undercover-infinity.html?room=${encodeURIComponent(code)}`
-    : 'undercover-infinity.html';
+    ? `${page}?room=${encodeURIComponent(code)}`
+    : page;
   closeModal();
   toast(modalMode === 'join' ? `Connexion à #${code}…` : 'Création en cours…');
   setTimeout(() => location.href = url, 500);
