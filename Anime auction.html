@@ -3,769 +3,335 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Anime Auction Battle</title>
+<title>Anime Auction Battle — Game Verse</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#06080e;--bg2:#0c0f1a;--bg3:#111627;
-  --s1:rgba(255,255,255,.04);--s2:rgba(255,255,255,.07);--s3:rgba(255,255,255,.10);
-  --b1:rgba(255,255,255,.08);--b2:rgba(255,255,255,.12);--b3:rgba(255,255,255,.18);
-  --tx:#e8ecf4;--tx2:#8892ad;--tx3:#4a5270;
-  --accent:#f97316;--accent2:#fb923c;--accent-glow:rgba(249,115,22,.3);
-  --gold:#fbbf24;--red:#ef4444;--green:#10b981;--cyan:#06b6d4;--purple:#a78bfa;
-}
+:root{--bg:#06080e;--bg2:#0c0f1a;--s1:rgba(255,255,255,.04);--s2:rgba(255,255,255,.07);--b1:rgba(255,255,255,.08);--b2:rgba(255,255,255,.12);--b3:rgba(255,255,255,.18);--tx:#e8ecf4;--tx2:#8892ad;--tx3:#4a5270;--accent:#f97316;--accent2:#fb923c;--aglow:rgba(249,115,22,.3);--gold:#fbbf24;--red:#ef4444;--green:#10b981;--cyan:#06b6d4;--purple:#a78bfa}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
-
-.bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.bg-orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.18}
-.bg-o1{width:500px;height:500px;background:radial-gradient(circle,var(--accent),transparent 70%);top:-200px;right:-100px}
-.bg-o2{width:400px;height:400px;background:radial-gradient(circle,var(--purple),transparent 70%);bottom:-150px;left:-100px;opacity:.12}
-
-.page{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px 20px 80px}
-
-/* ── Header ── */
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
-.h-title{font-family:'Syne',sans-serif;font-weight:900;font-size:1.3rem;letter-spacing:-.03em}
-.h-title span{color:var(--accent)}
-.h-back{font-size:.8rem;color:var(--tx2);cursor:pointer;text-decoration:none;transition:color .2s;border:1px solid var(--b1);padding:6px 14px;border-radius:8px;background:var(--s1)}
-.h-back:hover{color:var(--tx);border-color:var(--b3)}
-
-/* ── Screens ── */
-.screen{display:none;animation:fadeIn .35s ease}
-.screen.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── Universe Select ── */
-.uni-title{font-family:'Syne',sans-serif;font-weight:900;font-size:1.6rem;text-align:center;margin-bottom:8px}
-.uni-sub{text-align:center;color:var(--tx2);font-size:.9rem;margin-bottom:28px}
-.uni-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:24px}
-.uni-card{border:1.5px solid var(--b1);border-radius:16px;padding:22px;background:var(--s1);cursor:pointer;transition:all .22s;position:relative;overflow:hidden;text-align:center}
-.uni-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 16px 48px var(--accent-glow)}
-.uni-card.disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
-.uni-emoji{font-size:2.4rem;margin-bottom:10px}
-.uni-name{font-family:'Syne',sans-serif;font-weight:900;font-size:1.1rem;margin-bottom:4px}
-.uni-info{font-size:.78rem;color:var(--tx2)}
-.uni-soon{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--accent2);margin-top:8px}
-
-/* ── Setup ── */
-.setup-box{border:1px solid var(--b1);border-radius:16px;padding:24px;background:var(--s1);margin-bottom:20px}
-.setup-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:14px}
-.setup-row{display:flex;gap:10px;margin-bottom:12px;align-items:center}
-.setup-label{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.06em;min-width:70px}
-.setup-input{flex:1;padding:10px 14px;border-radius:10px;border:1px solid var(--b2);background:var(--s1);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:all .2s}
-.setup-input:focus{border-color:rgba(249,115,22,.5);box-shadow:0 0 0 3px rgba(249,115,22,.1)}
-
-/* ── Buttons ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
-.btn:hover{transform:translateY(-2px)}
-.btn-accent{background:linear-gradient(135deg,#c2410c,var(--accent));color:#fff;box-shadow:0 8px 28px var(--accent-glow)}
-.btn-accent:hover{box-shadow:0 12px 36px rgba(249,115,22,.5)}
-.btn-ghost{background:var(--s2);border:1.5px solid var(--b2);color:var(--tx)}
-.btn-green{background:linear-gradient(135deg,#059669,var(--green));color:#fff;box-shadow:0 8px 24px rgba(16,185,129,.3)}
-.btn-red{background:linear-gradient(135deg,#b91c1c,var(--red));color:#fff;box-shadow:0 6px 20px rgba(239,68,68,.3)}
-.btn-sm{padding:8px 16px;font-size:.8rem;border-radius:8px}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
-.btn-full{width:100%}
-
-/* ── Auction ── */
-.auction-top{display:flex;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-.player-bar{flex:1;min-width:200px;border:1px solid var(--b1);border-radius:14px;padding:14px;background:var(--s1);transition:border-color .3s}
-.player-bar.active-turn{border-color:var(--accent);box-shadow:0 0 20px var(--accent-glow)}
-.pb-name{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;margin-bottom:4px}
-.pb-budget{font-family:'Space Mono',monospace;font-size:.85rem;color:var(--gold)}
-.pb-chars{font-size:.75rem;color:var(--tx2);margin-top:4px}
-.pb-roster{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
-.pb-mini{font-size:.65rem;padding:2px 7px;border-radius:6px;background:var(--s2);border:1px solid var(--b1);color:var(--tx2)}
-
-.auction-progress{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--tx3);text-align:center;margin-bottom:16px}
-
-.char-showcase{border:1.5px solid var(--b2);border-radius:20px;padding:28px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));text-align:center;margin-bottom:20px;position:relative;overflow:hidden}
-.char-showcase::before{content:'';position:absolute;top:0;left:20px;right:20px;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);border-radius:4px}
-.cs-emoji{font-size:3rem;margin-bottom:10px}
-.cs-name{font-family:'Syne',sans-serif;font-weight:900;font-size:1.4rem;letter-spacing:-.02em;margin-bottom:4px}
-.cs-title{font-size:.82rem;color:var(--accent2);margin-bottom:6px}
-.cs-desc{font-size:.82rem;color:var(--tx2);line-height:1.5;max-width:500px;margin:0 auto 12px}
-.cs-power{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700}
-.cs-power.s{background:rgba(255,184,0,.12);border:1px solid rgba(255,184,0,.3);color:var(--gold)}
-.cs-power.a{background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);color:var(--purple)}
-.cs-power.b{background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.3);color:var(--cyan)}
-.cs-power.c{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:var(--green)}
-.cs-power.d{background:var(--s2);border:1px solid var(--b2);color:var(--tx2)}
-
-.bid-zone{border:1px solid var(--b1);border-radius:14px;padding:18px;background:var(--s1);margin-bottom:16px}
-.bid-current{text-align:center;margin-bottom:14px}
-.bid-label{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.bid-amount{font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;color:var(--gold)}
-.bid-who{font-size:.78rem;color:var(--tx2);margin-top:2px}
-.bid-turn{text-align:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--accent);margin-bottom:14px}
-.bid-input-row{display:flex;gap:10px;margin-bottom:10px}
-.bid-input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--b2);background:var(--s1);color:var(--tx);font-family:'Space Mono',monospace;font-size:1rem;outline:none;text-align:center;transition:all .2s}
-.bid-input:focus{border-color:rgba(249,115,22,.5);box-shadow:0 0 0 3px rgba(249,115,22,.1)}
-.bid-input::placeholder{color:var(--tx3)}
-.bid-actions{display:flex;gap:10px}
-.bid-actions .btn{flex:1}
-.bid-hint{font-size:.72rem;color:var(--tx3);text-align:center;margin-top:8px}
-.bid-error{font-size:.78rem;color:var(--red);text-align:center;margin-top:6px}
-
-/* ── Combat ── */
-.combat-screen{text-align:center}
-.combat-title{font-family:'Syne',sans-serif;font-weight:900;font-size:1.6rem;margin-bottom:6px}
-.combat-sub{color:var(--tx2);font-size:.9rem;margin-bottom:24px}
-.combat-vs{display:flex;gap:16px;margin-bottom:28px;align-items:stretch}
-.cv-team{flex:1;border:1px solid var(--b1);border-radius:14px;padding:16px;background:var(--s1)}
-.cv-team-name{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;margin-bottom:10px}
-.cv-char{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:var(--s2);margin-bottom:6px;font-size:.82rem}
-.cv-char-emoji{font-size:1.1rem}
-.cv-char-name{flex:1;text-align:left;font-weight:600}
-.cv-char-pwr{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--tx3)}
-.cv-total{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--gold);margin-top:8px;padding-top:8px;border-top:1px solid var(--b1)}
-
-.countdown-wrap{margin-bottom:28px}
-.countdown-num{font-family:'Syne',sans-serif;font-weight:900;font-size:4rem;color:var(--accent);text-shadow:0 0 40px var(--accent-glow)}
-.countdown-text{font-size:.9rem;color:var(--tx2)}
-
-.combat-log{border:1px solid var(--b1);border-radius:14px;padding:20px;background:var(--s1);text-align:left;margin-bottom:24px;max-height:400px;overflow-y:auto}
-.cl-line{font-size:.85rem;line-height:1.7;color:var(--tx2);margin-bottom:6px;animation:fadeIn .4s ease}
-.cl-line.highlight{color:var(--tx);font-weight:600}
-.cl-line.win{color:var(--gold);font-weight:700;font-size:1rem}
-.cl-line.lose{color:var(--red);font-weight:600}
-.cl-line.narration{color:var(--accent2);font-style:italic}
-
-.result-box{border:2px solid var(--gold);border-radius:20px;padding:28px;background:linear-gradient(160deg,rgba(251,191,36,.08),rgba(249,115,22,.03));text-align:center;margin-bottom:24px}
-.result-emoji{font-size:3rem;margin-bottom:8px}
-.result-title{font-family:'Syne',sans-serif;font-weight:900;font-size:1.5rem;color:var(--gold);margin-bottom:4px}
-.result-sub{font-size:.9rem;color:var(--tx2)}
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
-
-@media(max-width:600px){
-  .auction-top{flex-direction:column}
-  .combat-vs{flex-direction:column}
-  .bid-actions{flex-direction:column}
-}
+.bg-w{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-o{position:absolute;border-radius:50%;filter:blur(120px);opacity:.18}
+.bg-1{width:500px;height:500px;background:radial-gradient(circle,var(--accent),transparent 70%);top:-200px;right:-100px}
+.bg-2{width:400px;height:400px;background:radial-gradient(circle,var(--purple),transparent 70%);bottom:-150px;left:-100px;opacity:.12}
+.page{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:20px 20px 80px}
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px}
+.h-t{font-family:'Syne',sans-serif;font-weight:900;font-size:1.2rem;letter-spacing:-.03em}.h-t span{color:var(--accent)}
+.h-b{font-size:.78rem;color:var(--tx2);text-decoration:none;border:1px solid var(--b1);padding:5px 12px;border-radius:8px;background:var(--s1);transition:all .2s}.h-b:hover{color:var(--tx);border-color:var(--b3)}
+.h-r{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--accent2);padding:4px 10px;border-radius:999px;border:1px solid rgba(249,115,22,.3);background:rgba(249,115,22,.08)}
+.scr{display:none;animation:fi .3s ease}.scr.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{border:1px solid var(--b1);border-radius:16px;padding:22px;background:var(--s1);margin-bottom:16px}
+.card-a{border-color:rgba(249,115,22,.3);background:linear-gradient(160deg,rgba(249,115,22,.08),var(--s1))}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+.btn:hover{transform:translateY(-2px)}.btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important}
+.btn-o{background:linear-gradient(135deg,#c2410c,var(--accent));color:#fff;box-shadow:0 8px 28px var(--aglow)}
+.btn-g{background:linear-gradient(135deg,#059669,var(--green));color:#fff;box-shadow:0 8px 24px rgba(16,185,129,.3)}
+.btn-r{background:linear-gradient(135deg,#b91c1c,var(--red));color:#fff}
+.btn-gh{background:var(--s2);border:1.5px solid var(--b2);color:var(--tx)}
+.btn-f{width:100%}.btn-s{padding:8px 14px;font-size:.8rem;border-radius:8px}
+.fld{margin-bottom:12px}.fld label{display:block;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.fld input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--b2);background:var(--s1);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.92rem;outline:none;transition:all .2s}
+.fld input:focus{border-color:rgba(249,115,22,.5);box-shadow:0 0 0 3px rgba(249,115,22,.1)}.fld input::placeholder{color:var(--tx3)}
+.ug{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.uc{border:1.5px solid var(--b1);border-radius:14px;padding:20px;background:var(--s1);cursor:pointer;transition:all .2s;text-align:center}
+.uc:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 14px 40px var(--aglow)}
+.uc.dis{opacity:.3;cursor:not-allowed;pointer-events:none}
+.ue{font-size:2.2rem;margin-bottom:8px}.un{font-family:'Syne',sans-serif;font-weight:900;font-size:1rem;margin-bottom:3px}.ui{font-size:.75rem;color:var(--tx2)}.us{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--accent2);margin-top:6px}
+.pr{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.pb{flex:1;min-width:200px;border:1px solid var(--b1);border-radius:14px;padding:14px;background:var(--s1);transition:border-color .3s,box-shadow .3s}
+.pb.act{border-color:var(--accent);box-shadow:0 0 18px var(--aglow)}
+.pn{font-family:'Syne',sans-serif;font-weight:800;font-size:.92rem;margin-bottom:3px}
+.pbu{font-family:'Space Mono',monospace;font-size:.82rem;color:var(--gold)}
+.pc{font-size:.72rem;color:var(--tx2);margin-top:3px}
+.prs{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.pm{font-size:.62rem;padding:2px 7px;border-radius:6px;background:var(--s2);border:1px solid var(--b1);color:var(--tx2)}
+.ap{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--tx3);text-align:center;margin-bottom:14px}
+.cs{border:1.5px solid var(--b2);border-radius:18px;padding:24px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));text-align:center;margin-bottom:16px;position:relative;overflow:hidden}
+.cs::before{content:'';position:absolute;top:0;left:20px;right:20px;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);border-radius:4px}
+.ce{font-size:2.8rem;margin-bottom:8px}.cn{font-family:'Syne',sans-serif;font-weight:900;font-size:1.3rem;margin-bottom:3px}.ct{font-size:.8rem;color:var(--accent2);margin-bottom:5px}.cd{font-size:.8rem;color:var(--tx2);line-height:1.5;max-width:480px;margin:0 auto 10px}
+.tb{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:999px;font-family:'Space Mono',monospace;font-size:.7rem;font-weight:700}
+.ts{background:rgba(255,184,0,.12);border:1px solid rgba(255,184,0,.3);color:var(--gold)}.ta{background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);color:var(--purple)}.tbb{background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.3);color:var(--cyan)}.tc{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:var(--green)}.td{background:var(--s2);border:1px solid var(--b2);color:var(--tx2)}
+.bz{border:1px solid var(--b1);border-radius:14px;padding:16px;background:var(--s1);margin-bottom:14px}
+.bc{text-align:center;margin-bottom:12px}.bl{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.ba{font-family:'Syne',sans-serif;font-weight:900;font-size:1.7rem;color:var(--gold)}.bw{font-size:.76rem;color:var(--tx2);margin-top:2px}
+.bt{text-align:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--accent);margin-bottom:12px}
+.bir{display:flex;gap:10px;margin-bottom:8px}
+.bi{flex:1;padding:11px 14px;border-radius:10px;border:1px solid var(--b2);background:var(--s1);color:var(--tx);font-family:'Space Mono',monospace;font-size:.95rem;outline:none;text-align:center;transition:all .2s}
+.bi:focus{border-color:rgba(249,115,22,.5);box-shadow:0 0 0 3px rgba(249,115,22,.1)}.bi::placeholder{color:var(--tx3)}
+.bas{display:flex;gap:10px}.bas .btn{flex:1}
+.bh{font-size:.7rem;color:var(--tx3);text-align:center;margin-top:6px}.be{font-size:.76rem;color:var(--red);text-align:center;margin-top:5px;min-height:18px}
+.sr{display:flex;gap:8px;margin-bottom:16px}.sr input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--b2);background:var(--s1);color:var(--tx);font-family:'Space Mono',monospace;font-size:.72rem;outline:none}
+.lps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.lpi{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:var(--s2);border:1px solid var(--b1)}
+.la{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:.72rem;color:#fff;flex-shrink:0}
+.ln{font-weight:700;font-size:.88rem;flex:1}.lt{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--tx3)}
+.cv{display:flex;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.cvt{flex:1;min-width:200px;border:1px solid var(--b1);border-radius:14px;padding:14px;background:var(--s1)}
+.cvt.win{border-color:var(--gold);box-shadow:0 0 20px rgba(251,191,36,.15)}
+.cvn{font-family:'Syne',sans-serif;font-weight:800;font-size:.92rem;margin-bottom:8px}
+.cvc{display:flex;align-items:center;gap:7px;padding:5px 7px;border-radius:7px;background:var(--s2);margin-bottom:5px;font-size:.8rem}
+.cvce{font-size:1rem}.cvcn{flex:1;font-weight:600}.cvcp{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--tx3)}
+.cvtl{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--gold);margin-top:6px;padding-top:6px;border-top:1px solid var(--b1)}
+.cdn{font-family:'Syne',sans-serif;font-weight:900;font-size:3.5rem;color:var(--accent);text-shadow:0 0 40px var(--aglow);text-align:center;margin:20px 0}
+.cl{border:1px solid var(--b1);border-radius:14px;padding:18px;background:var(--s1);max-height:360px;overflow-y:auto;margin-bottom:20px}
+.cll{font-size:.82rem;line-height:1.7;color:var(--tx2);margin-bottom:5px;animation:fi .3s ease}
+.cll.hl{color:var(--tx);font-weight:600}.cll.w{color:var(--gold);font-weight:700;font-size:1rem}.cll.nr{color:var(--accent2);font-style:italic}
+.rb{border:2px solid var(--gold);border-radius:18px;padding:24px;background:linear-gradient(160deg,rgba(251,191,36,.08),rgba(249,115,22,.03));text-align:center;margin-bottom:20px}
+.re{font-size:2.6rem;margin-bottom:6px}.rt{font-family:'Syne',sans-serif;font-weight:900;font-size:1.4rem;color:var(--gold);margin-bottom:3px}.rs{font-size:.88rem;color:var(--tx2)}
+#toasts{position:fixed;bottom:18px;right:18px;z-index:200;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:10px 14px;border-radius:10px;background:rgba(12,15,26,.95);border:1px solid var(--b1);backdrop-filter:blur(12px);font-size:.82rem;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.4);animation:ti .2s ease}
+@keyframes ti{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+@media(max-width:550px){.pr,.cv{flex-direction:column}.bas{flex-direction:column}}
 </style>
 </head>
 <body>
-<div class="bg-wrap"><div class="bg-orb bg-o1"></div><div class="bg-orb bg-o2"></div></div>
-
+<div class="bg-w"><div class="bg-o bg-1"></div><div class="bg-o bg-2"></div></div>
 <div class="page">
-  <div class="header">
-    <div class="h-title">Anime <span>Auction</span> Battle</div>
-    <a class="h-back" href="index.html">← Lobby</a>
-  </div>
-
-  <!-- SCREEN 1: Universe Select -->
-  <div class="screen active" id="screenUniverse">
-    <div class="uni-title">Choisis ton univers</div>
-    <div class="uni-sub">Sélectionne un anime pour commencer les enchères.</div>
-    <div class="uni-grid">
-      <div class="uni-card" onclick="selectUniverse('naruto')">
-        <div class="uni-emoji">🍥</div>
-        <div class="uni-name">Naruto</div>
-        <div class="uni-info">60+ personnages · Genin → Dieux</div>
-      </div>
-      <div class="uni-card disabled">
-        <div class="uni-emoji">👁️</div>
-        <div class="uni-name">Jujutsu Kaisen</div>
-        <div class="uni-info">Bientôt disponible</div>
-        <div class="uni-soon">⏳ PROCHAINEMENT</div>
-      </div>
-      <div class="uni-card disabled">
-        <div class="uni-emoji">⚔️</div>
-        <div class="uni-name">Solo Leveling</div>
-        <div class="uni-info">Bientôt disponible</div>
-        <div class="uni-soon">⏳ PROCHAINEMENT</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN 2: Setup -->
-  <div class="screen" id="screenSetup">
-    <div class="setup-box">
-      <div class="setup-title">Configuration de la partie</div>
-      <div class="setup-row">
-        <span class="setup-label">Joueur 1</span>
-        <input class="setup-input" id="p1Name" type="text" placeholder="Pseudo J1" maxlength="20"/>
-      </div>
-      <div class="setup-row">
-        <span class="setup-label">Joueur 2</span>
-        <input class="setup-input" id="p2Name" type="text" placeholder="Pseudo J2" maxlength="20"/>
-      </div>
-      <div style="font-size:.78rem;color:var(--tx3);margin-bottom:16px">Chaque joueur commence avec <strong style="color:var(--gold)">350 000 000 €</strong>. 10 personnages seront proposés aux enchères (5 par joueur).</div>
-      <button class="btn btn-accent btn-full" onclick="startAuction()">Lancer les enchères →</button>
-    </div>
-  </div>
-
-  <!-- SCREEN 3: Auction -->
-  <div class="screen" id="screenAuction">
-    <div class="auction-top">
-      <div class="player-bar" id="pb1">
-        <div class="pb-name" id="pb1Name">Joueur 1</div>
-        <div class="pb-budget">💰 <span id="pb1Budget">350 000 000</span> €</div>
-        <div class="pb-chars" id="pb1Count">0/5 personnages</div>
-        <div class="pb-roster" id="pb1Roster"></div>
-      </div>
-      <div class="player-bar" id="pb2">
-        <div class="pb-name" id="pb2Name">Joueur 2</div>
-        <div class="pb-budget">💰 <span id="pb2Budget">350 000 000</span> €</div>
-        <div class="pb-chars" id="pb2Count">0/5 personnages</div>
-        <div class="pb-roster" id="pb2Roster"></div>
-      </div>
-    </div>
-    <div class="auction-progress" id="auctionProgress">Personnage 1/10</div>
-    <div class="char-showcase" id="charShowcase"></div>
-    <div class="bid-zone" id="bidZone"></div>
-  </div>
-
-  <!-- SCREEN 4: Combat -->
-  <div class="screen" id="screenCombat">
-    <div class="combat-screen" id="combatContent"></div>
+<div class="hdr">
+  <div class="h-t">Anime <span>Auction</span> Battle</div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <span class="h-r" id="rBadge" style="display:none">—</span>
+    <a class="h-b" href="index.html">← Lobby</a>
   </div>
 </div>
 
-<script>
-"use strict";
+<div class="scr on" id="sUni">
+  <div class="card" style="text-align:center;padding:28px">
+    <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.4rem;margin-bottom:4px">Choisis ton univers</div>
+    <div style="font-size:.85rem;color:var(--tx2);margin-bottom:18px">Sélectionne un anime pour lancer les enchères 1v1.</div>
+    <div class="ug">
+      <div class="uc" onclick="go('naruto')"><div class="ue">🍥</div><div class="un">Naruto</div><div class="ui">60+ personnages · Genin → Dieux</div></div>
+      <div class="uc dis"><div class="ue">👁️</div><div class="un">Jujutsu Kaisen</div><div class="ui">Bientôt</div><div class="us">⏳ PROCHAINEMENT</div></div>
+      <div class="uc dis"><div class="ue">⚔️</div><div class="un">Solo Leveling</div><div class="ui">Bientôt</div><div class="us">⏳ PROCHAINEMENT</div></div>
+    </div>
+  </div>
+</div>
 
-// ══════════════════════════════════════════
-// NARUTO CHARACTERS DATABASE (60+)
-// Power: 0-100, tiers: S(85-100) A(70-84) B(55-69) C(40-54) D(20-39)
-// ══════════════════════════════════════════
+<div class="scr" id="sLob">
+  <div class="card card-a">
+    <div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.1rem;margin-bottom:4px" id="lT">Salle — En attente</div>
+    <div style="font-size:.82rem;color:var(--tx2);margin-bottom:14px" id="lS">Envoie le lien à ton adversaire.</div>
+    <div class="sr"><input id="sLink" type="text" readonly/><button class="btn btn-gh btn-s" id="bCopy">📋 Copier</button></div>
+    <div class="lps" id="lP"></div>
+    <button class="btn btn-o btn-f" id="bStart" disabled>En attente du 2ème joueur...</button>
+  </div>
+</div>
 
-const NARUTO_CHARS = [
-  // ── GOD TIER (S) ──
-  {name:"Naruto Uzumaki",title:"Septième Hokage — Mode Baryon",power:100,tier:"S",emoji:"🦊",desc:"Jinchūriki de Kurama, maître du Mode Ermite des Six Chemins. Sa puissance dépasse celle des dieux."},
-  {name:"Sasuke Uchiha",title:"L'Ombre du Hokage — Rinnegan",power:98,tier:"S",emoji:"⚡",desc:"Dernier héritier des Uchiha. Rinnegan, Susanoo parfait, Amaterasu. Rival éternel de Naruto."},
-  {name:"Madara Uchiha",title:"Jinchūriki de Jūbi",power:97,tier:"S",emoji:"🌑",desc:"Le plus puissant des Uchiha. Jinchūriki du Jūbi, double Rinnegan, Limbo. Quasi-immortel."},
-  {name:"Kaguya Ōtsutsuki",title:"Déesse Lapine — Mère du Chakra",power:99,tier:"S",emoji:"🐇",desc:"Origine de tout le chakra. Dimensions infinies, régénération absolue, os destructeurs."},
-  {name:"Hashirama Senju",title:"Premier Hokage — Dieu des Shinobi",power:93,tier:"S",emoji:"🌳",desc:"Créateur de Konoha. Mokuton surpuissant, Sage Mode, statue aux mille bras. Seul rival de Madara."},
-  {name:"Obito Uchiha",title:"Jinchūriki de Jūbi",power:94,tier:"S",emoji:"🎭",desc:"Ancien élève de Minato. Kamui, Jinchūriki du Jūbi. A orchestré la 4ème Grande Guerre."},
-  {name:"Hagoromo Ōtsutsuki",title:"Sage des Six Chemins",power:99,tier:"S",emoji:"☯️",desc:"Fils de Kaguya, créateur du ninjutsu. Le Rinnegan originel, pouvoir illimité."},
-  {name:"Might Guy",title:"Huit Portes Ouvertes",power:92,tier:"S",emoji:"💪",desc:"Le plus grand maître du Taijutsu. Huit Portes = puissance capable de déformer l'espace."},
-  {name:"DMS Kakashi",title:"Double Mangekyō Sharingan",power:91,tier:"S",emoji:"📖",desc:"Kamui parfait des deux yeux, Susanoo complet. Forme temporaire mais de puissance divine."},
-  {name:"Minato Namikaze",title:"Quatrième Hokage — L'Éclair Jaune",power:90,tier:"S",emoji:"⚡",desc:"Le ninja le plus rapide. Rasengan, Hiraishin, Mode Kurama. Génie tactique absolu."},
-  {name:"Nagato Uzumaki",title:"Pain — Six Chemins",power:88,tier:"S",emoji:"🔴",desc:"Porteur du Rinnegan. Six Corps de Pain, Shinra Tensei planétaire, Chibaku Tensei. A détruit Konoha."},
-  {name:"Itachi Uchiha",title:"Génie Uchiha — Akatsuki",power:86,tier:"S",emoji:"🌙",desc:"Tsukuyomi, Amaterasu, Susanoo avec épée de Totsuka et miroir de Yata. Stratège ultime."},
+<div class="scr" id="sAuc">
+  <div class="pr" id="pB"></div>
+  <div class="ap" id="aP">Personnage 1/10</div>
+  <div class="cs" id="cS"></div>
+  <div class="bz" id="bZ"></div>
+</div>
 
-  // ── KAGE TIER (A) ──
-  {name:"Tobirama Senju",title:"Deuxième Hokage — Inventeur de l'Edo Tensei",power:83,tier:"A",emoji:"💧",desc:"Créateur du Multiclonage, de l'Edo Tensei et du Hiraishin. Maître absolu du Suiton."},
-  {name:"Killer Bee",title:"Jinchūriki de Hachibi",power:82,tier:"A",emoji:"🐙",desc:"Contrôle parfait du Hachibi. Style de combat à 8 épées unique. Rappeur légendaire."},
-  {name:"Gaara",title:"Cinquième Kazekage",power:78,tier:"A",emoji:"🏜️",desc:"Ancien Jinchūriki de Shukaku. Défense absolue de sable, techniques offensives dévastatrices."},
-  {name:"Tsunade Senju",title:"Cinquième Hokage — Princesse des limaces",power:74,tier:"A",emoji:"🐌",desc:"La plus grande ninja médecin. Force surhumaine, Byakugō, régénération cellulaire totale."},
-  {name:"Ōnoki",title:"Troisième Tsuchikage",power:76,tier:"A",emoji:"🪨",desc:"Maître du Jinton (Dissolution). Peut désintégrer la matière au niveau moléculaire."},
-  {name:"Troisième Raikage",title:"Le Plus Dur des Raikage",power:84,tier:"A",emoji:"⚡",desc:"Peau quasi-impénétrable. A combattu Hachibi seul et tenu tête à 1000 ninjas pendant 3 jours."},
-  {name:"A (Quatrième Raikage)",title:"Raikage — Vitesse Foudre",power:77,tier:"A",emoji:"💨",desc:"Armure de foudre, vitesse rivalisant avec Minato. Force brute colossale."},
-  {name:"Jiraiya",title:"Ermite des Crapauds — Sannin",power:80,tier:"A",emoji:"🐸",desc:"Sannin légendaire. Mode Ermite, invocations, Rasengan. Maître de Naruto et de Minato."},
-  {name:"Orochimaru",title:"Sannin — Le Serpent Blanc",power:79,tier:"A",emoji:"🐍",desc:"Sannin obsédé par l'immortalité. Edo Tensei, transformation, régénération, jutsu interdits."},
-  {name:"Kabuto Yakushi",title:"Mode Ermite du Dragon",power:81,tier:"A",emoji:"🐉",desc:"A surpassé Orochimaru. Mode Ermite, Edo Tensei de masse, a contrôlé des armées de morts."},
-  {name:"Hiruzen Sarutobi",title:"Troisième Hokage — Le Professeur",power:75,tier:"A",emoji:"🐵",desc:"Maîtrise les 5 affinités. Surnommé 'Le Professeur' pour sa connaissance de tous les jutsu."},
-  {name:"Danzō Shimura",title:"Chef de la Racine — Bras de Sharingan",power:73,tier:"A",emoji:"🦯",desc:"Multiples Sharingan, Izanagi répété, Mokuton implanté. Chef de l'ANBU Racine."},
-  {name:"Mei Terumī",title:"Cinquième Mizukage",power:72,tier:"A",emoji:"🌊",desc:"Double Kekkei Genkai : Yōton (lave) et Futton (vapeur acide). Puissante et charismatique."},
-  {name:"Mū",title:"Deuxième Tsuchikage — L'Invisible",power:74,tier:"A",emoji:"👻",desc:"Invisibilité totale, Jinton, capacité de se diviser en deux. Maître de l'espionnage."},
-  {name:"Gengetsu Hōzuki",title:"Deuxième Mizukage",power:73,tier:"A",emoji:"🫧",desc:"Clone de palourde explosif, Genjutsu de mirage. Combattant imprévisible."},
+<div class="scr" id="sCom" style="text-align:center"><div id="cC"></div></div>
+</div>
+<div id="toasts"></div>
 
-  // ── ELITE JONIN TIER (B) ──
-  {name:"Kakashi Hatake",title:"Le Ninja Copieur (War Arc)",power:69,tier:"B",emoji:"🐺",desc:"Maître du Raikiri, Kamui. A copié plus de 1000 jutsu. Leader de la Team 7."},
-  {name:"Might Guy",title:"Sept Portes (base)",power:68,tier:"B",emoji:"🥊",desc:"Version base de Guy sans les Huit Portes. Reste un des meilleurs combattants au corps-à-corps."},
-  {name:"Kisame Hoshigaki",title:"Le Bijū Sans Queue",power:67,tier:"B",emoji:"🦈",desc:"Réserves de chakra colossales. Samehada, fusions aquatiques. Surnommé le Bijū sans queue."},
-  {name:"Sasori",title:"Scorpion Rouge — Maître Marionnettiste",power:66,tier:"B",emoji:"🦂",desc:"S'est transformé en marionnette. Contrôle 100 pantins simultanément. Poison mortel."},
-  {name:"Deidara",title:"L'Art est une Explosion",power:64,tier:"B",emoji:"💣",desc:"Argile explosive de rang C1 à C4. Son C0 est une explosion nucléaire suicide."},
-  {name:"Konan",title:"L'Ange de Pain",power:63,tier:"B",emoji:"📃",desc:"600 milliards de papiers explosifs. Technique quasi imbattable, a failli tuer Obito."},
-  {name:"Kakuzu",title:"Cinq Cœurs — Akatsuki",power:65,tier:"B",emoji:"🧵",desc:"Cinq vies, cinq affinités élémentaires. Ancien rival de Hashirama, quasi-immortel."},
-  {name:"Hidan",title:"Immortel de Jashin",power:55,tier:"B",emoji:"💀",desc:"Immortalité absolue. Rituel de malédiction : un seul contact de sang = mort assurée."},
-  {name:"Neji Hyūga",title:"Le Prodige des Hyūga",power:58,tier:"B",emoji:"👁️",desc:"Byakugan, Poing Souple, Rotation céleste. Prodige du clan Hyūga."},
-  {name:"Rock Lee",title:"La Belle Bête Verte",power:60,tier:"B",emoji:"🥋",desc:"Spécialiste absolu du Taijutsu. Peut ouvrir jusqu'à la 6ème porte. Vitesse phénoménale."},
-  {name:"Yamato",title:"Capitaine ANBU — Mokuton",power:57,tier:"B",emoji:"🪵",desc:"Utilisateur du Mokuton grâce aux cellules de Hashirama. Ancien ANBU, leader temporaire de la Team 7."},
-  {name:"Asuma Sarutobi",title:"Jōnin — Gardien des Douze",power:56,tier:"B",emoji:"🚬",desc:"Expert des lames de chakra. Ancien Gardien du Seigneur Feudal. Maître de l'équipe 10."},
-  {name:"Zabuza Momochi",title:"Le Démon de Kiri",power:57,tier:"B",emoji:"⚔️",desc:"Épéiste de la Brume, expert de l'assassinat silencieux. Kubikiribōchō, le trancheur."},
-  {name:"Chiyo",title:"Ancienne de Suna — Marionnettiste",power:59,tier:"B",emoji:"🧓",desc:"Maître marionnettiste légendaire. A combattu le Troisième Kazekage et aidé à vaincre Sasori."},
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import{getFirestore,doc,setDoc,getDoc,updateDoc,onSnapshot,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyC0Z78enCaHs2Ao3HQdSGAMNxHBbHdGchs",authDomain:"sous-cacher.firebaseapp.com",projectId:"sous-cacher",storageBucket:"sous-cacher.firebasestorage.app",messagingSenderId:"107778956752",appId:"1:107778956752:web:8858751ba4e8d7c5ffedd5"});
+const db=getFirestore(app);
+const $=id=>document.getElementById(id),qs=new URLSearchParams(location.search);
+function toast(m){const w=$('toasts'),e=document.createElement('div');e.className='toast';e.textContent=m;w.appendChild(e);setTimeout(()=>{e.style.transition='.3s';e.style.opacity='0';},2600);setTimeout(()=>e.remove(),3000);}
+function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');}
+function rc(){const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let o="";for(let i=0;i<4;i++)o+=c[Math.floor(Math.random()*c.length)];return o;}
+function ff(n){return n.toLocaleString('fr-FR');}
+function pa(s){s=s.trim().toUpperCase().replace(/\s/g,'').replace(/€/g,'');let m;m=s.match(/^(\d+(?:\.\d+)?)M$/);if(m)return Math.round(parseFloat(m[1])*1e6);m=s.match(/^(\d+(?:\.\d+)?)K$/);if(m)return Math.round(parseFloat(m[1])*1e3);m=s.match(/^(\d+)$/);if(m)return parseInt(m[1]);return null;}
+function ir(n){if(n>=1e6)return n%1e6===0;if(n>=1e3)return n%1e3===0;return n%100===0;}
+const AV=['#f97316','#7c3aed','#06b6d4','#10b981','#f43f5e','#6366f1'];
+function ac(n){return AV[(n||'a').charCodeAt(0)%AV.length];}
+function gp(){try{return JSON.parse(localStorage.getItem('gv_profile'))||null;}catch{return null;}}
+const rr=id=>doc(db,'auction_rooms',id);
 
-  // ── CHUNIN/JONIN TIER (C) ──
-  {name:"Sakura Haruno",title:"Byakugō — Poing Dévastateur",power:54,tier:"C",emoji:"🌸",desc:"Élève de Tsunade. Force surhumaine, Byakugō, meilleure ninja médecin de sa génération."},
-  {name:"Shikamaru Nara",title:"QI 200+ — Manipulation des Ombres",power:50,tier:"C",emoji:"🧠",desc:"Stratège le plus brillant de Konoha. Ses plans sont toujours à 10 coups d'avance."},
-  {name:"Hinata Hyūga",title:"Byakugan — Poing Souple du Lion",power:47,tier:"C",emoji:"🫧",desc:"Héritière des Hyūga. Poing Souple du Lion, Byakugan. A protégé Naruto contre Pain."},
-  {name:"Temari",title:"Éventail Géant — Vent Tranchant",power:49,tier:"C",emoji:"🌪️",desc:"Spécialiste du Fūton. Son éventail génère des rafales capables de raser une forêt."},
-  {name:"Kankurō",title:"Maître Marionnettiste de Suna",power:46,tier:"C",emoji:"🎭",desc:"Marionnettiste talentueux. Contrôle Karasu, Kuroari et Sanshōuo."},
-  {name:"Kiba Inuzuka",title:"Croc-à-Croc avec Akamaru",power:42,tier:"C",emoji:"🐕",desc:"Combattant féroce avec son chien ninja Akamaru. Techniques de combo animales."},
-  {name:"Shino Aburame",title:"Maître des Insectes",power:44,tier:"C",emoji:"🐛",desc:"Contrôle des insectes dévoreurs de chakra. Style de combat silencieux et implacable."},
-  {name:"Chōji Akimichi",title:"Mode Papillon",power:48,tier:"C",emoji:"🦋",desc:"Mode Papillon, Techniques d'expansion géante. Force brute colossale."},
-  {name:"Ino Yamanaka",title:"Transfert d'Esprit",power:41,tier:"C",emoji:"💐",desc:"Techniques de possession mentale. Peut contrôler l'ennemi à distance."},
-  {name:"Sai",title:"ANBU — Encre Vivante",power:50,tier:"C",emoji:"🖌️",desc:"Ancien membre de la Racine. Ses dessins prennent vie : oiseaux, lions, serpents d'encre."},
-  {name:"Kurenai Yūhi",title:"Maître du Genjutsu",power:45,tier:"C",emoji:"🌹",desc:"Spécialiste du Genjutsu parmi les Jōnin de Konoha. Maître de l'équipe 8."},
-  {name:"Anko Mitarashi",title:"Ancienne Élève d'Orochimaru",power:44,tier:"C",emoji:"🍡",desc:"Techniques de serpent héritées d'Orochimaru. Jōnin spécialisée, examinatrice des Chūnin."},
-  {name:"Haku",title:"Miroirs de Glace Démoniaques",power:46,tier:"C",emoji:"❄️",desc:"Kekkei Genkai Hyōton (glace). Vitesse incroyable dans ses miroirs. Compagnon de Zabuza."},
-  {name:"Kimimaro",title:"Os du Clan Kaguya",power:53,tier:"C",emoji:"🦴",desc:"Shikotsumyaku : manipulation osseuse. A combattu Lee, Naruto et Gaara seul, mourant."},
-
-  // ── GENIN/LOWER TIER (D) ──
-  {name:"Konohamaru Sarutobi",title:"Petit-fils du Troisième",power:38,tier:"D",emoji:"🧣",desc:"Élève de Naruto. Rasengan, Multiclonage. Futur Hokage en devenir."},
-  {name:"Tenten",title:"Spécialiste des Armes",power:32,tier:"D",emoji:"🎯",desc:"Maîtrise de toutes les armes ninja. Rouleaux d'invocation offensifs."},
-  {name:"Iruka Umino",title:"Professeur de l'Académie",power:25,tier:"D",emoji:"📚",desc:"Le premier à avoir cru en Naruto. Chūnin et professeur bienveillant."},
-  {name:"Shizune",title:"Assistante de Tsunade",power:35,tier:"D",emoji:"💉",desc:"Ninja médecin compétente. Aiguilles empoisonnées, bras droit de Tsunade."},
-  {name:"Ebisu",title:"Tuteur d'Élite",power:30,tier:"D",emoji:"🤓",desc:"Jōnin spécialisé dans la formation. A entraîné Konohamaru et Naruto."},
-  {name:"Hayate Gekkō",title:"Épéiste de Konoha",power:33,tier:"D",emoji:"🗡️",desc:"Maître épéiste, examinateur des Chūnin. Techniques de lame de lune."},
-  {name:"Mizuki",title:"Traître de l'Académie",power:22,tier:"D",emoji:"🐯",desc:"Ancien instructeur devenu traître. Faible mais a déclenché l'éveil de Naruto."},
-  {name:"Rasa",title:"Quatrième Kazekage — Poussière d'Or",power:70,tier:"A",emoji:"✨",desc:"Père de Gaara. Contrôle de la poussière d'or. Puissant Kazekage assassiné par Orochimaru."},
-  {name:"Hanzo",title:"Hanzō la Salamandre",power:71,tier:"A",emoji:"🦎",desc:"Légendaire chef d'Ame. A vaincu les trois Sannin, leur donnant ce titre."},
-  {name:"Darui",title:"Cinquième Raikage",power:68,tier:"B",emoji:"⚡",desc:"Maître du Ranton (Tempête). Bras droit du Quatrième Raikage, puis son successeur."},
-  {name:"Suigetsu Hōzuki",title:"L'Homme-Eau",power:48,tier:"C",emoji:"💧",desc:"Corps aqueux, manie Kubikiribōchō. Membre de Taka avec Sasuke."},
-  {name:"Jūgo",title:"L'Origine du Sceau Maudit",power:50,tier:"C",emoji:"🔶",desc:"Transformation naturelle du sceau maudit. Force brute incontrôlable."},
-  {name:"Karin Uzumaki",title:"Chaînes de Chakra — Uzumaki",power:36,tier:"D",emoji:"👓",desc:"Capteur de chakra exceptionnel. Chaînes de chakra Uzumaki, guérison par morsure."},
+// ── NARUTO DB ──
+const NARUTO=[
+{name:"Naruto Uzumaki",title:"Mode Baryon",power:100,tier:"S",emoji:"🦊",desc:"Jinchūriki de Kurama, Mode Ermite des Six Chemins."},
+{name:"Sasuke Uchiha",title:"Rinnegan",power:98,tier:"S",emoji:"⚡",desc:"Rinnegan, Susanoo parfait, Amaterasu."},
+{name:"Kaguya Ōtsutsuki",title:"Mère du Chakra",power:99,tier:"S",emoji:"🐇",desc:"Origine de tout le chakra. Dimensions infinies."},
+{name:"Madara Uchiha",title:"Jinchūriki de Jūbi",power:97,tier:"S",emoji:"🌑",desc:"Double Rinnegan, Limbo. Le plus puissant Uchiha."},
+{name:"Obito Uchiha",title:"Jinchūriki de Jūbi",power:94,tier:"S",emoji:"🎭",desc:"Kamui, Jinchūriki du Jūbi."},
+{name:"Hashirama Senju",title:"Dieu des Shinobi",power:93,tier:"S",emoji:"🌳",desc:"Premier Hokage. Mokuton surpuissant."},
+{name:"Hagoromo Ōtsutsuki",title:"Sage des Six Chemins",power:99,tier:"S",emoji:"☯️",desc:"Créateur du ninjutsu. Pouvoir illimité."},
+{name:"Might Guy",title:"Huit Portes",power:92,tier:"S",emoji:"💪",desc:"Huit Portes = puissance divine."},
+{name:"DMS Kakashi",title:"Double Mangekyō",power:91,tier:"S",emoji:"📖",desc:"Kamui parfait, Susanoo complet."},
+{name:"Minato Namikaze",title:"L'Éclair Jaune",power:90,tier:"S",emoji:"⚡",desc:"Le plus rapide. Rasengan, Hiraishin."},
+{name:"Nagato Uzumaki",title:"Pain",power:88,tier:"S",emoji:"🔴",desc:"Rinnegan. Shinra Tensei planétaire."},
+{name:"Itachi Uchiha",title:"Génie Uchiha",power:86,tier:"S",emoji:"🌙",desc:"Tsukuyomi, Amaterasu, Susanoo + Totsuka."},
+{name:"Troisième Raikage",title:"Le Plus Dur",power:84,tier:"A",emoji:"⚡",desc:"Peau impénétrable, a combattu Hachibi."},
+{name:"Tobirama Senju",title:"Deuxième Hokage",power:83,tier:"A",emoji:"💧",desc:"Edo Tensei, Hiraishin. Maître Suiton."},
+{name:"Killer Bee",title:"Hachibi",power:82,tier:"A",emoji:"🐙",desc:"Contrôle parfait du Hachibi. 8 épées."},
+{name:"Kabuto Yakushi",title:"Mode Ermite Dragon",power:81,tier:"A",emoji:"🐉",desc:"Edo Tensei de masse."},
+{name:"Jiraiya",title:"Ermite des Crapauds",power:80,tier:"A",emoji:"🐸",desc:"Sannin, Mode Ermite. Maître de Naruto."},
+{name:"Orochimaru",title:"Serpent Blanc",power:79,tier:"A",emoji:"🐍",desc:"Immortalité, jutsu interdits."},
+{name:"Gaara",title:"Kazekage",power:78,tier:"A",emoji:"🏜️",desc:"Défense absolue de sable."},
+{name:"A (4ème Raikage)",title:"Vitesse Foudre",power:77,tier:"A",emoji:"💨",desc:"Armure de foudre."},
+{name:"Ōnoki",title:"Tsuchikage",power:76,tier:"A",emoji:"🪨",desc:"Jinton. Désintègre la matière."},
+{name:"Hiruzen Sarutobi",title:"Le Professeur",power:75,tier:"A",emoji:"🐵",desc:"Maîtrise 5 affinités."},
+{name:"Tsunade",title:"Cinquième Hokage",power:74,tier:"A",emoji:"🐌",desc:"Force surhumaine, Byakugō."},
+{name:"Danzō",title:"Chef Racine",power:73,tier:"A",emoji:"🦯",desc:"Sharingan multiples, Izanagi."},
+{name:"Mei Terumī",title:"Mizukage",power:72,tier:"A",emoji:"🌊",desc:"Double Kekkei Genkai."},
+{name:"Hanzō",title:"La Salamandre",power:71,tier:"A",emoji:"🦎",desc:"A vaincu les trois Sannin."},
+{name:"Rasa",title:"4ème Kazekage",power:70,tier:"A",emoji:"✨",desc:"Poussière d'or."},
+{name:"Kakashi Hatake",title:"Ninja Copieur",power:69,tier:"B",emoji:"🐺",desc:"Raikiri, 1000 jutsu copiés."},
+{name:"Darui",title:"5ème Raikage",power:68,tier:"B",emoji:"⚡",desc:"Maître du Ranton."},
+{name:"Kisame",title:"Bijū Sans Queue",power:67,tier:"B",emoji:"🦈",desc:"Chakra colossal. Samehada."},
+{name:"Sasori",title:"Scorpion Rouge",power:66,tier:"B",emoji:"🦂",desc:"100 marionnettes. Poison mortel."},
+{name:"Kakuzu",title:"Cinq Cœurs",power:65,tier:"B",emoji:"🧵",desc:"5 vies, 5 affinités."},
+{name:"Deidara",title:"L'Explosion",power:64,tier:"B",emoji:"💣",desc:"Argile explosive C1–C4."},
+{name:"Konan",title:"L'Ange",power:63,tier:"B",emoji:"📃",desc:"600 milliards de papiers."},
+{name:"Rock Lee",title:"Bête Verte",power:60,tier:"B",emoji:"🥋",desc:"Taijutsu, 6ème porte."},
+{name:"Chiyo",title:"Marionnettiste",power:59,tier:"B",emoji:"🧓",desc:"Légende de Suna."},
+{name:"Neji Hyūga",title:"Prodige",power:58,tier:"B",emoji:"👁️",desc:"Byakugan, Poing Souple."},
+{name:"Zabuza",title:"Démon de Kiri",power:57,tier:"B",emoji:"⚔️",desc:"Épéiste, assassinat silencieux."},
+{name:"Yamato",title:"ANBU Mokuton",power:57,tier:"B",emoji:"🪵",desc:"Mokuton via Hashirama."},
+{name:"Asuma",title:"Gardien des 12",power:56,tier:"B",emoji:"🚬",desc:"Lames de chakra."},
+{name:"Hidan",title:"Immortel Jashin",power:55,tier:"B",emoji:"💀",desc:"Immortalité + malédiction."},
+{name:"Sakura",title:"Byakugō",power:54,tier:"C",emoji:"🌸",desc:"Force surhumaine, médecin."},
+{name:"Kimimaro",title:"Clan Kaguya",power:53,tier:"C",emoji:"🦴",desc:"Manipulation osseuse."},
+{name:"Shikamaru",title:"QI 200+",power:50,tier:"C",emoji:"🧠",desc:"Stratège ultime."},
+{name:"Sai",title:"Encre Vivante",power:50,tier:"C",emoji:"🖌️",desc:"Dessins vivants."},
+{name:"Temari",title:"Éventail",power:49,tier:"C",emoji:"🌪️",desc:"Fūton dévastateur."},
+{name:"Chōji",title:"Mode Papillon",power:48,tier:"C",emoji:"🦋",desc:"Expansion géante."},
+{name:"Hinata",title:"Poing du Lion",power:47,tier:"C",emoji:"🫧",desc:"Byakugan."},
+{name:"Haku",title:"Miroirs de Glace",power:46,tier:"C",emoji:"❄️",desc:"Kekkei Genkai Hyōton."},
+{name:"Kankurō",title:"Marionnettiste",power:46,tier:"C",emoji:"🎭",desc:"Karasu, Kuroari."},
+{name:"Shino",title:"Insectes",power:44,tier:"C",emoji:"🐛",desc:"Insectes dévoreurs."},
+{name:"Kiba",title:"Croc-à-Croc",power:42,tier:"C",emoji:"🐕",desc:"Combo avec Akamaru."},
+{name:"Ino",title:"Transfert d'Esprit",power:41,tier:"C",emoji:"💐",desc:"Possession mentale."},
+{name:"Konohamaru",title:"Futur Hokage",power:38,tier:"D",emoji:"🧣",desc:"Rasengan."},
+{name:"Tenten",title:"Armes",power:32,tier:"D",emoji:"🎯",desc:"Maîtrise toutes les armes."},
+{name:"Iruka",title:"Professeur",power:25,tier:"D",emoji:"📚",desc:"Le premier à croire en Naruto."},
 ];
+const UNI={naruto:NARUTO};
 
-const UNIVERSES = { naruto: NARUTO_CHARS };
+let G={roomId:null,myId:null,myName:'',isHost:false,universe:null,roomData:null,unsub:null};
 
-// ══════════════════════════════════════════
-// GAME STATE
-// ══════════════════════════════════════════
-let G = {
-  universe: null,
-  p1: { name:'', budget:350000000, roster:[] },
-  p2: { name:'', budget:350000000, roster:[] },
-  pool: [],         // 10 characters to auction
-  currentIdx: 0,    // which character we're auctioning
-  currentBid: 0,
-  currentBidder: 0, // 0=none, 1=p1, 2=p2
-  turn: 1,          // whose turn to bid
-  phase: 'idle'     // idle, bidding, combat
-};
-
-// ══════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+async function createRoom(u){
+  const p=gp();G.myName=p?.name||'Joueur1';G.myId='p_'+Math.random().toString(36).slice(2,10);G.roomId=rc();G.isHost=true;G.universe=u;
+  const all=[...UNI[u]];for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}
+  await setDoc(rr(G.roomId),{roomId:G.roomId,universe:u,hostId:G.myId,phase:'lobby',pool:all.slice(0,10),
+    p1:{id:G.myId,name:G.myName,budget:350000000,roster:[],ready:true},
+    p2:{id:'',name:'',budget:350000000,roster:[],ready:false},
+    auction:{currentIdx:0,currentBid:0,currentBidderId:'',turn:1},combat:{winner:'',log:[],p1Score:0,p2Score:0,countdown:10},createdAt:Date.now()});
+  history.replaceState(null,'',location.pathname+'?room='+G.roomId);sub();toast('Salle '+G.roomId+' créée');
 }
-
-function selectUniverse(u) {
-  G.universe = u;
-  showScreen('screenSetup');
+async function joinRoom(code){
+  const p=gp();G.myName=p?.name||'Joueur2';G.myId='p_'+Math.random().toString(36).slice(2,10);G.roomId=code;
+  const snap=await getDoc(rr(code));if(!snap.exists()){toast('Salle introuvable !');return;}
+  const d=snap.data();if(d.p2?.ready){toast('Salle pleine !');return;}
+  G.isHost=false;G.universe=d.universe;
+  await updateDoc(rr(code),{'p2.id':G.myId,'p2.name':G.myName,'p2.ready':true});sub();toast('Rejoint !');
 }
+function sub(){if(G.unsub)G.unsub();G.unsub=onSnapshot(rr(G.roomId),s=>{if(!s.exists())return;G.roomData=s.data();render();});}
+function amP1(){return G.roomData?.p1?.id===G.myId;}
+function myN(){return amP1()?1:2;}
+function myD(){return amP1()?G.roomData.p1:G.roomData.p2;}
 
-// ══════════════════════════════════════════
-// FORMAT NUMBERS
-// ══════════════════════════════════════════
-function fmt(n) {
-  if (n >= 1000000) return (n / 1000000) + 'M';
-  if (n >= 1000) return (n / 1000) + 'K';
-  return n.toString();
+function render(){
+  const d=G.roomData;if(!d)return;
+  const rb=$('rBadge');rb.style.display='inline';rb.textContent='Salle : '+G.roomId;
+  if(d.phase==='lobby')rLobby();
+  else if(d.phase==='auction')rAuction();
+  else if(d.phase==='countdown'||d.phase==='combat')rCombat();
 }
-function fmtFull(n) {
-  return n.toLocaleString('fr-FR');
-}
-
-function parseAmount(str) {
-  str = str.trim().toUpperCase().replace(/\s/g,'').replace(/€/g,'').replace(/,/g,'.');
-  // Accept: 5M, 50M, 1.5M, 350M, 1000000, etc.
-  let m;
-  m = str.match(/^(\d+(?:\.\d+)?)M$/);
-  if (m) return Math.round(parseFloat(m[1]) * 1000000);
-  m = str.match(/^(\d+(?:\.\d+)?)K$/);
-  if (m) return Math.round(parseFloat(m[1]) * 1000);
-  m = str.match(/^(\d+)$/);
-  if (m) return parseInt(m[1]);
-  return null;
-}
-
-function isRound(n) {
-  if (n >= 1000000) return n % 1000000 === 0;
-  if (n >= 1000) return n % 1000 === 0;
-  return n % 100 === 0;
-}
-
-// ══════════════════════════════════════════
-// START AUCTION
-// ══════════════════════════════════════════
-function startAuction() {
-  const n1 = document.getElementById('p1Name').value.trim();
-  const n2 = document.getElementById('p2Name').value.trim();
-  if (!n1 || !n2) { alert('Entre les deux pseudos !'); return; }
-  if (n1 === n2) { alert('Les pseudos doivent être différents !'); return; }
-
-  G.p1 = { name: n1, budget: 350000000, roster: [] };
-  G.p2 = { name: n2, budget: 350000000, roster: [] };
-
-  // Pick 10 random characters
-  const all = [...UNIVERSES[G.universe]];
-  for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [all[i],all[j]] = [all[j],all[i]]; }
-  G.pool = all.slice(0, 10);
-  G.currentIdx = 0;
-  G.phase = 'bidding';
-
-  showScreen('screenAuction');
-  updatePlayerBars();
-  showCurrentChar();
-}
-
-// ══════════════════════════════════════════
-// PLAYER BARS
-// ══════════════════════════════════════════
-function updatePlayerBars() {
-  document.getElementById('pb1Name').textContent = G.p1.name;
-  document.getElementById('pb2Name').textContent = G.p2.name;
-  document.getElementById('pb1Budget').textContent = fmtFull(G.p1.budget);
-  document.getElementById('pb2Budget').textContent = fmtFull(G.p2.budget);
-  document.getElementById('pb1Count').textContent = G.p1.roster.length + '/5 personnages';
-  document.getElementById('pb2Count').textContent = G.p2.roster.length + '/5 personnages';
-
-  const r1 = document.getElementById('pb1Roster'); r1.innerHTML = '';
-  G.p1.roster.forEach(c => { r1.innerHTML += `<span class="pb-mini">${c.emoji} ${c.name}</span>`; });
-  const r2 = document.getElementById('pb2Roster'); r2.innerHTML = '';
-  G.p2.roster.forEach(c => { r2.innerHTML += `<span class="pb-mini">${c.emoji} ${c.name}</span>`; });
-
-  document.getElementById('pb1').classList.toggle('active-turn', G.turn === 1);
-  document.getElementById('pb2').classList.toggle('active-turn', G.turn === 2);
-}
-
-// ══════════════════════════════════════════
-// SHOW CURRENT CHARACTER
-// ══════════════════════════════════════════
-function showCurrentChar() {
-  const c = G.pool[G.currentIdx];
-  document.getElementById('auctionProgress').textContent = `Personnage ${G.currentIdx + 1}/10`;
-
-  const tierClass = c.tier === 'S' ? 's' : c.tier === 'A' ? 'a' : c.tier === 'B' ? 'b' : c.tier === 'C' ? 'c' : 'd';
-  document.getElementById('charShowcase').innerHTML = `
-    <div class="cs-emoji">${c.emoji}</div>
-    <div class="cs-name">${c.name}</div>
-    <div class="cs-title">${c.title}</div>
-    <div class="cs-desc">${c.desc}</div>
-    <div class="cs-power ${tierClass}">⚡ Puissance : ${c.power}/100 — Tier ${c.tier}</div>
-  `;
-
-  G.currentBid = 0;
-  G.currentBidder = 0;
-  G.turn = (G.currentIdx % 2 === 0) ? 1 : 2; // alternate who starts
-
-  renderBidZone();
-}
-
-// ══════════════════════════════════════════
-// BID ZONE
-// ══════════════════════════════════════════
-function renderBidZone() {
-  const zone = document.getElementById('bidZone');
-  const turner = G.turn === 1 ? G.p1 : G.p2;
-  const other = G.turn === 1 ? G.p2 : G.p1;
-
-  // Check if a player already has 5 → auto-assign to the other
-  if (G.p1.roster.length >= 5 && G.p2.roster.length < 5) {
-    autoAssign(2); return;
-  }
-  if (G.p2.roster.length >= 5 && G.p1.roster.length < 5) {
-    autoAssign(1); return;
-  }
-
-  let bidInfo = '';
-  if (G.currentBid > 0) {
-    const bidderName = G.currentBidder === 1 ? G.p1.name : G.p2.name;
-    bidInfo = `
-      <div class="bid-current">
-        <div class="bid-label">Enchère actuelle</div>
-        <div class="bid-amount">${fmtFull(G.currentBid)} €</div>
-        <div class="bid-who">par ${bidderName}</div>
-      </div>
-    `;
-  } else {
-    bidInfo = `
-      <div class="bid-current">
-        <div class="bid-label">Aucune enchère</div>
-        <div class="bid-amount" style="color:var(--tx3)">—</div>
-      </div>
-    `;
-  }
-
-  zone.innerHTML = `
-    ${bidInfo}
-    <div class="bid-turn">C'est au tour de ${turner.name}</div>
-    <div class="bid-input-row">
-      <input class="bid-input" id="bidInput" type="text" placeholder="Ex: 5M, 10M, 50000000" autocomplete="off"/>
-    </div>
-    <div class="bid-actions">
-      <button class="btn btn-green btn-sm" onclick="placeBid()">💰 Enchérir</button>
-      <button class="btn btn-red btn-sm" onclick="passBid()">${G.currentBid > 0 ? '✋ Laisser' : '⏭️ Passer'}</button>
-    </div>
-    <div class="bid-hint">Nombres ronds uniquement : 1M, 5M, 50M, 100M, etc.</div>
-    <div class="bid-error" id="bidError"></div>
-  `;
-
-  document.getElementById('bidInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') placeBid();
+function rLobby(){
+  show('sLob');const d=G.roomData;
+  $('lT').textContent=`Salle ${G.roomId} — ${d.universe==='naruto'?'🍥 Naruto':'Anime'}`;
+  $('sLink').value=location.origin+location.pathname+'?room='+G.roomId;
+  const lp=$('lP');lp.innerHTML='';
+  [d.p1,d.p2].forEach((p,i)=>{
+    if(!p.ready&&!p.name){lp.innerHTML+=`<div class="lpi" style="border-style:dashed;opacity:.5"><div class="la" style="background:var(--tx3)">?</div><span class="ln" style="color:var(--tx3)">En attente...</span></div>`;return;}
+    lp.innerHTML+=`<div class="lpi"><div class="la" style="background:${ac(p.name)}">${(p.name||'?')[0].toUpperCase()}</div><span class="ln">${p.name}</span><span class="lt">${p.id===G.myId?'Toi':'Adversaire'}${i===0?' · Hôte':''}</span></div>`;
   });
-  document.getElementById('bidInput').focus();
-  updatePlayerBars();
+  const b=$('bStart');
+  if(d.p1.ready&&d.p2.ready){b.disabled=!G.isHost;b.textContent=G.isHost?'▶ Lancer les enchères':'En attente...';}
+  else{b.disabled=true;b.textContent='En attente du 2ème joueur...';}
+  $('lS').textContent=d.p2.ready?'Les deux joueurs sont prêts !':'Envoie le lien à ton adversaire.';
 }
-
-function autoAssign(toPlayer) {
-  const p = toPlayer === 1 ? G.p1 : G.p2;
-  const c = G.pool[G.currentIdx];
-  p.roster.push(c);
-  updatePlayerBars();
-  nextCharOrCombat();
+function rAuction(){
+  show('sAuc');const d=G.roomData,a=d.auction,ch=d.pool[a.currentIdx];if(!ch)return;
+  $('pB').innerHTML=[d.p1,d.p2].map((p,i)=>`<div class="pb ${a.turn===i+1?'act':''}"><div class="pn">${p.name}${p.id===G.myId?' (toi)':''}</div><div class="pbu">💰 ${ff(p.budget)} €</div><div class="pc">${p.roster.length}/5 personnages</div><div class="prs">${p.roster.map(c=>`<span class="pm">${c.emoji} ${c.name}</span>`).join('')}</div></div>`).join('');
+  $('aP').textContent=`Personnage ${a.currentIdx+1}/10`;
+  const tc=ch.tier==='S'?'ts':ch.tier==='A'?'ta':ch.tier==='B'?'tbb':ch.tier==='C'?'tc':'td';
+  $('cS').innerHTML=`<div class="ce">${ch.emoji}</div><div class="cn">${ch.name}</div><div class="ct">${ch.title}</div><div class="cd">${ch.desc}</div><span class="tb ${tc}">⚡ ${ch.power}/100 — Tier ${ch.tier}</span>`;
+  const imt=a.turn===myN(),tn=a.turn===1?d.p1.name:d.p2.name;
+  let bi='';if(a.currentBid>0){const bn=a.currentBidderId===d.p1.id?d.p1.name:d.p2.name;bi=`<div class="bc"><div class="bl">Enchère actuelle</div><div class="ba">${ff(a.currentBid)} €</div><div class="bw">par ${bn}</div></div>`;}else{bi=`<div class="bc"><div class="bl">Aucune enchère</div><div class="ba" style="color:var(--tx3)">—</div></div>`;}
+  $('bZ').innerHTML=`${bi}<div class="bt">${imt?'👉 C\'est ton tour !':'⏳ '+tn+' réfléchit...'}</div>${imt?`<div class="bir"><input class="bi" id="bI" type="text" placeholder="Ex: 5M, 10M" autocomplete="off"/></div><div class="bas"><button class="btn btn-g btn-s" id="bB">💰 Enchérir</button><button class="btn btn-r btn-s" id="bP">${a.currentBid>0?'✋ Laisser':'⏭️ Passer'}</button></div>`:'<div style="text-align:center;padding:8px;font-size:.85rem;color:var(--tx2)">En attente...</div>'}<div class="bh">Nombres ronds : 1M, 5M, 50M…</div><div class="be" id="bE"></div>`;
+  if(imt){$('bB')?.addEventListener('click',doBid);$('bP')?.addEventListener('click',doPass);$('bI')?.addEventListener('keydown',e=>{if(e.key==='Enter')doBid();});setTimeout(()=>$('bI')?.focus(),50);}
 }
+function rCombat(){
+  show('sCom');const d=G.roomData;
+  if(d.phase==='countdown'){$('cC').innerHTML=`<div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.5rem;margin-bottom:8px">⚔️ Combat Final</div><div style="color:var(--tx2);margin-bottom:20px">${d.p1.name} vs ${d.p2.name}</div>${rT(d)}<div class="cdn">${d.combat.countdown||10}</div><div style="color:var(--tx2)">Le combat se prépare...</div>`;return;}
+  const w=d.combat.winner,wn=w===1?d.p1.name:d.p2.name;
+  $('cC').innerHTML=`<div style="font-family:'Syne',sans-serif;font-weight:900;font-size:1.5rem;margin-bottom:8px">⚔️ Combat Final</div>${rT(d,w)}<div class="cl" id="cL"></div><div class="rb"><div class="re">🏆</div><div class="rt">${wn} remporte le combat !</div><div class="rs">Score : ${Math.round(d.combat.p1Score)} vs ${Math.round(d.combat.p2Score)}</div></div><button class="btn btn-o btn-f" id="bR">🔄 Rejouer</button>`;
+  const l=$('cL');if(l&&d.combat.log)d.combat.log.forEach((x,i)=>setTimeout(()=>{const e=document.createElement('div');e.className='cll '+(x.cls||'');e.textContent=x.text;l.appendChild(e);l.scrollTop=l.scrollHeight;},i*500));
+  $('bR')?.addEventListener('click',async()=>{if(!G.isHost){toast('Seul l\'hôte peut relancer.');return;}const all=[...UNI[G.universe]];for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]];}await updateDoc(rr(G.roomId),{phase:'auction',pool:all.slice(0,10),'p1.budget':350000000,'p1.roster':[],'p2.budget':350000000,'p2.roster':[],auction:{currentIdx:0,currentBid:0,currentBidderId:'',turn:1},combat:{winner:'',log:[],p1Score:0,p2Score:0,countdown:10}});});
+}
+function rT(d,w){return`<div class="cv">${[d.p1,d.p2].map((p,i)=>`<div class="cvt ${w===i+1?'win':''}"><div class="cvn" style="color:${w===i+1?'var(--gold)':i===0?'var(--accent)':'var(--purple)'}">${p.name} ${w===i+1?'🏆':''}</div>${p.roster.map(c=>`<div class="cvc"><span class="cvce">${c.emoji}</span><span class="cvcn">${c.name}</span><span class="cvcp">${c.power}</span></div>`).join('')}<div class="cvtl">Puissance : ${p.roster.reduce((s,c)=>s+c.power,0)}</div></div>`).join('')}</div>`;}
 
-function placeBid() {
-  const input = document.getElementById('bidInput');
-  const errEl = document.getElementById('bidError');
-  const val = parseAmount(input.value);
-
-  if (val === null) { errEl.textContent = 'Format invalide. Exemples : 1M, 5M, 50000000'; return; }
-  if (!isRound(val)) { errEl.textContent = 'Nombre rond requis (1M, 2M, 5M, 10M, etc.)'; return; }
-  if (val <= 0) { errEl.textContent = 'L\'enchère doit être positive.'; return; }
-  if (val <= G.currentBid) { errEl.textContent = `L'enchère doit dépasser ${fmtFull(G.currentBid)} €`; return; }
-
-  const turner = G.turn === 1 ? G.p1 : G.p2;
-  if (val > turner.budget) { errEl.textContent = `Budget insuffisant ! (${fmtFull(turner.budget)} € restants)`; return; }
-
-  // Check if player can still afford remaining slots
-  const slotsNeeded = 5 - turner.roster.length - 1; // -1 because this would be one
-  if (turner.budget - val < slotsNeeded * 1000000 && slotsNeeded > 0) {
-    // Warning but allow — they might get chars for cheap
+async function doBid(){
+  const v=pa($('bI')?.value||''),d=G.roomData,a=d.auction,me=myD();
+  if(v===null){$('bE').textContent='Format invalide.';return;}
+  if(!ir(v)){$('bE').textContent='Nombre rond requis.';return;}
+  if(v<=0){$('bE').textContent='Positif requis.';return;}
+  if(v<=a.currentBid){$('bE').textContent=`Doit dépasser ${ff(a.currentBid)} €`;return;}
+  if(v>me.budget){$('bE').textContent=`Budget insuffisant (${ff(me.budget)} €)`;return;}
+  await updateDoc(rr(G.roomId),{'auction.currentBid':v,'auction.currentBidderId':G.myId,'auction.turn':a.turn===1?2:1});
+}
+async function doPass(){
+  const d=G.roomData,a=d.auction;
+  if(a.currentBid===0&&!a.currentBidderId){$('bE').textContent='Mise minimum : 1M !';return;}
+  if(!a.currentBidderId){$('bE').textContent='Personne n\'a enchéri !';return;}
+  const wk=a.currentBidderId===d.p1.id?'p1':'p2',ok=wk==='p1'?'p2':'p1';
+  const ch=d.pool[a.currentIdx],w=d[wk],o=d[ok];
+  const nr=[...w.roster,ch],nb=w.budget-a.currentBid,ni=a.currentIdx+1;
+  const u={};u[`${wk}.budget`]=nb;u[`${wk}.roster`]=nr;
+  if(nr.length>=5&&o.roster.length>=5||ni>=10){
+    if(ni<10){const rem=d.pool.slice(ni);u[`${nr.length>=5?ok:wk}.roster`]=[...d[nr.length>=5?ok:wk].roster,...rem];}
+    u.phase='countdown';u['combat.countdown']=10;u['auction.currentIdx']=10;
+    await updateDoc(rr(G.roomId),u);if(G.isHost)startCD();
+  }else if(nr.length>=5){
+    u[`${ok}.roster`]=[...o.roster,...d.pool.slice(ni)];u.phase='countdown';u['combat.countdown']=10;u['auction.currentIdx']=10;
+    await updateDoc(rr(G.roomId),u);if(G.isHost)startCD();
+  }else if(o.roster.length>=5){
+    u[`${wk}.roster`]=[...nr,...d.pool.slice(ni)];u.phase='countdown';u['combat.countdown']=10;u['auction.currentIdx']=10;
+    await updateDoc(rr(G.roomId),u);if(G.isHost)startCD();
+  }else{
+    u['auction.currentIdx']=ni;u['auction.currentBid']=0;u['auction.currentBidderId']='';u['auction.turn']=(ni%2===0)?1:2;
+    await updateDoc(rr(G.roomId),u);
   }
-
-  G.currentBid = val;
-  G.currentBidder = G.turn;
-  G.turn = G.turn === 1 ? 2 : 1;
-  renderBidZone();
+}
+function startCD(){let c=10;const iv=setInterval(async()=>{c--;await updateDoc(rr(G.roomId),{'combat.countdown':c});if(c<=0){clearInterval(iv);combat();}},1000);}
+async function combat(){
+  const d=(await getDoc(rr(G.roomId))).data(),t1=d.p1.roster,t2=d.p2.roster;
+  const s1=t1.reduce((s,c)=>s+c.power,0)*(0.85+Math.random()*0.30),s2=t2.reduce((s,c)=>s+c.power,0)*(0.85+Math.random()*0.30);
+  const w=s1>=s2?1:2,wn=w===1?d.p1.name:d.p2.name,ln=w===1?d.p2.name:d.p1.name;
+  const wt=[...(w===1?t1:t2)].sort((a,b)=>b.power-a.power),lt=[...(w===1?t2:t1)].sort((a,b)=>b.power-a.power);
+  const log=[{text:"═══ LE COMBAT COMMENCE ═══",cls:"hl"},{text:"Les deux équipes se font face...",cls:"nr"},
+  {text:`${lt[4].emoji} ${lt[4].name} s'élance, ${wt[4].emoji} ${wt[4].name} intercepte !`},
+  {text:`${wt[3].emoji} ${wt[3].name} entre en jeu face à ${lt[3].emoji} ${lt[3].name}.`},
+  {text:"Le terrain tremble...",cls:"nr"},
+  {text:wt[2].power>lt[2].power?`${wt[2].emoji} ${wt[2].name} (${wt[2].power}) domine ${lt[2].emoji} ${lt[2].name} (${lt[2].power}) !`:`${lt[2].emoji} ${lt[2].name} résiste à ${wt[2].emoji} ${wt[2].name} !`},
+  {text:"═══ LES PLUS PUISSANTS ENTRENT EN JEU ═══",cls:"hl"},
+  {text:`${wt[1].emoji} ${wt[1].name} face à ${lt[1].emoji} ${lt[1].name}. Le sol se fissure.`},
+  {text:`Dernier duel : ${wt[0].emoji} ${wt[0].name} (${wt[0].power}) VS ${lt[0].emoji} ${lt[0].name} (${lt[0].power}) !`,cls:"hl"},
+  {text:wt[0].power>=lt[0].power?`${wt[0].emoji} ${wt[0].name} déchaîne sa puissance !`:`${lt[0].emoji} ${lt[0].name} prend l'avantage, mais ${wn} se regroupe !`},
+  {text:`Attaque combinée de ${wn} !`,cls:"nr"},
+  {text:`${wt.map(c=>c.emoji).join(' ')} → Attaque finale !`,cls:"hl"},
+  {text:`L'équipe de ${ln} s'effondre...`},{text:''},{text:`🏆 VICTOIRE DE ${wn.toUpperCase()} ! 🏆`,cls:"w"}];
+  await updateDoc(rr(G.roomId),{phase:'combat','combat.winner':w,'combat.log':log,'combat.p1Score':s1,'combat.p2Score':s2});
 }
 
-function passBid() {
-  if (G.currentBid === 0 && G.currentBidder === 0) {
-    // Both can pass on first bid — if first player passes, give turn to other
-    if (G.turn === 1 && !G._p1Passed) {
-      G._p1Passed = true;
-      G.turn = 2;
-      renderBidZone();
-      return;
-    }
-    if (G.turn === 2 && !G._p2Passed) {
-      G._p2Passed = true;
-      if (G._p1Passed) {
-        // Both passed — no one gets this character, skip
-        G._p1Passed = false; G._p2Passed = false;
-        // Actually, we need all 10 chars distributed. Force minimum bid.
-        document.getElementById('bidError').textContent = 'Au moins un joueur doit enchérir ! Mise minimum : 1M.';
-        G.turn = 1;
-        G._p1Passed = false; G._p2Passed = false;
-        renderBidZone();
-        return;
-      }
-      G.turn = 1;
-      renderBidZone();
-      return;
-    }
-  }
+window.go=async function(u){const r=qs.get('room');if(r){await joinRoom(r.toUpperCase());}else{await createRoom(u);}};
+$('bStart').addEventListener('click',async()=>{if(G.isHost)await updateDoc(rr(G.roomId),{phase:'auction'});});
+$('bCopy').addEventListener('click',()=>{navigator.clipboard.writeText($('sLink').value).catch(()=>{});toast('Lien copié !');});
 
-  G._p1Passed = false; G._p2Passed = false;
-
-  if (G.currentBidder === 0) {
-    document.getElementById('bidError').textContent = 'Personne n\'a encore enchéri !';
-    return;
-  }
-
-  // The current turn player passes → character goes to currentBidder
-  const winner = G.currentBidder === 1 ? G.p1 : G.p2;
-  const c = G.pool[G.currentIdx];
-  winner.budget -= G.currentBid;
-  winner.roster.push(c);
-
-  updatePlayerBars();
-  nextCharOrCombat();
-}
-
-function nextCharOrCombat() {
-  G.currentIdx++;
-  G._p1Passed = false; G._p2Passed = false;
-
-  if (G.p1.roster.length >= 5 && G.p2.roster.length >= 5) {
-    startCombat();
-    return;
-  }
-
-  if (G.currentIdx >= 10) {
-    // All 10 done
-    startCombat();
-    return;
-  }
-
-  showCurrentChar();
-}
-
-// ══════════════════════════════════════════
-// COMBAT
-// ══════════════════════════════════════════
-function startCombat() {
-  G.phase = 'combat';
-  showScreen('screenCombat');
-
-  const content = document.getElementById('combatContent');
-  content.innerHTML = `
-    <div class="combat-title">⚔️ Combat Final</div>
-    <div class="combat-sub">${G.p1.name} vs ${G.p2.name}</div>
-    <div class="combat-vs">
-      <div class="cv-team">
-        <div class="cv-team-name" style="color:var(--accent)">${G.p1.name}</div>
-        ${G.p1.roster.map(c => `
-          <div class="cv-char">
-            <span class="cv-char-emoji">${c.emoji}</span>
-            <span class="cv-char-name">${c.name}</span>
-            <span class="cv-char-pwr">${c.power}</span>
-          </div>
-        `).join('')}
-        <div class="cv-total">Total puissance : ${G.p1.roster.reduce((s,c)=>s+c.power,0)}</div>
-      </div>
-      <div class="cv-team">
-        <div class="cv-team-name" style="color:var(--purple)">${G.p2.name}</div>
-        ${G.p2.roster.map(c => `
-          <div class="cv-char">
-            <span class="cv-char-emoji">${c.emoji}</span>
-            <span class="cv-char-name">${c.name}</span>
-            <span class="cv-char-pwr">${c.power}</span>
-          </div>
-        `).join('')}
-        <div class="cv-total">Total puissance : ${G.p2.roster.reduce((s,c)=>s+c.power,0)}</div>
-      </div>
-    </div>
-    <div class="countdown-wrap">
-      <div class="countdown-num" id="cdNum">10</div>
-      <div class="countdown-text">Le combat se prépare...</div>
-    </div>
-  `;
-
-  // Countdown
-  let count = 10;
-  const cdEl = document.getElementById('cdNum');
-  const interval = setInterval(() => {
-    count--;
-    cdEl.textContent = count;
-    if (count <= 3) cdEl.style.color = 'var(--red)';
-    if (count <= 0) {
-      clearInterval(interval);
-      runCombat();
-    }
-  }, 1000);
-}
-
-function runCombat() {
-  const content = document.getElementById('combatContent');
-
-  const t1 = [...G.p1.roster];
-  const t2 = [...G.p2.roster];
-  const p1Total = t1.reduce((s,c) => s + c.power, 0);
-  const p2Total = t2.reduce((s,c) => s + c.power, 0);
-
-  // Add randomness (±15% variation)
-  const p1Score = p1Total * (0.85 + Math.random() * 0.30);
-  const p2Score = p2Total * (0.85 + Math.random() * 0.30);
-
-  const winner = p1Score >= p2Score ? 1 : 2;
-  const winnerName = winner === 1 ? G.p1.name : G.p2.name;
-  const loserName = winner === 1 ? G.p2.name : G.p1.name;
-  const winTeam = winner === 1 ? t1 : t2;
-  const loseTeam = winner === 1 ? t2 : t1;
-
-  // Generate narrative
-  const lines = generateNarrative(winTeam, loseTeam, winnerName, loserName);
-
-  content.innerHTML = `
-    <div class="combat-title">⚔️ Combat Final</div>
-    <div class="combat-sub">${G.p1.name} vs ${G.p2.name}</div>
-    <div class="combat-vs">
-      <div class="cv-team" style="border-color:${winner===1?'var(--gold)':'var(--b1)'}">
-        <div class="cv-team-name" style="color:${winner===1?'var(--gold)':'var(--tx3)'}">${G.p1.name} ${winner===1?'🏆':''}</div>
-        ${G.p1.roster.map(c => `<div class="cv-char"><span class="cv-char-emoji">${c.emoji}</span><span class="cv-char-name">${c.name}</span><span class="cv-char-pwr">${c.power}</span></div>`).join('')}
-        <div class="cv-total">Score final : ${Math.round(p1Score)}</div>
-      </div>
-      <div class="cv-team" style="border-color:${winner===2?'var(--gold)':'var(--b1)'}">
-        <div class="cv-team-name" style="color:${winner===2?'var(--gold)':'var(--tx3)'}">${G.p2.name} ${winner===2?'🏆':''}</div>
-        ${G.p2.roster.map(c => `<div class="cv-char"><span class="cv-char-emoji">${c.emoji}</span><span class="cv-char-name">${c.name}</span><span class="cv-char-pwr">${c.power}</span></div>`).join('')}
-        <div class="cv-total">Score final : ${Math.round(p2Score)}</div>
-      </div>
-    </div>
-    <div class="combat-log" id="combatLog"></div>
-    <div class="result-box">
-      <div class="result-emoji">🏆</div>
-      <div class="result-title">${winnerName} remporte le combat !</div>
-      <div class="result-sub">Score : ${Math.round(winner===1?p1Score:p2Score)} vs ${Math.round(winner===1?p2Score:p1Score)}</div>
-    </div>
-    <button class="btn btn-accent btn-full" onclick="resetGame()">🔄 Rejouer</button>
-  `;
-
-  // Animate log lines
-  const logEl = document.getElementById('combatLog');
-  lines.forEach((line, i) => {
-    setTimeout(() => {
-      const div = document.createElement('div');
-      div.className = 'cl-line ' + (line.cls || '');
-      div.textContent = line.text;
-      logEl.appendChild(div);
-      logEl.scrollTop = logEl.scrollHeight;
-    }, i * 600);
-  });
-}
-
-function generateNarrative(winTeam, loseTeam, winnerName, loserName) {
-  const lines = [];
-
-  // Sort teams by power descending
-  const wSorted = [...winTeam].sort((a,b) => b.power - a.power);
-  const lSorted = [...loseTeam].sort((a,b) => b.power - a.power);
-
-  lines.push({text: "═══ LE COMBAT COMMENCE ═══", cls: "highlight"});
-  lines.push({text: `Les deux équipes se font face sur le champ de bataille...`, cls: "narration"});
-
-  // Phase 1: Opening clashes (weaker fighters)
-  const w4 = wSorted[4], l4 = lSorted[4];
-  lines.push({text: `${l4.emoji} ${l4.name} s'élance en premier, mais ${w4.emoji} ${w4.name} intercepte l'attaque !`, cls: ""});
-
-  const w3 = wSorted[3], l3 = lSorted[3];
-  lines.push({text: `${w3.emoji} ${w3.name} entre dans la mêlée face à ${l3.emoji} ${l3.name}. Un échange intense s'engage.`, cls: ""});
-
-  // Phase 2: Mid-battle
-  lines.push({text: `Le champ de bataille tremble sous la puissance des jutsu...`, cls: "narration"});
-
-  const w2 = wSorted[2], l2 = lSorted[2];
-  if (w2.power > l2.power) {
-    lines.push({text: `${w2.emoji} ${w2.name} (${w2.power}) domine ${l2.emoji} ${l2.name} (${l2.power}) avec une technique dévastatrice !`, cls: ""});
-  } else {
-    lines.push({text: `${l2.emoji} ${l2.name} résiste vaillamment à ${w2.emoji} ${w2.name}, un duel acharné !`, cls: ""});
-  }
-
-  // Phase 3: Ace vs Ace
-  lines.push({text: `═══ LES PLUS PUISSANTS ENTRENT EN JEU ═══`, cls: "highlight"});
-
-  const w1 = wSorted[1], l1 = lSorted[1];
-  lines.push({text: `${w1.emoji} ${w1.name} fait face à ${l1.emoji} ${l1.name}. Le sol se fissure sous leur chakra.`, cls: ""});
-
-  // Phase 4: Final showdown
-  const w0 = wSorted[0], l0 = lSorted[0];
-  lines.push({text: `Le dernier affrontement : ${w0.emoji} ${w0.name} (${w0.power}) VS ${l0.emoji} ${l0.name} (${l0.power}) !`, cls: "highlight"});
-
-  if (w0.power >= l0.power) {
-    lines.push({text: `${w0.emoji} ${w0.name} déchaîne toute sa puissance ! ${l0.name} est repoussé !`, cls: ""});
-  } else {
-    lines.push({text: `${l0.emoji} ${l0.name} semble prendre l'avantage, mais l'équipe de ${winnerName} se regroupe !`, cls: ""});
-    lines.push({text: `Par un effort combiné, l'équipe de ${winnerName} renverse la situation !`, cls: ""});
-  }
-
-  // Synergy bonus
-  lines.push({text: `L'équipe de ${winnerName} combine ses forces pour une attaque finale coordonnée !`, cls: "narration"});
-  lines.push({text: `${wSorted.map(c => c.emoji).join(' ')} → Attaque combinée !`, cls: "highlight"});
-
-  // Result
-  lines.push({text: `L'équipe de ${loserName} s'effondre...`, cls: "lose"});
-  lines.push({text: ``, cls: ""});
-  lines.push({text: `🏆 VICTOIRE DE ${winnerName.toUpperCase()} ! 🏆`, cls: "win"});
-
-  return lines;
-}
-
-function resetGame() {
-  G = { universe: null, p1:{name:'',budget:350000000,roster:[]}, p2:{name:'',budget:350000000,roster:[]}, pool:[], currentIdx:0, currentBid:0, currentBidder:0, turn:1, phase:'idle' };
-  showScreen('screenUniverse');
-}
+// Boot
+const roomUrl=qs.get('room');
+if(roomUrl){(async()=>{const s=await getDoc(rr(roomUrl.toUpperCase()));if(s.exists()){G.universe=s.data().universe;await joinRoom(roomUrl.toUpperCase());}else toast('Salle introuvable !');})();}
 </script>
 </body>
 </html>
