@@ -25,23 +25,23 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opac
 .app{max-width:1120px;margin:0 auto;padding:0 18px 60px;position:relative;z-index:1}
 .hidden{display:none!important}
 /* TOPBAR */
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 0 18px;position:sticky;top:0;z-index:50;backdrop-filter:blur(22px);background:linear-gradient(180deg,rgba(7,9,16,.97) 65%,transparent);gap:12px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:11px;cursor:pointer;text-decoration:none}
-.logo-mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--vi),var(--cy));display:grid;place-items:center;flex-shrink:0;position:relative;overflow:hidden;animation:lp 3s ease-in-out infinite;box-shadow:0 0 20px rgba(124,58,237,.5)}
-.logo-mark svg{width:24px;height:24px;position:relative;z-index:1}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 0 12px;position:sticky;top:0;z-index:50;backdrop-filter:blur(22px);background:linear-gradient(180deg,rgba(7,9,16,.98) 70%,transparent);gap:10px}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;flex-shrink:0}
+.logo-mark{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--vi),var(--cy));display:grid;place-items:center;flex-shrink:0;position:relative;overflow:hidden;animation:lp 3s ease-in-out infinite;box-shadow:0 0 16px rgba(124,58,237,.4)}
+.logo-mark svg{width:20px;height:20px;position:relative;z-index:1}
 .logo-mark::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.22),transparent)}
-@keyframes lp{0%,100%{box-shadow:0 0 18px rgba(124,58,237,.5)}50%{box-shadow:0 0 34px rgba(124,58,237,.85),0 0 55px rgba(0,201,255,.3)}}
-.brand-name{font-family:"Syne",sans-serif;font-size:1rem;font-weight:900;letter-spacing:-.02em}
-.brand-tag{font-size:.65rem;color:var(--di);letter-spacing:.04em;text-transform:uppercase;margin-top:1px}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.chip{font-family:"Space Mono",monospace;font-size:.64rem;padding:4px 10px;border-radius:999px;border:1px solid var(--b2);background:var(--s2);color:var(--mu);white-space:nowrap}
+@keyframes lp{0%,100%{box-shadow:0 0 14px rgba(124,58,237,.4)}50%{box-shadow:0 0 28px rgba(124,58,237,.7),0 0 45px rgba(0,201,255,.2)}}
+.brand-name{font-family:"Syne",sans-serif;font-size:.92rem;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.brand-tag{font-size:.58rem;color:var(--di);letter-spacing:.04em;text-transform:uppercase;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.chip{font-family:"Space Mono",monospace;font-size:.58rem;padding:3px 8px;border-radius:999px;border:1px solid var(--b2);background:var(--s2);color:var(--mu);white-space:nowrap}
 .chip.active{border-color:rgba(124,58,237,.45);color:var(--vi2);background:rgba(124,58,237,.1)}
-.btn-back{font-family:"DM Sans",sans-serif;font-size:.8rem;font-weight:700;padding:7px 14px;border-radius:10px;border:1px solid var(--b2);background:var(--s2);color:var(--mu);cursor:pointer;transition:all .18s}
+.btn-back{font-family:"DM Sans",sans-serif;font-size:.76rem;font-weight:700;padding:6px 12px;border-radius:9px;border:1px solid var(--b2);background:var(--s2);color:var(--mu);cursor:pointer;transition:all .18s;white-space:nowrap}
 .btn-back:hover{background:var(--s1);color:var(--tx);border-color:var(--b1)}
-.profile-pill{display:flex;align-items:center;gap:7px;padding:5px 11px 5px 7px;border-radius:999px;border:1px solid var(--b1);background:var(--s2)}
-.profile-av{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-weight:900;font-size:.65rem;color:#fff;flex-shrink:0}
-.profile-nm{font-size:.76rem;font-weight:700;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.profile-gr{font-family:"Space Mono",monospace;font-size:.56rem}
+.profile-pill{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:999px;border:1px solid var(--b1);background:var(--s2);flex-shrink:0}
+.profile-av{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-weight:900;font-size:.6rem;color:#fff;flex-shrink:0}
+.profile-nm{font-size:.72rem;font-weight:700;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profile-gr{font-family:"Space Mono",monospace;font-size:.52rem}
 /* CARDS */
 .card{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid var(--b2);border-radius:var(--r);padding:22px;backdrop-filter:blur(12px);position:relative;overflow:hidden;box-shadow:var(--shadow)}
 .card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent)}
@@ -176,6 +176,11 @@ input[type=checkbox]{accent-color:var(--vi);width:14px;height:14px;cursor:pointe
 .avatar-bar-item.is-me .avatar-bar-name{color:var(--vi2)}
 .avatar-bar-item.dead .avatar-bar-name{text-decoration:line-through}
 .avatar-bar-badge{position:absolute;top:-4px;right:-4px;font-size:.6rem;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--am);color:#000;font-weight:900;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+/* Vote status borders */
+.avatar-bar-item.voted-red .player-avatar{border-color:var(--rs)!important;box-shadow:0 0 12px rgba(255,61,107,.35)}
+.avatar-bar-item.voted-green .player-avatar{border-color:var(--em)!important;box-shadow:0 0 12px rgba(0,224,154,.35)}
+.avatar-bar-item.voted-green .avatar-bar-name{color:var(--em2)}
+.avatar-bar-item.voted-red .avatar-bar-name{color:var(--rs2)}
 /* GAME TIMER — centered big timer */
 .game-timer-block{text-align:center;padding:12px 0}
 .game-timer-big{font-family:"Space Mono",monospace;font-size:clamp(2.5rem,7vw,4.5rem);font-weight:700;letter-spacing:.08em;color:var(--tx);transition:color .3s;line-height:1}
@@ -185,6 +190,8 @@ input[type=checkbox]{accent-color:var(--vi);width:14px;height:14px;cursor:pointe
 .game-center{max-width:700px;margin:0 auto;width:100%}
 .game-side-panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
 @media(max-width:700px){.game-side-panels{grid-template-columns:1fr}}
+/* GAME ACTION BAR */
+.game-action-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px;padding:12px 16px;border-radius:var(--r2);background:rgba(255,255,255,.03);border:1px solid var(--b3)}
 /* PHASE BAR */
 .phasebar{display:flex;gap:6px;flex-wrap:wrap}
 .phase-step{font-family:"Space Mono",monospace;font-size:.68rem;padding:5px 11px;border-radius:999px;border:1px solid var(--b2);color:var(--di);transition:all .3s}
@@ -516,11 +523,9 @@ details[open] .summary-arrow{transform:rotate(180deg)}
     </div>
   </a>
   <div class="topbar-right">
-    <div style="display:flex;gap:7px;flex-wrap:wrap">
-      <span id="modeBadge" class="chip active">Accueil</span>
-      <span id="roomBadge" class="chip hidden">Salle : —</span>
-      <span id="roundBadge" class="chip hidden">Manche : 0/0</span>
-    </div>
+    <span id="modeBadge" class="chip active">Accueil</span>
+    <span id="roomBadge" class="chip hidden">Salle : —</span>
+    <span id="roundBadge" class="chip hidden">Manche : 0/0</span>
     <button id="btnGoMenu" class="btn-back hidden">← Menu</button>
     <div class="profile-pill" id="profilePill" style="display:none">
       <div class="profile-av" id="navAvatar"></div>
@@ -721,19 +726,9 @@ details[open] .summary-arrow{transform:rotate(180deg)}
       <div class="stat"><div class="stat-k">Manches</div><div class="stat-v" id="settingsRounds">3</div></div>
       <div class="stat"><div class="stat-k">Vivants</div><div class="stat-v" id="aliveCount">0</div></div>
     </div>
-    <div id="skipWordBanner" class="skip-word-banner hidden">
-      <div><div class="skip-title">🔄 Ce mot ne plaît pas ?</div><div class="skip-count" id="skipVoteCount">0 / 0 votes</div></div>
-      <div style="display:flex;gap:8px"><button id="btnSkipWord" class="btn btn-orange btn-sm">Changer</button></div>
-    </div>
     <div class="row" id="hostActions" style="margin-top:10px">
       <button id="btnStartRound" class="btn btn-primary hidden">▶ Démarrer</button>
       <button id="btnLeaveLobby" class="btn btn-ghost hidden">← Quitter le lobby</button>
-      <button id="btnForceDiscussion" class="btn btn-cyan hidden">💬 Discussion</button>
-      <button id="btnNextSpeaker" class="btn btn-yellow hidden">⏭ Suivant</button>
-      <button id="btnForceVote" class="btn btn-red hidden">🗳 Vote</button>
-      <button id="btnResolveVote" class="btn btn-red hidden">⚡ Résoudre</button>
-      <button id="btnNextRound" class="btn btn-primary hidden">↺ Suite</button>
-      <button id="btnResetGame" class="btn btn-ghost hidden">🔄 Reset</button>
     </div>
     <div id="panel-offline-admin" class="hidden" style="margin-top:12px">
       <div class="sep" style="margin:10px 0"></div>
@@ -747,6 +742,22 @@ details[open] .summary-arrow{transform:rotate(180deg)}
       <div id="statusTitle" style="font-weight:800;font-size:.86rem">Prêt</div>
       <div id="statusText" class="small muted" style="margin-top:3px">Configure et démarre quand tout le monde est là.</div>
     </div>
+  </div>
+
+  <!-- GAME ACTION BAR — always visible during game phases -->
+  <div id="gameActionBar" class="game-action-bar hidden">
+    <button id="btnForceDiscussion" class="btn btn-cyan hidden">💬 Discussion</button>
+    <button id="btnNextSpeaker" class="btn btn-yellow hidden">⏭ Suivant</button>
+    <button id="btnForceVote" class="btn btn-red hidden">🗳 Vote</button>
+    <button id="btnResolveVote" class="btn btn-red hidden">⚡ Résoudre</button>
+    <button id="btnNextRound" class="btn btn-primary hidden">↺ Suite</button>
+    <button id="btnResetGame" class="btn btn-ghost hidden">🔄 Reset</button>
+  </div>
+
+  <!-- SKIP WORD BANNER — visible during reveal & discussion -->
+  <div id="skipWordBanner" class="skip-word-banner hidden" style="margin-top:12px">
+    <div><div class="skip-title">🔄 Ce mot ne plaît pas ?</div><div class="skip-count" id="skipVoteCount">0 / 0 votes</div></div>
+    <div style="display:flex;gap:8px"><button id="btnSkipWord" class="btn btn-orange btn-sm">Changer</button></div>
   </div>
 
   <!-- DISCUSSION PANEL -->
@@ -764,16 +775,16 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 
   <!-- VOTE PANEL -->
   <div id="panel-vote" class="card hidden" style="margin-top:16px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-      <div><h2>Qui est l'imposteur ?</h2><div class="small muted" id="voteTypeLabel">Votez pour éliminer un suspect.</div></div>
-      <div style="text-align:right">
-        <div id="voteTimer" class="timer-display" style="font-size:1.65rem;display:none">00:00</div>
-        <div id="voteTimerAdjust" class="hidden" style="margin-top:3px"><div class="timer-adj"><button class="btn btn-ghost btn-sm" onclick="adjustTimer('vote',-15)">−15s</button><button class="btn btn-ghost btn-sm" onclick="adjustTimer('vote',15)">+15s</button></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+      <div><h2 style="margin:0">Qui est l'imposteur ?</h2><div id="voteRoundInfo" class="small muted" style="margin-top:2px"></div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div id="voteInfo" class="badge badge-warn" style="display:inline-flex">En attente…</div>
+        <div id="voteTimerAdjust" class="hidden"><div class="timer-adj"><button class="btn btn-ghost btn-sm" onclick="adjustTimer('vote',-15)">−15s</button><button class="btn btn-ghost btn-sm" onclick="adjustTimer('vote',15)">+15s</button></div></div>
       </div>
     </div>
-    <div class="vote-deliberation"><div class="vote-deliberation-title">🗣 Discutez entre vous !</div><div class="vote-deliberation-sub">Regardez les indices et débattez à voix haute</div></div>
+    <div id="voteTimer" class="timer-display" style="display:none">00:00</div>
     <div id="voteProgress" class="progress-fill" style="display:none"></div>
-    <div id="voteInfo" class="badge badge-warn" style="margin-bottom:12px;display:inline-flex">En attente du vote…</div>
+    <div id="voteTypeLabel" style="display:none"></div>
     <div id="offlineVoteVoter" class="hidden card-sm small muted" style="margin-bottom:10px"></div>
     <div id="voteGrid" class="vote-profiles"></div>
     <div id="revealVotesPanel" class="hidden" style="margin-top:14px;text-align:center">
@@ -1604,10 +1615,10 @@ const hasSeenCurrentWord=()=>getPlayers().find(p=>p.id===state.myId)?.revealedRo
 function getSkipVotes(){return getRoom()?.current?.skipVotes||{};}
 function getMajorityThreshold(){return Math.ceil(getAlivePlayers().length/2);}
 function hasVotedToSkip(){return!!getSkipVotes()[state.myId];}
-async function castSkipVote(){if(hasVotedToSkip())return;const room=getRoom();if(!room||room.phase!=='reveal')return;if(state.mode==='firebase'){try{await firebaseFns.updateDoc(roomRef(state.roomId),{[`current.skipVotes.${state.myId}`]:true});sfxSkip();toast('Vote enregistré','Tu veux changer le mot');setTimeout(async()=>{const snap=await firebaseFns.getDoc(roomRef(state.roomId));if(snap.exists()){const rd=snap.data();const sv=rd.current?.skipVotes||{};const alive=(state.players||[]).filter(p=>p.alive);if(Object.keys(sv).length>=Math.ceil(alive.length/2)&&state.isHost)await executeSkipWord();}},500);}catch(e){console.error(e);}}else{if(!room.current.skipVotes)room.current.skipVotes={};room.current.skipVotes[state.myId]=true;persistOffline();sfxSkip();toast('Vote enregistré');if(Object.keys(room.current.skipVotes).length>=getMajorityThreshold())executeSkipWordOffline();updateSkipBanner();}}
+async function castSkipVote(){if(hasVotedToSkip())return;const room=getRoom();if(!room||!['reveal','discussion'].includes(room.phase))return;if(state.mode==='firebase'){try{await firebaseFns.updateDoc(roomRef(state.roomId),{[`current.skipVotes.${state.myId}`]:true});sfxSkip();toast('Vote enregistré','Tu veux changer le mot');setTimeout(async()=>{const snap=await firebaseFns.getDoc(roomRef(state.roomId));if(snap.exists()){const rd=snap.data();const sv=rd.current?.skipVotes||{};const alive=(state.players||[]).filter(p=>p.alive);if(Object.keys(sv).length>=Math.ceil(alive.length/2)&&state.isHost)await executeSkipWord();}},500);}catch(e){console.error(e);}}else{if(!room.current.skipVotes)room.current.skipVotes={};room.current.skipVotes[state.myId]=true;persistOffline();sfxSkip();toast('Vote enregistré');if(Object.keys(room.current.skipVotes).length>=getMajorityThreshold())executeSkipWordOffline();updateSkipBanner();}}
 async function executeSkipWord(){const room=getRoom();if(!room||!state.isHost)return;const alive=getAlivePlayers();const ucIds=room.current?.undercoverIds||[];const mwIds=room.current?.mrWhiteIds||[];const pairIndex=pickPairIndex();const pair=getPairAtIndex(pairIndex);const batch=firebaseFns.writeBatch(state.db);batch.update(roomRef(state.roomId),{'current.pairIndex':pairIndex,'current.civilianWord':pair.a,'current.skipVotes':{},updatedAt:firebaseFns.serverTimestamp()});for(const p of alive){batch.set(playerRef(state.roomId,p.id),{revealedRound:-999999},{merge:true});const isMW=mwIds.includes(p.id);const isUC=ucIds.includes(p.id);batch.set(privateRef(state.roomId,p.secretId),{roundNumber:room.roundNumber,pairIndex,word:isMW?'':isUC?pair.b:pair.a,role:isMW?'mrwhite':isUC?'undercover':'civil',playerId:p.id,seen:false});}await batch.commit();toast('Mot changé !');sfxSkip();}
 function executeSkipWordOffline(){const room=state.offline;if(!room)return;const alive=room.players.filter(p=>p.alive);const ucIds=room.current.undercoverIds||[];const mwIds=room.current.mrWhiteIds||[];const pairIndex=pickPairIndex();const pair=getPairAtIndex(pairIndex);room.current.pairIndex=pairIndex;room.current.skipVotes={};room.privateWords={};for(const p of alive){p.revealedRound=-999999;const isMW=mwIds.includes(p.id);const isUC=ucIds.includes(p.id);room.privateWords[p.id]={roundNumber:room.roundNumber,word:isMW?'':isUC?pair.b:pair.a,role:isMW?'mrwhite':isUC?'undercover':'civil',playerId:p.id,seen:false};}room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();toast('Mot changé !');sfxSkip();renderPlayers();updateRoomHeader();}
-function updateSkipBanner(){const room=getRoom();const banner=$('skipWordBanner');const btn=$('btnSkipWord');if(!banner||!btn)return;if(!room||room.phase!=='reveal'){show(banner,false);return;}show(banner,true);setText('skipVoteCount',`${Object.keys(getSkipVotes()).length} / ${getMajorityThreshold()} votes`);btn.disabled=hasVotedToSkip();btn.textContent=hasVotedToSkip()?'✓ Voté':'Changer';}
+function updateSkipBanner(){const room=getRoom();const banner=$('skipWordBanner');const btn=$('btnSkipWord');if(!banner||!btn)return;if(!room||!['reveal','discussion'].includes(room.phase)){show(banner,false);return;}show(banner,true);setText('skipVoteCount',`${Object.keys(getSkipVotes()).length} / ${getMajorityThreshold()} votes`);btn.disabled=hasVotedToSkip();btn.textContent=hasVotedToSkip()?'✓ Voté':'Changer';}
 
 
 function showRevealOverlay(playerName,word,role,seenCount,totalCount){
@@ -1643,19 +1654,21 @@ function renderRoundDots(){const room=getRoom();const total=room?.settings?.roun
 function renderPlayers(){const players=getPlayers();const speakerId=currentSpeakerId();const room=getRoom();const phase=room?.phase||'lobby';// Au lobby : afficher le total, en jeu : afficher les vivants
 const displayCount=phase==='lobby'?players.length:players.filter(p=>p.alive).length;setText('aliveCount',displayCount);
 // Avatar bar (visible during game phases)
-const bar=$('avatarBar');if(bar){const inGame=phase!=='lobby';bar.style.display=inGame?'flex':'none';if(inGame){bar.innerHTML=players.map(p=>{const isSpeaking=p.id===speakerId&&phase==='discussion';const isDead=!p.alive;const isMe=p.id===state.myId;return`<div class="avatar-bar-item ${isSpeaking?'speaking':''} ${isDead?'dead':''} ${isMe?'is-me':''}"><div class="player-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div class="avatar-bar-name">${escHtml(p.nickname||'?')}</div>${isSpeaking?'<div class="avatar-bar-badge">🎙</div>':''}</div>`;}).join('');}}
+const bar=$('avatarBar');if(bar){const inGame=phase!=='lobby';bar.style.display=inGame?'flex':'none';if(inGame){bar.innerHTML=players.map(p=>{const isSpeaking=p.id===speakerId&&phase==='discussion';const isDead=!p.alive;const isMe=p.id===state.myId;const hasVoted=phase==='vote'&&p.votedRound===currentRoundNumber();const inVotePhase=phase==='vote';let borderClass='';if(inVotePhase&&p.alive)borderClass=hasVoted?'voted-green':'voted-red';return`<div class="avatar-bar-item ${isSpeaking?'speaking':''} ${isDead?'dead':''} ${isMe?'is-me':''} ${borderClass}"><div class="player-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div class="avatar-bar-name">${escHtml(p.nickname||'?')}</div>${isSpeaking?'<div class="avatar-bar-badge">🎙</div>':''}</div>`;}).join('');}}
 // Players list panel (lobby only)
 const plPanel=$('panel-players-list');if(plPanel)plPanel.style.display=phase==='lobby'?'':'none';
 const list=$('playersList');if(!list)return;list.innerHTML=players.map(p=>{const tags=[];if(p.id===state.myId)tags.push('Toi');if(p.host)tags.push('Hôte');if(!p.alive&&phase!=='lobby')tags.push('Éliminé');if(p.id===speakerId&&phase==='discussion')tags.push('🎙');return`<div class="player-card ${p.id===state.myId?'is-me':''} ${!p.alive&&phase!=='lobby'?'dead':''} ${p.id===speakerId&&phase==='discussion'?'speaking':''}"><div style="display:flex;align-items:center;gap:9px"><div class="player-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="player-name">${escHtml(p.nickname||'?')}</div><div class="player-meta">${tags.join(' · ')||'En jeu'}</div></div></div></div>`;}).join('')||`<div class="small muted">Aucun joueur</div>`;}
 
-function updateBadges(){const inGame=currentScreen==='room'||currentScreen==='mrwhite-guess';show($('btnGoMenu'),inGame);if(!inGame){setText('modeBadge','Accueil');$('modeBadge').classList.add('active');show($('roomBadge'),false);show($('roundBadge'),false);return;}const room=getRoom();const total=room?.settings?.roundsTotal||1;const cur=currentRoundNumber();setText('modeBadge',`Mode : ${state.mode==='firebase'?'en ligne':'local'}`);setText('roomBadge',`Salle : ${state.roomId||'—'}`);setText('roundBadge',`Manche : ${cur}/${total}`);show($('roomBadge'),true);show($('roundBadge'),true);const mlb=$('modeLabelBadge');if(mlb){const rm=room?.settings?.gameMode;if(rm==='ranked'){mlb.textContent='🏆 Ranked';mlb.className='badge badge-warn';show(mlb,true);}else if(rm==='normal'){mlb.textContent='⚡ Normal';mlb.className='badge badge-info';show(mlb,true);}else{show(mlb,false);}}}
+function updateBadges(){const inGame=currentScreen==='room'||currentScreen==='mrwhite-guess';show($('btnGoMenu'),inGame);if(!inGame){setText('modeBadge','Accueil');$('modeBadge').classList.add('active');show($('modeBadge'),true);show($('roomBadge'),false);show($('roundBadge'),false);return;}const room=getRoom();const total=room?.settings?.roundsTotal||1;const cur=currentRoundNumber();const phase=room?.phase||'lobby';// During active game phases, simplify topbar
+const isActivePhase=['discussion','vote','result','reveal'].includes(phase);show($('modeBadge'),!isActivePhase);if(!isActivePhase)setText('modeBadge',`${state.mode==='firebase'?'En ligne':'Local'}`);show($('roomBadge'),!isActivePhase);if(!isActivePhase)setText('roomBadge',`Salle : ${state.roomId||'—'}`);setText('roundBadge',`Manche ${cur}/${total}`);show($('roundBadge'),true);const mlb=$('modeLabelBadge');if(mlb){const rm=room?.settings?.gameMode;if(rm==='ranked'){mlb.textContent='🏆 Ranked';mlb.className='badge badge-warn';show(mlb,true);}else if(rm==='normal'){mlb.textContent='⚡ Normal';mlb.className='badge badge-info';show(mlb,true);}else{show(mlb,false);}}}
 
 const PHASE_ORDER=['lobby','reveal','discussion','vote','result'];
-function updateStepUI(phase){const idx=PHASE_ORDER.indexOf(phase);PHASE_ORDER.forEach((p,i)=>{const el=$('step-'+p);if(!el)return;el.classList.remove('active','done');if(i<idx)el.classList.add('done');else if(i===idx)el.classList.add('active');});setText('phaseBadge',phaseLabel(phase));show($('panel-discussion'),phase==='discussion');show($('panel-vote'),phase==='vote');show($('panel-result'),phase==='result');show($('panel-clue-feed'),phase==='discussion'||phase==='vote');// Show lobby panel always but collapse stats when in game
-const lobbyPanel=$('panel-lobby');if(lobbyPanel){const inActiveGame=['discussion','vote'].includes(phase);lobbyPanel.style.display=phase==='reveal'&&!state.isHost?'none':'';}const vt=$('voteTypeLabel');if(vt)vt.textContent=getRoom()?.settings?.ranked?'Votes secrets — révélation simultanée.':'Votez pour éliminer un suspect.';// Hide big timer when not voting
+function updateStepUI(phase){const idx=PHASE_ORDER.indexOf(phase);PHASE_ORDER.forEach((p,i)=>{const el=$('step-'+p);if(!el)return;el.classList.remove('active','done');if(i<idx)el.classList.add('done');else if(i===idx)el.classList.add('active');});setText('phaseBadge',phaseLabel(phase));show($('panel-discussion'),phase==='discussion');show($('panel-vote'),phase==='vote');show($('panel-result'),phase==='result');show($('panel-clue-feed'),phase==='discussion');// Show lobby panel always but collapse stats when in game
+const lobbyPanel=$('panel-lobby');if(lobbyPanel){const hidePhases=['discussion','vote'];lobbyPanel.style.display=hidePhases.includes(phase)||(phase==='reveal'&&!state.isHost)?'none':'';}const vt=$('voteTypeLabel');if(vt)vt.textContent=getRoom()?.settings?.ranked?'Votes secrets — révélation simultanée.':'Votez pour éliminer un suspect.';// Hide big timer when not voting
 const bigBlock=$('gameTimerBlock');if(bigBlock&&phase!=='vote')bigBlock.classList.add('hidden');}
 
-function updateButtons(){const room=getRoom();const phase=room?.phase||'lobby';const alive=getAlivePlayers();const allPlayers=getPlayers();const lobbyCount=phase==='lobby'?allPlayers.length:alive.length;const allSeen=alive.every(p=>p.revealedRound===currentRoundNumber());const order=room?.current?.turnOrder||[];const idx=room?.current?.speakerIndex||0;const totalTurns=order.length;show($('btnStartRound'),state.isHost&&phase==='lobby'&&lobbyCount>=3);show($('btnLeaveLobby'),phase==='lobby');show($('btnForceDiscussion'),state.isHost&&phase==='reveal');if($('btnForceDiscussion'))$('btnForceDiscussion').disabled=!allSeen;show($('btnNextSpeaker'),state.isHost&&phase==='discussion');if($('btnNextSpeaker'))$('btnNextSpeaker').disabled=idx>=Math.max(0,totalTurns-1);show($('btnForceVote'),state.isHost&&phase==='discussion');show($('btnResolveVote'),state.isHost&&phase==='vote'&&!room?.settings?.ranked);show($('revealVotesPanel'),state.isHost&&phase==='vote'&&!!room?.settings?.ranked);show($('btnNextRound'),state.isHost&&phase==='result'&&currentRoundNumber()<(room?.settings?.roundsTotal||1));show($('btnResetGame'),state.isHost);show($('voteTimerAdjust'),state.isHost&&phase==='vote');if($('btnSeenWord'))$('btnSeenWord').disabled=state.mode==='firebase'?hasSeenCurrentWord():!offlineCurrentRevealPlayer();show($('panel-offline-admin'),state.mode==='offline'&&state.isHost&&phase==='lobby');updateSkipBanner();}
+function updateButtons(){const room=getRoom();const phase=room?.phase||'lobby';const alive=getAlivePlayers();const allPlayers=getPlayers();const lobbyCount=phase==='lobby'?allPlayers.length:alive.length;const allSeen=alive.every(p=>p.revealedRound===currentRoundNumber());const order=room?.current?.turnOrder||[];const idx=room?.current?.speakerIndex||0;const totalTurns=order.length;show($('btnStartRound'),state.isHost&&phase==='lobby'&&lobbyCount>=3);show($('btnLeaveLobby'),phase==='lobby');show($('btnForceDiscussion'),state.isHost&&phase==='reveal');if($('btnForceDiscussion'))$('btnForceDiscussion').disabled=!allSeen;show($('btnNextSpeaker'),state.isHost&&phase==='discussion');if($('btnNextSpeaker'))$('btnNextSpeaker').disabled=idx>=Math.max(0,totalTurns-1);show($('btnForceVote'),state.isHost&&phase==='discussion');show($('btnResolveVote'),state.isHost&&phase==='vote'&&!room?.settings?.ranked);show($('revealVotesPanel'),state.isHost&&phase==='vote'&&!!room?.settings?.ranked);show($('btnNextRound'),state.isHost&&phase==='result'&&currentRoundNumber()<(room?.settings?.roundsTotal||1));show($('btnResetGame'),state.isHost&&phase!=='lobby');show($('voteTimerAdjust'),state.isHost&&phase==='vote');if($('btnSeenWord'))$('btnSeenWord').disabled=state.mode==='firebase'?hasSeenCurrentWord():!offlineCurrentRevealPlayer();show($('panel-offline-admin'),state.mode==='offline'&&state.isHost&&phase==='lobby');// Show game action bar when in active game phases
+const gab=$('gameActionBar');if(gab){const showBar=state.isHost&&phase!=='lobby';gab.classList.toggle('hidden',!showBar);}updateSkipBanner();}
 
 function updateRoomHeader(){const room=getRoom();if(!room)return;const settings=room.settings||{};setText('roomTitle',`Salle ${state.roomId||'—'}`);setText('roomMeta',state.mode==='firebase'?'Multijoueur en ligne':'Partie locale');setText('settingsUndercover',settings.undercoverCount??1);setText('settingsMrWhite',settings.mrWhiteCount??0);setText('settingsClueTime',`${settings.clueSeconds||60}s`);setText('settingsVote',`${settings.voteSeconds||45}s`);setText('settingsRounds',settings.roundsTotal||1);setText('settingsTurns',settings.turnsPerRound||2);const ctd=$('clueTimeDisplay');if(ctd)ctd.textContent=`${settings.clueSeconds||60}s`;if($('shareLinkInput'))$('shareLinkInput').value=state.mode==='firebase'?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||'')}`:`${location.origin}${location.pathname}`;const gm=settings.gameMode||'custom';const isMatchmaking=gm==='normal'||gm==='ranked';show($('shareLinkRow'),!isMatchmaking);show($('hostBadge'),state.isHost);updateBadges();renderRoundDots();updateStepUI(room.phase||'lobby');updateRevealPanel();updateDiscussionPanel();updateVotePanel();updateResultPanel();updateButtons();updatePeekButton();maybePlayPhaseAudio();}
 
@@ -1668,7 +1681,9 @@ function updateDiscussionPanel(){const room=getRoom();if(!room||room.phase!=='di
 if(lastRenderedSpeakerIdx!==idx||!clueTimerInterval){lastRenderedSpeakerIdx=idx;renderClueInput();}
 renderClueFeed();}
 
-function updateVotePanel(){const room=getRoom();if(!room||room.phase!=='vote')return;const alive=getAlivePlayers();const grid=$('voteGrid');if(!grid)return;if(state.mode==='firebase'){const me=getPlayers().find(p=>p.id===state.myId);const voted=me?.votedRound===currentRoundNumber();$('voteInfo').textContent=voted?'✓ Vote enregistré':'⚡ Tu n\'as pas encore voté';$('voteInfo').className='badge '+(voted?'badge-ok':'badge-warn');show($('offlineVoteVoter'),false);grid.innerHTML=alive.filter(p=>p.id!==state.myId).map(p=>{const clues=getPlayerClues(p.id);return`<div class="vote-profile"><div class="vote-profile-head"><div class="vote-profile-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="vote-profile-name">${escHtml(p.nickname)}</div><div class="vote-profile-tag">En jeu</div></div></div><div class="vote-profile-clues">${clues.length?clues.map((c,i)=>`<div class="vote-clue-chip"><span class="vote-clue-round">T${i+1}</span> ${escHtml(c.word)}</div>`).join(''):`<div class="small muted">Aucun indice</div>`}</div><button class="vote-profile-btn ${voted?'voted':''}" data-vote="${escHtml(p.id)}" ${(!me?.alive||voted)?'disabled':''}>${voted?'✓ Voté':'🗳 Voter contre'}</button></div>`;}).join('');}else{const voter=offlineCurrentVoter();const done=!voter;$('voteInfo').textContent=done?'✓ Tous ont voté':`🗳 Au tour de : ${voter?.nickname}`;$('voteInfo').className='badge '+(done?'badge-ok':'badge-warn');show($('offlineVoteVoter'),!done);if(!done&&$('offlineVoteVoter'))$('offlineVoteVoter').textContent=`📱 Passe le téléphone à ${voter.nickname}`;grid.innerHTML=done?`<div class="small muted" style="text-align:center;padding:20px">En attente du résultat…</div>`:alive.filter(p=>p.id!==voter.id).map(p=>{const clues=getPlayerClues(p.id);return`<div class="vote-profile"><div class="vote-profile-head"><div class="vote-profile-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="vote-profile-name">${escHtml(p.nickname)}</div><div class="vote-profile-tag">En jeu</div></div></div><div class="vote-profile-clues">${clues.length?clues.map((c,i)=>`<div class="vote-clue-chip"><span class="vote-clue-round">T${i+1}</span> ${escHtml(c.word)}</div>`).join(''):`<div class="small muted">Aucun indice</div>`}</div><button class="vote-profile-btn" data-vote="${escHtml(p.id)}">🗳 Voter contre</button></div>`;}).join('');}[...grid.querySelectorAll('[data-vote]')].forEach(btn=>{btn.addEventListener('click',()=>{const id=btn.getAttribute('data-vote');SFX.vote();if(state.mode==='firebase')firebaseCastVote(id);else offlineCastVote(id);});});}
+function updateVotePanel(){const room=getRoom();if(!room||room.phase!=='vote')return;const alive=getAlivePlayers();const grid=$('voteGrid');if(!grid)return;// Show round info
+const vri=$('voteRoundInfo');if(vri)vri.textContent=`Manche ${currentRoundNumber()} / ${room.settings?.roundsTotal||1}`;// Re-render players to update vote borders on avatars
+renderPlayers();if(state.mode==='firebase'){const me=getPlayers().find(p=>p.id===state.myId);const voted=me?.votedRound===currentRoundNumber();$('voteInfo').textContent=voted?'✓ Vote enregistré':'⚡ Tu n\'as pas encore voté';$('voteInfo').className='badge '+(voted?'badge-ok':'badge-warn');show($('offlineVoteVoter'),false);grid.innerHTML=alive.filter(p=>p.id!==state.myId).map(p=>{const clues=getPlayerClues(p.id);return`<div class="vote-profile"><div class="vote-profile-head"><div class="vote-profile-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="vote-profile-name">${escHtml(p.nickname)}</div><div class="vote-profile-tag">En jeu</div></div></div><div class="vote-profile-clues">${clues.length?clues.map((c,i)=>`<div class="vote-clue-chip"><span class="vote-clue-round">T${i+1}</span> ${escHtml(c.word)}</div>`).join(''):`<div class="small muted">Aucun indice</div>`}</div><button class="vote-profile-btn ${voted?'voted':''}" data-vote="${escHtml(p.id)}" ${(!me?.alive||voted)?'disabled':''}>${voted?'✓ Voté':'🗳 Voter contre'}</button></div>`;}).join('');}else{const voter=offlineCurrentVoter();const done=!voter;$('voteInfo').textContent=done?'✓ Tous ont voté':`🗳 Au tour de : ${voter?.nickname}`;$('voteInfo').className='badge '+(done?'badge-ok':'badge-warn');show($('offlineVoteVoter'),!done);if(!done&&$('offlineVoteVoter'))$('offlineVoteVoter').textContent=`📱 Passe le téléphone à ${voter.nickname}`;grid.innerHTML=done?`<div class="small muted" style="text-align:center;padding:20px">En attente du résultat…</div>`:alive.filter(p=>p.id!==voter.id).map(p=>{const clues=getPlayerClues(p.id);return`<div class="vote-profile"><div class="vote-profile-head"><div class="vote-profile-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="vote-profile-name">${escHtml(p.nickname)}</div><div class="vote-profile-tag">En jeu</div></div></div><div class="vote-profile-clues">${clues.length?clues.map((c,i)=>`<div class="vote-clue-chip"><span class="vote-clue-round">T${i+1}</span> ${escHtml(c.word)}</div>`).join(''):`<div class="small muted">Aucun indice</div>`}</div><button class="vote-profile-btn" data-vote="${escHtml(p.id)}">🗳 Voter contre</button></div>`;}).join('');}[...grid.querySelectorAll('[data-vote]')].forEach(btn=>{btn.addEventListener('click',()=>{const id=btn.getAttribute('data-vote');SFX.vote();if(state.mode==='firebase')firebaseCastVote(id);else offlineCastVote(id);});});}
 
 document.getElementById('btnRevealVotes')?.addEventListener('click',async()=>{SFX.tap();if(state.mode==='firebase')await firebaseResolveVotes();else offlineResolveVotes();show($('revealVotesPanel'),false);});
 
